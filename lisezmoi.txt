@@ -1,0 +1,43 @@
+Nouveau type de question REGEXP pour Moodle
+par Joseph Rézeau et Jean-Michel Vedrine
+VERSION 2.2 MARS 2007 compatible avec Moodle à partir de la version 1.8 seulement
+date de ce fichier readme.txt 17:37 30/12/2007
+--------------------------------------------------------
+INTRODUCTION
+
+Ce nouveau type de question (pour le module Test de Moodle) offre un système avancé d'analyse des réponses de l'élève, grâce à l'utilisation des expressions régulières. La question regexp est une extension de la question à réponse courte. Elle peut être utilisée telle quelle et aussi être incorporée dans une question de format Cloze, en la codant {REGEXP} (sur le modèle de {SHORTANSWER}).
+
+DOCUMENTATION
+
+voir le fichier d'aide /lang/fr_utf8/help/quiz/regexp.html
+
+INSTALLATION
+Dézippez le fichier regexp.zip et copiez le dossier regexp dans le dossier /question/type/ de votre installation moodle.
+
+Lorsque vous êtes sur votre site Moodle vous devez vous connecter en tant qu'administrateur et visiter la page Notifications une fois pour que le nouveau type de question regexp soit enregistré dans la base de données. Vous devriez voir ces messages: (example pour une base de type mySql):
+*******************************
+regexp plugin needs upgrading
+(mysql): CREATE TABLE mdl_question_regexp ( id int(10) unsigned NOT NULL auto_increment, question int(10) unsigned NOT NULL default '0', answers varchar(255) NOT NULL default '', PRIMARY KEY (id), KEY question (question)) TYPE=MyISAM COMMENT='Options for regexp questions'  
+Success
+(mysql): SELECT name FROM mdl_config WHERE name = 'qtype_regexp_version'   (mysql): UPDATE mdl_config SET value = '2006032200' WHERE name = 'qtype_regexp_version'  
+regexp tables have been set up correctly
+***************************
+
+Merci d'adresser vos remarques à moodle@rezeau.org
+
+********************************************************
+
+NOTE- Intégration avec la question de format Cloze
+Si vous voulez intégrer des question de type REGEXP dans des questions au format Cloze, vous devrez remplacer le fichier \question\type\multianswer\questiontype.php de votre installation Moodle avec le fichier ad hoc sur Modules and plugins Question Type: Regular Expression Short Answer page à: http://moodle.org/mod/data/view.php?d=13&rid=338
+Sur un site de production, faites d'abord une sauvegarde de votre site.
+
+Lorsque vous intégrez une sous-question de type REGEXP dans une question de type Cloze (multianswer) vous devez faire très attention. Je vous recommande de créer d'abord votre question comme question de type Réponse courte de type expression régulière, pour bien la tester, puis de recopier tous les champs soigneusement dans une question Cloze. Voici quelques exemples:
+---
+The word Moodle was originally an {:REGEXP:~%100%acronym#Excellent!~%0%--.*nym$#Your answer should end in “-nym”.~%0%--[aeiou].*#The missing word should start with a vowel (because it's preceded by the indefinite article an).~%0%--^acro.*#The missing word starts with the root-word acro, from the Greek akros "tip, end".~%0%.*#anything goes} for Modular Object-Oriented Dynamic Learning Environment, which is mostly useful to programmers and education theorists.
+---
+Quelles sont les couleurs du drapeau français ?
+- {:REGEXP:%100%bleu, blanc, rouge#Correct!~%100%((elles|(les|ses) couleurs) sont(| :) |)le bleu, le blanc(,| et) le rouge#OK~--.*\bbleu\b.*#Il manque la couleur du ciel!~--.*\bblanc\b.*#Il manque la couleur de la royauté!~--.*\brouge\b.*#Il manque la couleur du sang!~.*jaune|noir|orange|vert|rose.*#Une ou plusieurs de ces couleurs ne font pas partie du drapeau français!~\brouge\b.*\bbleu\b|\bblanc\b.*\bbleu\b|\brouge\b.*\bblanc\b#Vous avez trouvé toutes les couleurs, mais dans le désordre.~--(bleu, blanc, rouge|bleu, blanc et rouge|le bleu, le blanc et le rouge)#Vous avez trouvé toutes les couleurs, mais vous devriez rajouter la ponctuation, commme dans cet exemple: "un, deux et trois".~.*#Quelque chose cloche dans votre réponse.} 
+---
+
+
+Joseph
