@@ -10,6 +10,6 @@ CREATE TABLE prefix_question_regexp (
   answers varchar(255) NOT NULL default '',
   usehint tinyint(2) NULL default '0',  PRIMARY KEY  (id),
   KEY question (question)
-) TYPE=MyISAM COMMENT='Options for regexp questions';
+) COMMENT='Options for regexp questions';
 
 -- --------------------------------------------------------
