@@ -285,9 +285,9 @@
 
 /// testing for presence of (right or wrong) elements in student's answer
 
-// we must escape potential metacharacters in $firstcorrectanswer, e.g. if first correct answer ends with a question mark...
-        if ($response1 == $firstcorrectanswer) {
-            $response1 = quotemeta($teststate->responses['']);
+        // no need to do any further matching
+        if ($response1 == $response0) {
+        	return true;
 		}
 		if ( (preg_match('/^'.$response1.'$/'.$ignorecase, $response0)) ) {
 			return true;
