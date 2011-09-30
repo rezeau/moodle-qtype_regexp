@@ -17,14 +17,14 @@
   <?php echo $feedbackimg; ?>
   <?php 
   // only print Hint button if all these conditions are met (readonly is set on Review page, where we do not want Hint button displayed)
-  if ($question->options->usehint && ($cmoptions->optionflags == QUESTION_ADAPTIVE) && !$readonly && $state->raw_grade != 1 ) {	
-		$p = get_string("hintpenalty", "qtype_regexp", $question->penalty);
-		$q = 'resp'.$question->id.'_';
-		$q2 = $q.'submit';
-		$hint = get_string("hint", "qtype_regexp");
-		echo('<input  id ="'.$q.'" type="submit" name="'.$q2.'" value="'.$hint.'" title="'.$p.'" onclick="submittheform(this.id)" style="width:auto;" />');
-	}  
-	?>
+  if ($question->options->usehint && ($cmoptions->optionflags == QUESTION_ADAPTIVE) && !$readonly && $state->raw_grade != 1 ) {    
+        $p = get_string("hintpenalty", "qtype_regexp", $question->penalty);
+        $q = $question->name_prefix;
+        $q2 = $q.'submit';
+        $hint = get_string("hint", "qtype_regexp");
+        echo('<input  id ="'.$q.'" type="submit" name="'.$q2.'" value="'.$hint.'" title="'.$p.'" onclick="submittheform(this.id)" style="width:auto;" />');
+    }  
+    ?>
   </div>
   </div>
   <?php if ($feedback) { ?>
@@ -35,7 +35,7 @@
   </div>
   <?php $this->print_question_submit_buttons($question, $state, $cmoptions, $options); ?>
 <?php if ($correctanswer) { ?>
-	<div class="correctness correct">
+    <div class="correctness correct">
     <?php echo get_string('correctanswer', 'quiz').': '. $correctanswer; ?>
   </div> 
 <?php } ?>
@@ -46,22 +46,22 @@ $hide = get_string("hidealternate", "qtype_regexp");
 echo ("<script type=\"text/javascript\">
 function showdiv(id,thisbutton) {
 if (document.getElementById(id).style.display == 'none') {
-		document.getElementById(id).style.display = 'block'
-		thisbutton.value = '".$hide."'
-	} else {
-		document.getElementById(id).style.display = 'none'
-		thisbutton.value = '".$show."'
-	}
-	return;
+        document.getElementById(id).style.display = 'block'
+        thisbutton.value = '".$hide."'
+    } else {
+        document.getElementById(id).style.display = 'none'
+        thisbutton.value = '".$show."'
+    }
+    return;
 }
 function submittheform (myid) {
-	a = document.forms[0].action;
-	if (a.indexOf('preview.php')!=-1) {
-		document.forms[0].name = 'responseform';
-	}
-	a = document.getElementsByName(myid)[0].value;
-	document.getElementsByName(myid)[0].value = a + '\t';
-	this.document.forms.responseform.submit();
+    a = document.forms[0].action;
+    if (a.indexOf('preview.php')!=-1) {
+        document.forms[0].name = 'responseform';
+    }
+    a = document.getElementsByName(myid)[0].value;
+    document.getElementsByName(myid)[0].value = a + '\t';
+    this.document.forms.responseform.submit();
 }
 </script>");
  ?>
