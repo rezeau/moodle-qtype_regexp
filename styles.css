@@ -1,0 +1,24 @@
+.que.regexp .answer {
+    padding: 0.3em;
+    width: auto;
+    display: inline;
+    color:green;
+}
+#alternateanswers {
+    background-color: #fff3bf;
+}
+.que.regexp .answer input {
+    width: 80%;
+}
+.misplacedword, wrongword, maxtotalpenalties {
+    color:#FF0000;
+}
+.wrongword {
+    text-decoration:line-through;
+}
+/* must be a monospace font for correct display of erroneous characters position */
+.displayvalidationerrors {
+	font-family: Courier New, Courier, monospace;
+	color: blue;
+	font-size: 0.9em;
+}
