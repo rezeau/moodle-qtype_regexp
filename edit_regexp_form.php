@@ -1,102 +1,198 @@
 <?php
-/** by Joseph Rézeau 23:43 24/02/2007
- * Defines the editing form for the shortanswer question type.
+
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Defines the editing form for the regexp question type.
  *
  * @copyright &copy; 2007 Jamie Pratt
  * @author Jamie Pratt me@jamiep.org
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package questions
+ * @package questionbank
+ * @subpackage questiontypes
  */
 
 /**
- * shortanswer editing form definition.
+ * regexp editing form definition.
  */
-
-class question_edit_regexp_form extends question_edit_form {
+class qtype_regexp_edit_form extends question_edit_form {
     /**
      * Add question-type specific form fields.
      *
      * @param MoodleQuickForm $mform the form being built.
      */
+    protected function definition_inner($mform) {
 
-    function definition_inner(&$mform) {
-        $langfile = 'qtype_'.$this->qtype();
-
-        $mform->removeElement('generalfeedback'); //JR
-        $menu = array(get_string('no', 'moodle'), get_string('yes', 'moodle'));
+    	$mform->removeElement('generalfeedback'); //general feedback has no meaning in the REGEXP question type, only specific feedback
+    	$menu = array(get_string('no'), get_string('yes'));
         $mform->addElement('select', 'usehint', get_string('usehint', 'qtype_regexp'), $menu);
-        $mform->setHelpButton('usehint', array('regexphint', get_string('usehint', 'qtype_regexp'), 'qtype_regexp'));
-        $mform->addElement('static', 'answersinstruct', get_string('correctanswers', 'quiz'), get_string('filloutoneanswer', $langfile));
-        $mform->closeHeaderBefore('answersinstruct');
-        $creategrades = get_grade_options();
-        $gradeoptions = $creategrades->gradeoptions;
-        $repeated = array();
-        $repeated[] =& $mform->createElement('header', 'answerhdr', get_string('answerno', $langfile, '{no}'));
-        $repeated[] =& $mform->createElement('text', 'answer', get_string('answer', 'quiz'),array('size'=>100)); //JR
-        $repeated[] =& $mform->createElement('select', 'fraction', get_string('grade'), $gradeoptions);
-        $repeated[] =& $mform->createElement('textarea', 'feedback', get_string('feedback', 'quiz'),array('cols'=>60, 'rows'=>1));
+        $mform->addHelpButton('usehint', 'usehint', 'qtype_regexp');
+        $menu = array(get_string('caseno', 'qtype_regexp'), get_string('caseyes', 'qtype_regexp'));
+        $mform->addElement('select', 'usecase', get_string('casesensitive', 'qtype_regexp'), $menu);        
+        $mform->addElement('static', 'answersinstruct', '', get_string('filloutoneanswer', 'qtype_regexp'));
+        $mform->closeHeaderBefore('answersinstruct');                
 
-        if (isset($this->question->options)){
-            $countanswers = count($this->question->options->answers);
-        } else {
-            $countanswers = 0;
+        $this->add_per_answer_fields($mform, get_string('answerno', 'qtype_shortanswer', '{no}'),
+            question_bank::fraction_options());
+        $mform->addElement('header', 'multitriesheader',
+                get_string('settingsformultipletries', 'question'));
+        $withclearwrong = false;
+        $withshownumpartscorrect = false;
+        $penalties = array(
+            1.00,
+            0.50,
+            0.33,
+            0.25,
+            0.20,
+            0.10,
+            0.05,
+            0.00
+        );
+        if (!empty($this->question->penalty) && !in_array($this->question->penalty, $penalties)) {
+            $penalties[] = $this->question->penalty;
+            sort($penalties);
         }
-        $repeatsatstart = (QUESTION_NUMANS_START > ($countanswers + QUESTION_NUMANS_ADD))?
-                            QUESTION_NUMANS_START : ($countanswers + QUESTION_NUMANS_ADD);
-        $repeatedoptions = array();
-        $mform->setType('answer', PARAM_NOTAGS);
-        $repeatedoptions['fraction']['default'] = 0;
-        $this->repeat_elements($repeated, $repeatsatstart, $repeatedoptions, 'noanswers', 'addanswers', QUESTION_NUMANS_ADD, get_string('addmoreanswerblanks', 'qtype_shortanswer'));
+        $penaltyoptions = array();
+        foreach ($penalties as $penalty) {
+            $penaltyoptions["$penalty"] = (100 * $penalty) . '%';
+        }
+        $mform->addElement('select', 'penalty',
+                get_string('penaltyforeachincorrecttry', 'qtype_regexp'), $penaltyoptions);
+        $mform->addRule('penalty', null, 'required', null, 'client');
+        $mform->addHelpButton('penalty', 'penaltyforeachincorrecttry', 'qtype_regexp');
+        $mform->setDefault('penalty', 0.1);
 
+        if (isset($this->question->hints)) {
+            $counthints = count($this->question->hints);
+        } else {
+            $counthints = 0;
+        }
+
+        if ($this->question->formoptions->repeatelements) {
+            $repeatsatstart = max(self::DEFAULT_NUM_HINTS, $counthints);
+        } else {
+            $repeatsatstart = $counthints;
+        }
+
+        list($repeated, $repeatedoptions) = $this->get_hint_fields(
+                $withclearwrong, $withshownumpartscorrect);
+        $this->repeat_elements($repeated, $repeatsatstart, $repeatedoptions,
+                'numhints', 'addhint', 1, get_string('addanotherhint', 'question'));
+        //$this->add_interactive_settings();
     }
 
-    function set_data($question) {
-        if (isset($question->options)){
-            $answers = $question->options->answers;
-            if (count($answers)) {
-                $key = 0;
-                foreach ($answers as $answer){
-                    $default_values['answer['.$key.']'] = $answer->answer;
-                    $default_values['fraction['.$key.']'] = $answer->fraction;
-                    $default_values['feedback['.$key.']'] = $answer->feedback;
-                    $key++;
-                }
-            }
-            $default_values['image'] =  "None";
-            $default_values['usehint'] =  $question->options->usehint;
-            $question = (object)((array)$question + $default_values);
+    protected function data_preprocessing($question) {
+    	global $CFG, $PAGE;
+        $question = parent::data_preprocessing($question);
+        $question = $this->data_preprocessing_answers($question);
+        $question = $this->data_preprocessing_hints($question);
+
+        if (!empty($question->options)) {
+            $question->usecase = $question->options->usecase;
+            $question->usehint = $question->options->usehint;
         } else {
-			$key = 0;
+            $key = 0;
             $default_values['fraction['.$key.']'] = 1;
-            $question = (object)((array)$question + $default_values);
+            $question = (object)((array)$question + $default_values);        	
         }
-        parent::set_data($question);
+        // disable the score dropdown list for Answer 1 to make sure it remains at 100%
+        // grade for Answer 1 will need to be automatically set to 1 in questiontype.php,  save_question_options($question) 
+        $i=1;
+        foreach ($this->_form->_elements as $element) {
+            if ($element->_attributes['name'] == 'fraction[0]') {
+                break;
+            }
+            $i++;
+        }
+        $this->_form->_elements[$i]->_attributes['disabled'] = 'disabled';
+        
+        return $question;
     }
-    function validation($data){
-        $langfile = 'qtype_'.$this->qtype();
-        $errors = array();
+
+    public function validation($data, $files) {
+        global $CFG;
+        require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
+    	$errors = parent::validation($data, $files);
         $answers = $data['answer'];
+        $grades = $data['fraction'];
         $answercount = 0;
-        foreach ($answers as $answer){
+        $illegalmetacharacters = ". ^ $ * + ? { } \\";
+        foreach ($answers as $key => $answer) {
             $trimmedanswer = trim($answer);
-            if (!empty($trimmedanswer)){
-					$parenserror = check_my_parens($trimmedanswer);
-					if ($parenserror) {
-						$errors['answer['.$answercount.']'] = $parenserror;
-					}
-				$answercount++;
+            if ($trimmedanswer !== ''){
+                $answercount++;
+                $parenserror = '';
+                $metacharserror = '';
+                //$errors["answer[$key]"] = null;
+                // we do not check parenthesis and square brackets in Answer 1 (correct answer)
+                if ($key > 0) {
+                	$markedline = '';
+                    for ($i=0;$i<strlen($trimmedanswer);$i++) {
+                        $markedline .= ' ';
+                    }
+	                $parenserror = check_my_parens($trimmedanswer, $markedline);
+	                if ($parenserror) {
+                        $errors["answer[$key]"] = get_string("regexperrorparen", "qtype_regexp").'<br />';
+                        $markedline = $parenserror; 
+	                }
+	                // we do not test unescaped metacharacters in Answers expressions for incorrect responses (grade = None)
+	                if ($data['fraction'][$key] > 0) {
+		                $metacharserror = check_unescaped_metachars($trimmedanswer, $markedline);
+	                    if ($metacharserror) {
+	                        $errormessage = get_string("illegalcharacters", "qtype_regexp", $illegalmetacharacters);
+	                    	if (empty($errors["answer[$key]"])) {
+	                    	  $errors["answer[$key]"] = $errormessage;
+	                        } else {
+	                        	$errors["answer[$key]"] .= $errormessage;
+	                        }
+	                    }
+	                }
+	                if ($metacharserror || $parenserror) {
+    	                $answerstringchunks = splitstring ($trimmedanswer);
+    	                $nbchunks = count($answerstringchunks);
+    	                $errors["answer[$key]"] .= '<pre><div class="displayvalidationerrors">';
+		                if ($metacharserror) {
+		                	$illegalcharschunks = splitstring ($metacharserror);   	
+		                	for ($i=0;$i<$nbchunks;$i++) {
+		                	  $errors["answer[$key]"] .= '<br />'.$answerstringchunks[$i].'<br />'.$illegalcharschunks[$i];	
+		                	}
+		                } elseif ($parenserror) {
+                            $illegalcharschunks = splitstring ($parenserror);      
+                            for ($i=0;$i<$nbchunks;$i++) {
+                                $errors["answer[$key]"] .= '<br />'.$answerstringchunks[$i].'<br />'.$illegalcharschunks[$i]; 
+                            }
+		                }
+                        $errors["answer[$key]"] .= '</div></pre>';
+	                }
+                }
+            } else if ($data['fraction'][$key] != 0 || !html_is_blank($data['feedback'][$key]['text'])) {
+                $errors["answer[$key]"] = get_string('answermustbegiven', 'qtype_regexp');
+                $answercount++;
             }
         }
         if ($answercount==0){
-            $errors['answer[0]'] = get_string('notenoughanswers', $langfile);
+            $errors['answer[0]'] = get_string('notenoughanswers', 'qtype_regexp', 1);
         }
-		if ($data['fraction'][0] != 1) {
-			$errors['fraction[0]'] = get_string('fractionsnomax', $langfile, 1);
-		}
         return $errors;
     }
-    function qtype() {
+
+	
+    public function qtype() {
         return 'regexp';
     }
 }
-?>
