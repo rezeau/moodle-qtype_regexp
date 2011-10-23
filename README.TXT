@@ -1,4 +1,4 @@
-﻿---------------------------------------
+---------------------------------------
 REGEXP QUESTION TYPE plugin for Moodle
 by Joseph Rézeau and Jean-Michel Vedrine
 ----------------------------------------
@@ -21,6 +21,15 @@ If you downloaded this zip archive from https://github.com/rezeau
 
 
 This question type (for the Moodle quiz module) aims at a more advanced system of student's response analysis, through the use of regular expresssions. The new question type is an extension of the SHORTANSWER type. It can be used on its own and can also be incorporated into the existing Cloze (embedded) question type (see DOCUMENTATION).
+
+***IMPORTANT***
+
+If you want to take full advantage of the regexp question *Help* feature, which allows the student to "buy" a letter, you'll have to install 2 more plugins on your moodle 2.1 installation. Those plugins are 2 question behaviours, located at:
+https://github.com/rezeau/moodle-qbehaviour_regexpadaptivewithhelp
+and
+https://github.com/rezeau/moodle-qbehaviour_regexpadaptivewithhelpnopenalty
+
+Download both and install to your <moodle>/question/behaviour/ folder. 
 
 DOCUMENTATION
 
