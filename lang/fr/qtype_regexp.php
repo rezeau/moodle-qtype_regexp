@@ -23,6 +23,7 @@ La pénalité est un pourcentage de la note totale de la question, donc si la qu
 
 Si vous avez sélectionné l\'affichage du bouton <strong>Aide</strong>, la valeur indiquée pour la pénalité s\'appliquera également à tout «&nbsp;achat&nbsp;» de lettre.';
 $string['pleaseenterananswer'] = 'Veuillez entrer votre réponse.';
+$string['pluginname'] = 'Réponse courte de type expression régulière';
 $string['regexp'] = 'Réponse courte de type <br />expression régulière';
 $string['regexp_help'] = 'Clic droit sur le lien <em>Aide</em> ci-dessous pour ouvrir la page d\'aide de la documentation Moodle.';
 $string['regexp_link'] = 'question/type/regexp';

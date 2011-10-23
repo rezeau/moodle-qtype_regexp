@@ -23,6 +23,7 @@ The penalty is a proportion of the total question grade, so if the question is w
 
 If you have set the <strong>Display Help Button</strong> to <strong>Yes</strong> for this question, the same penalty applies each time the student clicks the <strong>Display Help Button</strong>.';
 $string['pleaseenterananswer'] = 'Please enter an answer.';
+$string['pluginname'] = 'Regular expression short answer';
 $string['regexp'] = 'Regular expression short answer';
 $string['regexp_help'] = 'Right-click on the <em>More Help</em> link below to open the Help page in a new tab/window.';
 $string['regexp_link'] = 'question/type/regexp';
