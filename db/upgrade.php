@@ -43,6 +43,19 @@ if ($oldversion < 2011022301) {
     // savepoint reached
         upgrade_plugin_savepoint(true, 2011022301, 'qtype', 'regexp');
     }
+    
+if ($oldversion < 2011102300) {
+        // table question_regexp to be renamed to qtype_regexp
+        $table = new xmldb_table('question_regexp');
+
+        // Launch rename table for quiz_reports
+        if ($dbman->table_exists($table)) {
+            $dbman->rename_table($table, 'qtype_regexp');
+        }
+
+        upgrade_plugin_savepoint(true, 2011102300,  'qtype', 'regexp');
+    }
+    
     return true;
 }
 ?>

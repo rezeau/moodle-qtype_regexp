@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="question/type/regexp/db" VERSION="2011022301" COMMENT="XMLDB file for Moodle question/type/regexp">
   <TABLES>
-    <TABLE NAME="question_regexp" COMMENT="Options for regexp questions">
+    <TABLE NAME="qtype_regexp" COMMENT="Options for regexp questions">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="question"/>
         <FIELD NAME="question" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="answers"/>
