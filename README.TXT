@@ -1,4 +1,4 @@
----------------------------------------
+﻿---------------------------------------
 REGEXP QUESTION TYPE plugin for Moodle
 by Joseph Rézeau and Jean-Michel Vedrine
 ----------------------------------------
@@ -28,6 +28,8 @@ If you want to take full advantage of the regexp question *Help* feature, which 
 https://github.com/rezeau/moodle-qbehaviour_regexpadaptivewithhelp
 and
 https://github.com/rezeau/moodle-qbehaviour_regexpadaptivewithhelpnopenalty
+
+OR download from moodle's plugin repository, at http://moodle.org/plugins/browse.php?list=category&id=31
 
 Download both and install to your <moodle>/question/behaviour/ folder. 
 
