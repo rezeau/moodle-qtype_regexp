@@ -50,14 +50,13 @@ class qtype_regexp_renderer extends qtype_renderer {
     	       $hintadded = $step->has_behaviour_var('_helps') === true;
     	       break;
         }
-        $closest = find_closest($question, $currentanswer, $ispreview, $correct_response=false, $hintadded);
+        $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
         $currentanswer = $closest[0];
         
-        //echo"currentanswer 49 = $currentanswer<br>";
         //js script for showing / hiding regexp generated alternative sentences (for teacher only)
         if ($ispreview) {
-            $alternateanswers = find_closest($question, null, $ispreview, $correct_response=true);
-            $response = $question->get_correct_response();
+            $alternateanswers = get_alternateanswers($question);
+        	$response = $question->get_correct_response();
             $correctanswer = $response['answer'];
             $id = "showhidebutton";
             echo html_writer::start_tag('div');
@@ -189,7 +188,7 @@ class qtype_regexp_renderer extends qtype_renderer {
             $hintadded = $step->has_behaviour_var('_helps') === true;
             break;
         }
-        $closest = find_closest($question, $currentanswer, $ispreview, false, $hintadded);
+        $closest = find_closest($question, $currentanswer, false, $hintadded);
 
         if ($hintadded) { // hint added one letter or hint added letter and answer is complete
             $answer = $question->get_matching_answer(array('answer' => $closest[0]));
@@ -220,7 +219,7 @@ class qtype_regexp_renderer extends qtype_renderer {
     public function correct_response(question_attempt $qa) {
         global $CFG;
         $question = $qa->get_question();
-        $alternateanswers = find_closest($question, $currentanswer='', $ispreview=false, $correct_response=true);
+        $alternateanswers = get_alternateanswers($question);;
         $display_responses = '';
         if (count($alternateanswers) == 0 ) { // no alternative answers besides the only "correct" answer
             return get_string('correctansweris', 'qtype_regexp', $alternateanswers[0]);

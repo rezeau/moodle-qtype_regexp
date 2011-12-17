@@ -50,7 +50,7 @@ class qtype_regexp extends question_type {
 /// TODO dunno what those functions are --- END
 
     function save_question_options($question) {
-        global $DB;
+        global $DB, $SESSION;
         $result = new stdClass;
 
         $context = $question->context;
@@ -111,7 +111,9 @@ class qtype_regexp extends question_type {
         }
         ///  TODO no hints are used in the REGEXP question type, so we don't need to save them
         $this->save_hints($question);
-
+        // JR dec 2011 unset alternateanswers after question has been edited, just in case
+        $qid = $question->id;
+	    unset($SESSION->qtype_regexp_question->alternateanswers[$qid]);
         // Perform sanity checks on fractional grades
         if ($maxfraction != 1) {
             $result->noticeyesno = get_string('fractionsnomax', 'quiz', $maxfraction * 100);
@@ -124,6 +126,7 @@ class qtype_regexp extends question_type {
         $question->usecase = $questiondata->options->usecase;
         $question->usehint = $questiondata->options->usehint;
         $this->initialise_question_answers($question, $questiondata);
+        $qid = $question->id;
     }
 
     public function get_random_guess_score($questiondata) {
