@@ -39,7 +39,7 @@ class qtype_regexp_edit_form extends question_edit_form {
     protected function definition_inner($mform) {
 
     	$mform->removeElement('generalfeedback'); //general feedback has no meaning in the REGEXP question type, only specific feedback
-    	$menu = array(get_string('no'), get_string('yes'));
+    	$menu = array(get_string('none'), get_string('letter', 'qtype_regexp'), get_string('word', 'qtype_regexp'));
         $mform->addElement('select', 'usehint', get_string('usehint', 'qtype_regexp'), $menu);
         $mform->addHelpButton('usehint', 'usehint', 'qtype_regexp');
         $menu = array(get_string('caseno', 'qtype_regexp'), get_string('caseyes', 'qtype_regexp'));
@@ -50,7 +50,7 @@ class qtype_regexp_edit_form extends question_edit_form {
         $this->add_per_answer_fields($mform, get_string('answerno', 'qtype_shortanswer', '{no}'),
             question_bank::fraction_options());
         $mform->addElement('header', 'multitriesheader',
-                get_string('settingsformultipletries', 'question'));
+                get_string('settingsformultipletries', 'qtype_regexp'));
         $withclearwrong = false;
         $withshownumpartscorrect = false;
         $penalties = array(

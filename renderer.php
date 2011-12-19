@@ -43,7 +43,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         $inputname = $qa->get_qt_field_name('answer');
         $ispreview = !isset($options->attempt);        
         $currentanswer = remove_blanks ($qa->get_last_qt_var('answer') );
-        $response = $qa->get_last_qt_data(); 
+        $response = $qa->get_last_qt_data();
         $laststep = $qa->get_reverse_step_iterator();
         $hintadded = false;
         foreach ($qa->get_reverse_step_iterator() as $step) {
