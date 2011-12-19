@@ -22,7 +22,7 @@ $string['penaltyforeachincorrecttry_help'] = 'When you run your questions using 
 so that the student will have several tries to get the question right, then this option controls how much they are penalised for each incorrect try.
 
 The penalty is a proportion of the total question grade, so if the question is worth three marks, and the penalty is 0.3333333, 
-then the student will score 3 if they get the question right first time, 2 if they get it right second try, and 1 of they get it right on the third try.
+then the student will score 3 if they get the question right first time, 2 if they get it right second try, and 1 if they get it right on the third try.
 
 If you have set the <strong>Help Button</strong> mode to <strong>Letter</strong> or <strong>Word</strong> for this question, 
 <strong><em>the same penalty</em></strong> applies each time the student clicks the <strong>Buy Letter/Word</strong> Button.';
