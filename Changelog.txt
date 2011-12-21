@@ -1,4 +1,9 @@
+16:50 21/12/2011
+version 2011122101
+- added words hint feature (needs 2011122101 versions of regexpadaptivewithhelp and regexpadaptivewithhelpnopenalty to work)
+
 23:52 17/12/2011
 version 2011121701
 - moved calculation of alternateanswers to locallib function get_alternateanswers($question)
 - stored/cached alternateanswers array in $SESSION for better performance
+

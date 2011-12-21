@@ -51,6 +51,7 @@ class qtype_regexp_renderer extends qtype_renderer {
     	       break;
         }
         $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
+        $question->closest = $closest;
         $currentanswer = $closest[0];
         
         //js script for showing / hiding regexp generated alternative sentences (for teacher only)
@@ -188,12 +189,10 @@ class qtype_regexp_renderer extends qtype_renderer {
             $hintadded = $step->has_behaviour_var('_helps') === true;
             break;
         }
-        $closest = find_closest($question, $currentanswer, false, $hintadded);
-
+        $closest = $question->closest;
         if ($hintadded) { // hint added one letter or hint added letter and answer is complete
             $answer = $question->get_matching_answer(array('answer' => $closest[0]));
-        	$closest[0] = $textlib->substr($closest[0], 0, -1)."<strong>".$textlib->substr($closest[0], -1, 1)."</strong>";
-            // hint added letter and answer is complete
+            // help has added letter OR word and answer is complete
         	$isstateimprovable = $qa->get_behaviour()->is_state_improvable($qa->get_state());
         	if ($closest[2] == 'complete' && $isstateimprovable) {
                 $closestcomplete = true;
@@ -207,7 +206,7 @@ class qtype_regexp_renderer extends qtype_renderer {
             $closest[3] = '['.$closest[3].']'; // rest of submitted answer, in red
         }
         $f = ''; // student's response with corrections to be displayed in feedback div
-            $f = '<span style="color:#0000FF;">'.$closest[0].'</span> '.$closest[3]; // color blue for correct words/letters
+            $f = '<span style="color:#0000FF;">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3]; // color blue for correct words/letters
         if ($answer && $answer->feedback || $closestcomplete == true) {
             return $question->format_text($f.$answer->feedback.$completemessage, $answer->feedbackformat,
                 $qa, 'question', 'answerfeedback', $answer->id);

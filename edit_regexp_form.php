@@ -20,11 +20,11 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Defines the editing form for the regexp question type.
  *
- * @copyright &copy; 2007 Jamie Pratt
- * @author Jamie Pratt me@jamiep.org
+ * @copyright  2011 Joseph REZEAU
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package questionbank
  * @subpackage questiontypes
+ * @subpackage regexp
  */
 
 /**
