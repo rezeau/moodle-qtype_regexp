@@ -74,9 +74,10 @@ class restore_qtype_regexp_plugin extends restore_qtype_plugin {
             }
             $data->answers = implode(',', $answersarr);
             // Insert record
-            $newitemid = $DB->insert_record('question_regexp', $data);
+            //  JR changed table name to match new table name system in moodle 2.1 DEC 2011
+            $newitemid = $DB->insert_record('qtype_regexp', $data);
             // Create mapping
-            $this->set_mapping('question_regexp', $oldid, $newitemid);
+            $this->set_mapping('qtype_regexp', $oldid, $newitemid);
         } else {
             // Nothing to remap if the question already existed
         }
