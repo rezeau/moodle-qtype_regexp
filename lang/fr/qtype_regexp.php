@@ -1,6 +1,8 @@
 ﻿<?php
+$string['addmoreanswers'] = 'Ajouter {no} réponse';
 $string['answer'] = 'Réponse :';
 $string['answermustbegiven'] = 'Ce champ Réponse ne peut pas être vide si vous avez entré une valeur de Score ou un message de Feedback.';
+$string['answer1mustbegiven'] = 'La Réponse n° 1 ne peut pas être vide.';
 $string['answerno'] = 'Réponse {$a}';
 $string['addingregexp'] = 'Créer une question de type expression régulière';
 $string['bestcorrectansweris'] = '<strong>La meilleure réponse est :</strong><br />{$a}';
@@ -12,16 +14,19 @@ $string['correctansweris'] = '<strong>La réponse correcte est :</strong><br />{
 $string['correctanswersare'] = '<strong>Les autres réponses acceptables sont :</strong>';
 $string['editingregexp'] = 'Modifier une question de type expression régulière';
 $string['filloutoneanswer'] = '<em>Réponse 1</em> doit être correcte (Note = 100%) et ne sera <strong>pas</strong> analysée en tant qu\'expression régulière.';
-$string['fractionsnomax'] = 'Le score de la Solution 1 doit être de 100%.';
 $string['hidealternate'] = 'Cacher les réponses alternatives';
 $string['illegalcharacters'] = '<strong>ERREUR !</strong> Dans les Réponses avec un score supérieur à 0%, ces métacaractères non <em>échappés</em> ne sont pas autorisés :<strong>{$a}</strong>';
+$string['letter'] = 'Lettre';
 $string['notenoughanswers'] = 'Ce type de question demande au moins une réponse';
 $string['penaltyforeachincorrecttry'] = 'Pénalité pour essai incorrect ou Aide';
-$string['penaltyforeachincorrecttry_help'] = 'Lorsque vous utilisez le mode «&nbsp;Interactif avec tentatives multiples » ou «&nbsp;Adaptatif&nbsp;» les étudiants ont plusieurs essais pour trouver la bonne réponse. Cette option contrôle comment ils seront pénalisés pour chaque essai incorrect.
+$string['penaltyforeachincorrecttry_help'] = 'Lorsque vous utilisez le mode «&nbsp;Interactif avec tentatives multiples » ou «&nbsp;Adaptatif&nbsp;» 
+les étudiants ont plusieurs essais pour trouver la bonne réponse. Cette option contrôle comment ils seront pénalisés pour chaque essai incorrect.
 
-La pénalité est un pourcentage de la note totale de la question, donc si la question est notée sur 3 points et que la pénalité est de 0,33, alors l\'étudiant aura 3 points s\'il répond correctement à la question au premier essai, 2 points s\'il répond correctement au deuxième essai, et 1 point s\'il répond correctement au troisième essai.
+La pénalité est un pourcentage de la note totale de la question, donc si la question est notée sur 3 points et que la pénalité est de 0,33, alors l\'étudiant aura 3 points s\'il répond correctement à la question au premier essai, 
+2 points s\'il répond correctement au deuxième essai, et 1 point s\'il répond correctement au troisième essai.
 
-Si vous avez sélectionné l\'affichage du bouton <strong>Aide</strong>, la valeur indiquée pour la pénalité s\'appliquera également à tout «&nbsp;achat&nbsp;» de lettre.';
+Si vous avez sélectionné comme mode d\'aide pour cette question <strong>Lettre</strong> ou <strong>Mot</strong>,
+ la valeur indiquée pour la pénalité s\'appliquera également à tout «&nbsp;achat&nbsp;» de lettre ou de mot.';
 $string['pleaseenterananswer'] = 'Veuillez entrer votre réponse.';
 $string['pluginname'] = 'Réponse courte de type expression régulière';
 $string['regexp'] = 'Réponse courte de type <br />expression régulière';
@@ -34,10 +39,19 @@ $string['regexperrorparen'] = '<strong>ERREUR !</strong> Vérifiez vos parenthè
 $string['regexperrorsqbrack'] = 'Crochets carrés';
 $string['regexpsensitive'] = 'Utiliser les expressions régulières pour analyser les réponses';
 $string['regexpsummary'] = 'Question à réponse courte où les réponses de l\'étudiant sont basées sur des expressions régulières';
+$string['settingsformultipletries'] = 'Paramètres de pénalités pour les essais incorrects et l\'achat de lettres ou de mots';
 $string['showalternate'] = 'Afficher les réponses alternatives';
-$string['usehint'] = 'Afficher le bouton Aide';
-$string['usehint_help'] = 'Si <strong>Afficher bouton Aide</strong> est sélectionné (<strong>Oui</strong>), un bouton <strong>Aide</strong> sera affiché 
-pour permettre à l\'étudiant d\'«&nbsp;acheter&nbsp;» une lettre. 
+$string['showhidealternate'] = 'Afficher/Masquer les réponses alternatives';
+$string['usehint'] = 'Mode d\'aide';
+$string['usehint_help'] = 'Si un mode d\'aide autre que <strong>Aucun</strong> est sélectionné, un bouton d\'aide sera affiché 
+pour permettre à l\'étudiant d\'«&nbsp;acheter&nbsp;» une lettre ou un mot.
 
-La valeur par défaut du paramètre <strong>Afficher bouton Aide</strong> est <strong>Non</strong>.';
+En mode <strong>Adaptif</strong>, le bouton d\'aide affichera «&nbsp;Acheter la lettre suivante&nbsp;» ou «&nbsp;Acheter le mot suivant&nbsp;» selon 
+le mode sélectionné par l\'enseignant. Pour la valeur de la pénalité d\'achat d\'une lettre ou d\'un mot, 
+voir le paramétrage <strong>plus bas sur cette page</strong>.
+
+En mode <strong>Adaptif sans pénalité</strong>, le bouton d\'aide affichera «&nbsp;Demander la lettre suivante&nbsp;» ou «&nbsp;Demander le mot suivant&nbsp;»
+
+La valeur par défaut du paramètre <strong>Mode d\'aide</strong> est <strong>Aucun</strong>.';
+$string['word'] = 'Mot';
 ?>

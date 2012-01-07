@@ -39,7 +39,7 @@ class qtype_regexp_question extends question_graded_by_strategy
 
     /** @var boolean whether answers should be graded case-sensitively. */
     public $usecase;
-    /** @var boolean whether student can ask for help (next correct letter will be added). */    
+    /** @var boolean whether student can ask for help (next correct letter will be added). */
     public $usehint;
     /** @var array of question_answer. */
     public $answers = array();
@@ -51,7 +51,11 @@ class qtype_regexp_question extends question_graded_by_strategy
     public function get_expected_data() {
         return array('answer' => PARAM_RAW_TRIMMED);
     }
-    
+
+    public function get_data() {
+        return array('answer' => PARAM_RAW_TRIMMED);
+    }
+
     public function summarise_response(array $response) {
         if (isset($response['answer'])) {
             return $response['answer'];
@@ -59,19 +63,19 @@ class qtype_regexp_question extends question_graded_by_strategy
             return null;
         }
     }
-    
+
     public function summarise_response_withhelp(array $response) {
         global $CFG;
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         if (isset($response['answer'])) {
             $answer = $response['answer'];
             $closest = $this->closest;
-            return $answer.' => '.$closest[0];            
+            return $answer.' => '.$closest[0];
         } else {
             return null;
         }
     }
-    
+
     public function is_complete_response(array $response) {
         return array_key_exists('answer', $response) &&
                 ($response['answer'] || $response['answer'] === '0');
@@ -85,12 +89,12 @@ class qtype_regexp_question extends question_graded_by_strategy
     }
 
     public function is_same_response(array $prevresponse, array $newresponse) {
-    	return question_utils::arrays_same_at_key_missing_is_blank(
+        return question_utils::arrays_same_at_key_missing_is_blank(
                 $prevresponse, $newresponse, 'answer');
     }
 
     public function get_answers() {
-    	return $this->answers;
+        return $this->answers;
     }
 
     public function compare_response_with_answer(array $response, question_answer $answer) {
@@ -98,49 +102,49 @@ class qtype_regexp_question extends question_graded_by_strategy
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         $response['answer'] = remove_blanks ($response['answer']);
         if ($currentanswerwithhint) {
-        	$response['answer'] = $currentanswerwithhint;
+            $response['answer'] = $currentanswerwithhint;
         }
         if ($response == $this->get_correct_response()) {
-    		return true;
-    	}
-    	// do NOT match student response against Answer 1 : if it matches, already matched by get_correct_response() above
-    	// and Answer 1 may contain metacharacters that do not follow correct regex syntax
-    	// get id of Answer 1
-    	foreach ($this->answers as $key=>$value) {
-    		break;
-    	}
-    	// if this is Answer 1 then return; do not try to match
-    	if ($key == $answer->id) {
-    		return;
-    	}
-    	return self::compare_string_with_wildcard(
+            return true;
+        }
+        // do NOT match student response against Answer 1 : if it matches, already matched by get_correct_response() above
+        // and Answer 1 may contain metacharacters that do not follow correct regex syntax
+        // get id of Answer 1
+        foreach ($this->answers as $key=>$value) {
+            break;
+        }
+        // if this is Answer 1 then return; do not try to match
+        if ($key == $answer->id) {
+            return;
+        }
+        return self::compare_string_with_wildcard(
                 $response['answer'], $answer->answer, $answer->fraction, !$this->usecase);
     }
     public static function compare_string_with_wildcard($string, $pattern, $grade, $ignorecase) {
         if (substr($pattern,0,2) != '--') {
-        	// answers with a positive grade must be anchored for strict match
-        	// incorrect answers are not strictly matched
-        	if ($grade > 0) {
-        	   $regexp = '/^' . $pattern . '$/';
-	        } else {
-	        	$regexp = '/' . $pattern. '/';
-	        }
-            $regexp .= 'u'; // for potential utf-8 characters
-	        // Make the match insensitive if requested to.
-	        if ($ignorecase) {
-	            $regexp .= 'i';
+            // answers with a positive grade must be anchored for strict match
+            // incorrect answers are not strictly matched
+            if ($grade > 0) {
+               $regexp = '/^' . $pattern . '$/';
+            } else {
+                $regexp = '/' . $pattern. '/';
             }
-	        if (preg_match($regexp, trim($string))) {
-	            return true;
-	        }
+            $regexp .= 'u'; // for potential utf-8 characters
+            // Make the match insensitive if requested to.
+            if ($ignorecase) {
+                $regexp .= 'i';
+            }
+            if (preg_match($regexp, trim($string))) {
+                return true;
+            }
         }
         // testing for absence of needed (right) elements in student's answer, through initial -- coding
         if (substr($pattern,0,2) == '--') {
             if ($ignorecase) {
                 $ignorecase = 'i';
             }
-        	
-        	$response1 = substr($pattern,2);
+            
+            $response1 = substr($pattern,2);
             $response0 = $string;
             // testing for absence of more than one needed word
             if (preg_match('/^.*\&\&.*$/', $response1)) {
@@ -186,19 +190,19 @@ class qtype_regexp_question extends question_graded_by_strategy
     }
 
     public function make_behaviour(question_attempt $qa, $preferredbehaviour) {
-    	GLOBAL $CFG;
+        GLOBAL $CFG;
         // check that regexpadaptivewithhelp behaviour has been installed
-        // if not installed, then the regexp questions will follow the "standard" behaviours 
+        // if not installed, then the regexp questions will follow the "standard" behaviours
         // and Help button will not be available
         // only use the regexpadaptivewithhelp behaviour is question uses hint
-    	if ($this->usehint) {
-	    	if ($preferredbehaviour == 'adaptive' && file_exists($CFG->dirroot.'/question/behaviour/regexpadaptivewithhelp/')) {
-		        return question_engine::make_behaviour('regexpadaptivewithhelp', $qa, $preferredbehaviour);
-	        }
-	        if ($preferredbehaviour == 'adaptivenopenalty' && file_exists($CFG->dirroot.'/question/behaviour/regexpadaptivewithhelpnopenalty/')) {
-	            return question_engine::make_behaviour('regexpadaptivewithhelpnopenalty', $qa, $preferredbehaviour);
-	        }
-    	}
+        if ($this->usehint) {
+            if ($preferredbehaviour == 'adaptive' && file_exists($CFG->dirroot.'/question/behaviour/regexpadaptivewithhelp/')) {
+                return question_engine::make_behaviour('regexpadaptivewithhelp', $qa, $preferredbehaviour);
+            }
+            if ($preferredbehaviour == 'adaptivenopenalty' && file_exists($CFG->dirroot.'/question/behaviour/regexpadaptivewithhelpnopenalty/')) {
+                return question_engine::make_behaviour('regexpadaptivewithhelpnopenalty', $qa, $preferredbehaviour);
+            }
+        }
         return question_engine::make_archetypal_behaviour($preferredbehaviour, $qa);
     }
 }

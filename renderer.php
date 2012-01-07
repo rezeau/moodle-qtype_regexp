@@ -41,23 +41,23 @@ class qtype_regexp_renderer extends qtype_renderer {
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         $question = $qa->get_question();
         $inputname = $qa->get_qt_field_name('answer');
-        $ispreview = !isset($options->attempt);        
+        $ispreview = !isset($options->attempt);
         $currentanswer = remove_blanks ($qa->get_last_qt_var('answer') );
         $response = $qa->get_last_qt_data();
         $laststep = $qa->get_reverse_step_iterator();
         $hintadded = false;
         foreach ($qa->get_reverse_step_iterator() as $step) {
-    	       $hintadded = $step->has_behaviour_var('_helps') === true;
-    	       break;
+            $hintadded = $step->has_behaviour_var('_helps') === true;
+                break;
         }
         $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
         $question->closest = $closest;
         $currentanswer = $closest[0];
-        
+
         //js script for showing / hiding regexp generated alternative sentences (for teacher only)
         if ($ispreview) {
             $alternateanswers = get_alternateanswers($question);
-        	$response = $question->get_correct_response();
+            $response = $question->get_correct_response();
             $correctanswer = $response['answer'];
             $id = "showhidebutton";
             echo html_writer::start_tag('div');
@@ -74,22 +74,27 @@ class qtype_regexp_renderer extends qtype_renderer {
                 'requires' => array('base', 'node', 'event'),
                 'strings' => array(array('showalternate', 'qtype_regexp'), array('hidealternate', 'qtype_regexp')),
             ));
+            echo html_writer::start_tag('div', array('id' => 'alternateanswers', 'style' => 'display:none;'));
+            echo '<hr />';
+            if ($question->usecase) {
+                $case = get_string('caseyes', 'qtype_regexp');
+            } else {
+                $case = get_string('caseno', 'qtype_regexp');
+            }
+            echo get_string('casesensitive', 'qtype_regexp').' : <b>'.$case.'</b><hr />';
 
-	        echo html_writer::start_tag('div', array('id' => 'alternateanswers', 'style' => 'display:none;'));
-	        echo '<hr />';   
-	        if ($question->usecase) {
-	            $case = get_string('caseyes', 'qtype_regexp'); 
-	        } else {
-	            $case = get_string('caseno', 'qtype_regexp');
-	        }
-	        echo get_string('casesensitive', 'qtype_regexp').' : <b>'.$case.'</b><hr />';
-	        foreach ($alternateanswers as $answer) {
-	            echo("$answer<br />");
-	        }   
-	        echo("<hr />");
-	        echo html_writer::end_tag('div');
+            foreach($alternateanswers as $key => $alternateanswer) {
+                echo get_string('answer').' '.$key.' ('.$alternateanswer['fraction'].') ','<span class="regexp">'.$alternateanswer['regexp'].'</span>';
+                $list = '';
+                foreach($alternateanswer['answers'] as $alternate) {
+                    $list.= '<li>'.$alternate.'</li>';
+                }
+                echo '<ul class="square">'.$list.'</ul>';
+            }
+            echo("<hr />");
+            echo html_writer::end_tag('div');
         }
-        
+
         $inputattributes = array(
             'type' => 'text',
             'name' => $inputname,
@@ -146,7 +151,7 @@ class qtype_regexp_renderer extends qtype_renderer {
     }
 
     public function feedback(question_attempt $qa, question_display_options $options) {
-    	$result = '';
+        $result = '';
         $hint = null;
         if ($options->feedback) {
             $result .= html_writer::nonempty_tag('div', $this->specific_feedback($qa, $options),
@@ -180,7 +185,7 @@ class qtype_regexp_renderer extends qtype_renderer {
     public function specific_feedback(question_attempt $qa, question_display_options $options) {
         /// Use text services
         $textlib = textlib_get_instance();
-    	$question = $qa->get_question();
+        $question = $qa->get_question();
         $currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
         $ispreview = false;
         $completemessage = '';
@@ -193,14 +198,14 @@ class qtype_regexp_renderer extends qtype_renderer {
         if ($hintadded) { // hint added one letter or hint added letter and answer is complete
             $answer = $question->get_matching_answer(array('answer' => $closest[0]));
             // help has added letter OR word and answer is complete
-        	$isstateimprovable = $qa->get_behaviour()->is_state_improvable($qa->get_state());
-        	if ($closest[2] == 'complete' && $isstateimprovable) {
+            $isstateimprovable = $qa->get_behaviour()->is_state_improvable($qa->get_state());
+            if ($closest[2] == 'complete' && $isstateimprovable) {
                 $closestcomplete = true;
                 $class = '"correctness correct"';
                 $completemessage = '<div class='.$class.'>'.get_string("clicktosubmit", "qtype_regexp").'</div>';
             }
         } else {
-        	$answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
+            $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
         }
         if ($closest[3]) {
             $closest[3] = '['.$closest[3].']'; // rest of submitted answer, in red
@@ -218,28 +223,24 @@ class qtype_regexp_renderer extends qtype_renderer {
     public function correct_response(question_attempt $qa) {
         global $CFG;
         $question = $qa->get_question();
-        $alternateanswers = get_alternateanswers($question);;
+        $alternateanswers = get_alternateanswers($question);
+        $bestcorrectanswer = $alternateanswers[1]['answers'][0];
         $display_responses = '';
-        if (count($alternateanswers) == 0 ) { // no alternative answers besides the only "correct" answer
-            return get_string('correctansweris', 'qtype_regexp', $alternateanswers[0]);
-        }
-        $i = 0;
-        foreach ($alternateanswers as $answer) {
-            if ($i === 0) { // first (correct) Answer
-                if (count($alternateanswers) > 1) {
-                    $display_responses = get_string('bestcorrectansweris', 'qtype_regexp', $answer).'<br />';
+        if (count($alternateanswers) == 1 ) { // no alternative answers besides the only "correct" answer
+            $display_responses .= get_string('correctansweris', 'qtype_regexp', $bestcorrectanswer);
+        } else {
+            foreach ($alternateanswers as $key => $alternateanswer) {
+                if ($key == 1) { // first (correct) Answer
+                    $display_responses .= get_string('bestcorrectansweris', 'qtype_regexp', $bestcorrectanswer).'<br />';
                     $display_responses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
                 } else {
-                    $display_responses = get_string('correctansweris', 'qtype_regexp', $answer).'<br />';
+                    $fraction = $alternateanswer['fraction'];
+                    $display_responses .= "<strong>$fraction</strong><br>";
+                    foreach($alternateanswer['answers'] as $alternate) {
+                        $display_responses .=  $alternate.'<br />';
+                    }
                 }
-            } else {
-                $strong = strpos($answer, '<strong>');
-                if ($strong) {
-                    $answer = '<strong>'.substr($answer, 0, $strong).' :</strong>';
-                }
-                $display_responses .= $answer.'<br />';
             }
-            $i++;
         }
         return $display_responses;
     }

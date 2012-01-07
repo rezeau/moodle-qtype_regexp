@@ -4,9 +4,20 @@
     display: inline;
     color:green;
 }
+/* for displaying alternate answers in question preview */
 #alternateanswers {
-    background-color: #fff3bf;
+    background-color: #FFFFCC;
+    line-height:1em;
 }
+/* for displaying alternate answers in question edit form */
+.alternateanswers {
+    background: #e4f1fa;
+}
+.alternateanswers .regexp,
+#alternateanswers .regexp {
+    color:#333;
+    font-weight: bold;
+	}
 .que.regexp .answer input {
     width: 80%;
 }
@@ -21,4 +32,11 @@
 	font-family: Courier New, Courier, monospace;
 	color: blue;
 	font-size: 0.9em;
+}
+.alternateanswers ul.square,
+#alternateanswers ul.square {
+    list-style: square;
+}
+.alternateanswers ul {
+    margin:0;
 }

@@ -55,7 +55,8 @@ class backup_qtype_regexp_plugin extends backup_qtype_plugin {
 
         // set source to populate the data
         //  JR changed table name to match new table name system in moodle 2.1 DEC 2011
-        $regexp->set_source_table('qtype_regexp', array('question' => backup::VAR_PARENTID));
+        //  JR changed table name again to add "options" suffix in moodle 2.1 up to 2.3 JAN 2012
+        $regexp->set_source_table('qtype_regexp_options', array('question' => backup::VAR_PARENTID));
 
         // don't need to annotate ids nor files
 

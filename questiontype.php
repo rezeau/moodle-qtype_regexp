@@ -4,7 +4,7 @@
 /// REGEXP ///
 ///////////////////
 // Jean-Michel Vedrine & Joseph Rezeau
-// based on shortanswer/questiontype 
+// based on shortanswer/questiontype
 
 /// QUESTION TYPE CLASS //////////////////
 
@@ -30,14 +30,9 @@ require_once($CFG->dirroot . '/question/type/regexp/question.php');
  */
 class qtype_regexp extends question_type {
     public function extra_question_fields() {
-        return array('qtype_regexp', 'usehint', 'usecase');
+        return array('qtype_regexp_options', 'usehint', 'usecase');
     }
 
-    protected function questionid_column_name() {
-        return 'question';
-    }
-
-    /// TODO dunno what those functions are
     public function move_files($questionid, $oldcontextid, $newcontextid) {
         parent::move_files($questionid, $oldcontextid, $newcontextid);
         $this->move_files_in_answers($questionid, $oldcontextid, $newcontextid);
@@ -47,7 +42,24 @@ class qtype_regexp extends question_type {
         parent::delete_files($questionid, $contextid);
         $this->delete_files_in_answers($questionid, $contextid);
     }
-/// TODO dunno what those functions are --- END
+
+    public function finished_edit_wizard($fromform) {
+        //keep browser from moving onto next page after saving question and
+        //recalculating variable values.
+        global $SESSION;
+        $SESSION->qtype_regexp->showalternate = false;
+        if (!empty($fromform->showalternate)) {
+            $SESSION->qtype_regexp->showalternate = true;
+            return false;
+        }
+        if (!empty($fromform->hidealternate)) {
+            $SESSION->qtype_regexp->showalternate = false;
+            return false;
+        } else {
+            $SESSION->qtype_regexp->showalternate = false;
+            return true;
+        }
+    }
 
     function save_question_options($question) {
         global $DB, $SESSION;
@@ -59,12 +71,12 @@ class qtype_regexp extends question_type {
                 array('question' => $question->id), 'id ASC');
 
         $answers = array();
-        $maxfraction = -1;
+        //$maxfraction = -1;
 
         // Insert all the new answers
         foreach ($question->answer as $key => $answerdata) {
             // Check for, and ignore, completely blank answer from the form.
-        	if (trim($answerdata) == '' && $question->fraction[$key] == 0 &&
+            if (trim($answerdata) == '' && $question->fraction[$key] == 0 &&
                     html_is_blank($question->feedback[$key]['text'])) {
                 continue;
             }
@@ -82,7 +94,7 @@ class qtype_regexp extends question_type {
             $answer->answer   = trim($answerdata);
             // set grade for Answer 1 to 1 (100%)
             if ($key === 0) {
-            	$question->fraction[$key] = 1;
+                $question->fraction[$key] = 1;
             }
             $answer->fraction = $question->fraction[$key];
             $answer->feedback = $this->import_or_save_files($question->feedback[$key],
@@ -91,9 +103,9 @@ class qtype_regexp extends question_type {
             $DB->update_record('question_answers', $answer);
 
             $answers[] = $answer->id;
-            if ($question->fraction[$key] > $maxfraction) {
+            /*if ($question->fraction[$key] > $maxfraction) {
                 $maxfraction = $question->fraction[$key];
-            }
+            }*/
         }
 
         $question->answers = implode(',', $answers);
@@ -109,16 +121,21 @@ class qtype_regexp extends question_type {
             $fs->delete_area_files($context->id, 'question', 'answerfeedback', $oldanswer->id);
             $DB->delete_records('question_answers', array('id' => $oldanswer->id));
         }
-        ///  TODO no hints are used in the REGEXP question type, so we don't need to save them
         $this->save_hints($question);
-        // JR dec 2011 unset alternateanswers after question has been edited, just in case
+
+        // JR dec 2011 unset alternateanswers and alternatecorrectanswers after question has been edited, just in case
         $qid = $question->id;
-	    unset($SESSION->qtype_regexp_question->alternateanswers[$qid]);
+        if (isset($SESSION->qtype_regexp_question->alternateanswers[$qid])) {
+           unset($SESSION->qtype_regexp_question->alternateanswers[$qid]);
+        }
+        if (isset($SESSION->qtype_regexp_question->alternatecorrectanswers[$qid])) {
+           unset($SESSION->qtype_regexp_question->alternatecorrectanswers[$qid]);
+        }
         // Perform sanity checks on fractional grades
-        if ($maxfraction != 1) {
+/*        if ($maxfraction != 1) {
             $result->noticeyesno = get_string('fractionsnomax', 'quiz', $maxfraction * 100);
             return $result;
-        }
+        }*/
     }
 
     protected function initialise_question_instance(question_definition $question, $questiondata) {
@@ -137,7 +154,7 @@ class qtype_regexp extends question_type {
         }
         return 0;
     }
-    
+
         public function get_possible_responses($questiondata) {
         $responses = array();
 
@@ -153,7 +170,7 @@ class qtype_regexp extends question_type {
 /**
     * Provide export functionality for xml format
     * @param question object the question object
-    * @param format object the format object so that helper methods can be used 
+    * @param format object the format object so that helper methods can be used
     * @param extra mixed any additional format specific data that may be passed by the format (see format code for info)
     * @return string the data to append to the output buffer or false if error
     */
@@ -173,7 +190,7 @@ class qtype_regexp extends question_type {
      * If some of you fields contains id's you'll need to reimplement this
      */
     function export_to_xml($question, $format, $extra=null) {
-    	$extraquestionfields = $this->extra_question_fields();
+        $extraquestionfields = $this->extra_question_fields();
         if (!is_array($extraquestionfields)) {
             return false;
         }
@@ -188,7 +205,7 @@ class qtype_regexp extends question_type {
             $expout .= "    <$field>{$exportedvalue}</$field>\n";
         }
         foreach ($question->options->answers as $answer) {
-        	$percent = 100 * $answer->fraction;
+            $percent = 100 * $answer->fraction;
             $expout .= "    <answer fraction=\"$percent\">\n";
             $expout .= $format->writetext($answer->answer, 3, false);
             $expout .= "      <feedback format=\"html\">\n";
@@ -196,7 +213,7 @@ class qtype_regexp extends question_type {
             $expout .= "      </feedback>\n";
             $expout .= "    </answer>\n";
         }
-        return $expout;   	
+        return $expout;       
     }
 
    /**
@@ -209,10 +226,10 @@ class qtype_regexp extends question_type {
     **/
     function import_from_xml($data, $question, $format, $extra=null) {
         // check question is for us///
-    	$qtype = $data['@']['type'];
-        if ($qtype=='regexp') {    
+        $qtype = $data['@']['type'];
+        if ($qtype=='regexp') {
             $qo = $format->import_headers( $data );
-    
+
             // header parts particular to regexp
             $qo->qtype = "regexp";
             $qo->usehint = 0;
@@ -237,4 +254,4 @@ class qtype_regexp extends question_type {
             return false;
         }
     }
-}    
+}

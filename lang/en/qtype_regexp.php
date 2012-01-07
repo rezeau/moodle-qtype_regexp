@@ -1,6 +1,8 @@
 <?php
+$string['addmoreanswers'] = 'Add {no} more answer';
 $string['answer'] = 'Answer: ';
 $string['answermustbegiven'] = 'You must enter an answer if there is a grade or feedback.';
+$string['answer1mustbegiven'] = 'Answer 1 cannot be empty.';
 $string['answerno'] = 'Answer: {$a}';
 $string['addingregexp'] = 'Adding regular expression question';
 $string['bestcorrectansweris'] = '<strong>The best correct answer is:</strong><br />{$a}';
@@ -12,7 +14,6 @@ $string['correctansweris'] = '<strong>The correct answer is:</strong><br />{$a}'
 $string['correctanswersare'] = '<strong>The other accepted answers are:</strong>';
 $string['editingregexp'] = 'Editing regular expression question';
 $string['filloutoneanswer'] = '<em>Answer 1</em> must be a correct answer (grade = 100%) and it will not be analysed as a regular expression.';
-$string['fractionsnomax'] = 'The grade for Answer #1 must be 100%.';
 $string['hidealternate'] = 'Hide alternate answers';
 $string['illegalcharacters'] = '<strong>ERROR!</strong> In Answers with a grade > 0 these <em>unescaped</em> metacharacters are not allowed: <strong>{$a}</strong>';
 $string['letter'] = 'Letter';
@@ -40,6 +41,7 @@ $string['regexpsensitive'] = 'Use regular expressions to check answers';
 $string['regexpsummary'] = 'Like short answer but the analysis of the student\'s responses is based on regular expressions';
 $string['settingsformultipletries'] = 'Settings for multiple tries and Buying letters or words';
 $string['showalternate'] = 'Show alternate answers';
+$string['showhidealternate'] = 'Show/Hide alternate answers';
 $string['usehint'] = 'Help button mode';
 $string['usehint_help'] = 'Selecting a mode other than <strong>None</strong> will display 
 a button to allow the student to get the next letter or word. 
