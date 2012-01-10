@@ -30,7 +30,7 @@ require_once($CFG->dirroot . '/question/type/regexp/question.php');
  */
 class qtype_regexp extends question_type {
     public function extra_question_fields() {
-        return array('qtype_regexp_options', 'usehint', 'usecase');
+        return array('qtype_regexp', 'usehint', 'usecase');
     }
 
     public function move_files($questionid, $oldcontextid, $newcontextid) {

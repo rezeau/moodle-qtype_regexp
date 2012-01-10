@@ -63,10 +63,10 @@ class restore_qtype_regexp_plugin extends restore_qtype_plugin {
         $newquestionid   = $this->get_new_parentid('question');
         $questioncreated = $this->get_mappingid('question_created', $oldquestionid) ? true : false;
 
-        // If the question has been created by restore, we need to create its question_regexp too
+        // If the question has been created by restore, we need to create its qtype_regexp too
         if ($questioncreated) {
             // Adjust some columns
-            $data->question = $newquestionid;
+            $data->questionid = $newquestionid;
             // Map sequence of question_answer ids
             $answersarr = explode(',', $data->answers);
             foreach ($answersarr as $key => $answer) {
@@ -75,8 +75,7 @@ class restore_qtype_regexp_plugin extends restore_qtype_plugin {
             $data->answers = implode(',', $answersarr);
             // Insert record
             //  JR changed table name to match new table name system in moodle 2.1 DEC 2011
-            //  JR changed table name again to add "options" suffix in moodle 2.1 up to 2.3 JAN 2012
-            $newitemid = $DB->insert_record('qtype_regexp_options', $data);
+            $newitemid = $DB->insert_record('qtype_regexp', $data);
             // Create mapping
             $this->set_mapping('qtype_regexp', $oldid, $newitemid);
         } else {
