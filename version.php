@@ -31,7 +31,7 @@ $plugin->version  = 2012010100;
 $plugin->requires = 2011070102.03;
 $plugin->dependencies = array(
     'qbehaviour_regexpadaptivewithhelp'   => 2012010100,
-    'qtype_regexpadaptivewithhelpnopenalty'  => 2012010100,
+    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2012010100,
 );
 
 $plugin->maturity  = MATURITY_STABLE;
