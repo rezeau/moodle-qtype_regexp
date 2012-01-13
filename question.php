@@ -194,6 +194,8 @@ class qtype_regexp_question extends question_graded_by_strategy
         // check that regexpadaptivewithhelp behaviour has been installed
         // if not installed, then the regexp questions will follow the "standard" behaviours
         // and Help button will not be available
+        // NOTE: from 2.2 you cannot install regexp if corresponding behaviours have not been installed first
+        // see plugin->dependencies in version.php file
         // only use the regexpadaptivewithhelp behaviour is question uses hint
         if ($this->usehint) {
             if ($preferredbehaviour == 'adaptive' && file_exists($CFG->dirroot.'/question/behaviour/regexpadaptivewithhelp/')) {

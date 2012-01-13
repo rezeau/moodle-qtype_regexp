@@ -22,38 +22,47 @@
 
 function xmldb_qtype_regexp_upgrade($oldversion) {
     global $CFG, $DB;
-
+    
     $dbman = $DB->get_manager();
     $result = true;
 
-/// And upgrade begins here. For each one, you'll need one 
-/// block of code similar to the next one. Please, delete 
-/// this comment lines once this file start handling proper
-/// upgrade code.
-
-if ($oldversion < 2011022301) {
+    if ($oldversion < 2011022301) {
     /// Define field usecase to be added to question_regexp
         $table = new xmldb_table('question_regexp');
         $field = new xmldb_field('usecase', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'usehint');
         
-    /// Conditionally launch add field single
+    /// Conditionally launch add field
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
-        }	
+        }    
     // savepoint reached
         upgrade_plugin_savepoint(true, 2011022301, 'qtype', 'regexp');
     }
     
-if ($oldversion < 2011102300) {
+    if ($oldversion < 2011102300) {
         // table question_regexp to be renamed to qtype_regexp
         $table = new xmldb_table('question_regexp');
 
-        // Launch rename table for quiz_reports
+        // Launch rename table
         if ($dbman->table_exists($table)) {
             $dbman->rename_table($table, 'qtype_regexp');
         }
 
         upgrade_plugin_savepoint(true, 2011102300,  'qtype', 'regexp');
+    }
+
+    if ($oldversion < 2012010100) {
+    /// Rename field "question" on table "qtype_regexp" to "questiontype"
+        $table = new xmldb_table('qtype_regexp');
+        $field = new xmldb_field('question', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+
+    /// Launch rename field
+        if ($dbman->table_exists($table)) {
+        	if ($dbman->field_exists($table, $field)) {
+		        $dbman->rename_field($table, $field, 'questionid');
+		        upgrade_plugin_savepoint(true, 2012010100,  'qtype', 'regexp');
+        	}
+        }
     }
 
     return true;
