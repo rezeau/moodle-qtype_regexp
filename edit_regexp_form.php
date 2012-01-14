@@ -195,10 +195,10 @@ class qtype_regexp_edit_form extends question_edit_form {
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         $errors = parent::validation($data, $files);
         $answers = $data['answer'];
+        $data['fraction'][0] = 1;
         $grades = $data['fraction'];
         $answercount = 0;
         $illegalmetacharacters = ". ^ $ * + ? { } \\";
-        $data['fraction'][0] = 1;
         foreach ($answers as $key => $answer) {
             $trimmedanswer = trim($answer);
             if ($trimmedanswer !== ''){
