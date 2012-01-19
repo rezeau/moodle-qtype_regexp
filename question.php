@@ -39,8 +39,13 @@ class qtype_regexp_question extends question_graded_by_strategy
 
     /** @var boolean whether answers should be graded case-sensitively. */
     public $usecase;
-    /** @var boolean whether student can ask for help (next correct letter will be added). */
+    
+    /** @var usehint : hint mode :: None / Letter / Word */
     public $usehint;
+    
+    /** @var boolean whether all correct alternate answers should be displayed to student on review page. */
+    public $studentshowalternate;
+    
     /** @var array of question_answer. */
     public $answers = array();
 

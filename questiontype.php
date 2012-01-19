@@ -30,7 +30,7 @@ require_once($CFG->dirroot . '/question/type/regexp/question.php');
  */
 class qtype_regexp extends question_type {
     public function extra_question_fields() {
-        return array('qtype_regexp', 'usehint', 'usecase');
+        return array('qtype_regexp', 'usehint', 'usecase', 'studentshowalternate');
     }
 
     public function move_files($questionid, $oldcontextid, $newcontextid) {
@@ -41,24 +41,6 @@ class qtype_regexp extends question_type {
     protected function delete_files($questionid, $contextid) {
         parent::delete_files($questionid, $contextid);
         $this->delete_files_in_answers($questionid, $contextid);
-    }
-
-    public function finished_edit_wizard($fromform) {
-        //keep browser from moving onto next page after saving question and
-        //recalculating variable values.
-        global $SESSION;
-        $SESSION->qtype_regexp->showalternate = false;
-        if (!empty($fromform->showalternate)) {
-            $SESSION->qtype_regexp->showalternate = true;
-            return false;
-        }
-        if (!empty($fromform->hidealternate)) {
-            $SESSION->qtype_regexp->showalternate = false;
-            return false;
-        } else {
-            $SESSION->qtype_regexp->showalternate = false;
-            return true;
-        }
     }
 
     function save_question_options($question) {
@@ -142,6 +124,7 @@ class qtype_regexp extends question_type {
         parent::initialise_question_instance($question, $questiondata);
         $question->usecase = $questiondata->options->usecase;
         $question->usehint = $questiondata->options->usehint;
+        $question->studentshowalternate = $questiondata->options->studentshowalternate;
         $this->initialise_question_answers($question, $questiondata);
         $qid = $question->id;
     }
@@ -238,7 +221,9 @@ class qtype_regexp extends question_type {
             $qo->usehint = $format->getpath($data, array('#','usehint',0,'#'), $qo->usehint );
             // get usecase
             $qo->usecase = $format->getpath($data, array('#','usecase',0,'#'), $qo->usecase );
-
+            // get studentshowalternate
+            $qo->studentshowalternate = $format->getpath($data, array('#','studentshowalternate',0,'#'), $qo->studentshowalternate );
+            
             // run through the answers
             $answers = $data['#']['answer'];
             $a_count = 0;

@@ -37,79 +37,49 @@ class qtype_regexp_edit_form extends question_edit_form {
      * @param MoodleQuickForm $mform the form being built.
      */
 
-    public function __construct($submiturl, $question, $category, $contexts, $formeditable = true) {
-        
-    	//$SESSION->qtype_regexp->hidealternate = true;
-    	$this->showalternate = false;
-    	if ("" != optional_param('showalternate', '', PARAM_RAW)) {
-    		//$SESSION->qtype_regexp->showalternate = true;
-    		$this->showalternate = true;
-    		//$SESSION->qtype_regexp->hidealternate = true;
-    	}
-        if ("" != optional_param('hidealternate', '', PARAM_RAW)) {
-            //$SESSION->qtype_regexp->showalternate = false;
-            //$SESSION->qtype_regexp->hidealternate = false;
-        }
-        if ("" != optional_param('answer', '', PARAM_RAW)) {
-            // new Answer field added OR error detected by validation
-            $this->currentanswers = optional_param('answer', '', PARAM_NOTAGS);
-            $this->usecase = optional_param('usecase', '', PARAM_NOTAGS);
-            $this->fraction = optional_param('fraction', '', PARAM_RAW);
-        } elseif (isset($question->id)) {
-            // question data is set
-            $this->questionid = $question->id;
-            $this->currentanswers = $question->options->answers;
-            $this->usecase = $question->options->usecase;
-        } else {
-            // starting a new question edit; nothing is set yet
-            $this->currentanswers = '';
-        }
-        $this->questionid = optional_param('id', '', PARAM_NOTAGS);
-        $this->usecase = optional_param('usecase', '', PARAM_NOTAGS);
-        $this->fraction = optional_param('fraction', '', PARAM_RAW);
-        $this->feedback = optional_param('feedback', '', PARAM_RAW);
-        $this->currentanswers = optional_param('answer', '', PARAM_NOTAGS);
-
-        parent::__construct($submiturl, $question, $category, $contexts, $formeditable);
-    }
-
     protected function definition_inner($mform) {
         global $CFG, $OUTPUT, $SESSION;
         
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
-        require_once($CFG->dirroot.'/question/type/questiontypebase.php');
+        
+        $this->showalternate = false;
+        if ("" != optional_param('showalternate', '', PARAM_RAW)) {
+            $this->showalternate = true;
+        }
+        $this->questionid = optional_param('id', '', PARAM_NOTAGS);
+        $this->usecase = optional_param('usecase', '', PARAM_NOTAGS);
+        $this->studentshowalternate = optional_param('studentshowalternate', '', PARAM_NOTAGS);
+        $this->fraction = optional_param('fraction', '', PARAM_RAW);
+        $this->feedback = optional_param('feedback', '', PARAM_RAW);
+        $this->currentanswers = optional_param('answer', '', PARAM_NOTAGS);
 
         //general feedback has no meaning in the REGEXP question type, only specific feedback
         $mform->removeElement('generalfeedback');
 
+        // hint mode :: None / Letter / Word
         $menu = array(get_string('none'), get_string('letter', 'qtype_regexp'), get_string('word', 'qtype_regexp'));
         $mform->addElement('select', 'usehint', get_string('usehint', 'qtype_regexp'), $menu);
         $mform->addHelpButton('usehint', 'usehint', 'qtype_regexp');
+
+        // use case :: yes / no
         $menu = array(get_string('caseno', 'qtype_regexp'), get_string('caseyes', 'qtype_regexp'));
         $mform->addElement('select', 'usecase', get_string('casesensitive', 'qtype_regexp'), $menu);
-        
+
+        // display all correct alternate answers to student on review page :: yes / no 
+        $menu = array(get_string('no'), get_string('yes'));
+        $mform->addElement('select', 'studentshowalternate', get_string('studentshowalternate', 'qtype_regexp'), $menu);
+        $mform->addHelpButton('studentshowalternate', 'studentshowalternate', 'qtype_regexp');
+
         //$mform->closeHeaderBefore('answersinstruct');
         $mform->addElement('static', 'answersinstruct', 'Note.-', get_string('filloutoneanswer', 'qtype_regexp'));
 
         $this->add_per_answer_fields($mform, get_string('answerno', 'qtype_shortanswer', '{no}'),
             question_bank::fraction_options(), $minoptions = 3, $addoptions =1); 
-        // TODO format nicely a div for alternate answers
         $mform->addElement('header', 'showhidealternateheader', get_string('showhidealternate', 'qtype_regexp'));
         $buttonarray = array();
         $buttonarray[] = $mform->createElement('submit', 'showalternate', get_string('showalternate', 'qtype_regexp'));
         $mform->registerNoSubmitButton('showalternate');
         
-        $disabled = '';
-        if ($this->showalternate) {
-            $disabled = '';
-        } else {
-            $disabled = 'disabled';
-        }
-        $buttonarray[] = $mform->createElement('submit', 'hidealternate', get_string('hidealternate', 'qtype_regexp'), $disabled);
-        $mform->registerNoSubmitButton('hidealternate');
-        
-        $mform->addGroup($buttonarray, '', '', array(' '), false);
-
         if ($this->showalternate) {
             $qu->id = $this->questionid;
             $qu->answers = array();
@@ -129,11 +99,14 @@ class qtype_regexp_edit_form extends question_edit_form {
             $moodle_val = $this->validation($data, '');
             if ((is_array($moodle_val) && count($moodle_val)!==0)) {
                 // non-empty array means errors
-                foreach ($moodle_val as $element=>$msg) {
+            	foreach ($moodle_val as $element=>$msg) {
                     $mform->setElementError($element, $msg);
                 }
-                $mform->addElement('static', 'alternateanswer', 'FIX YOUR ERRORS', 'in these Answers: '); // TODO
+                // set to false in order to set hidealternate button to disabled
+                $this->showalternate = false;
             } else {
+                // we need to unset SESSION in case Answers have been edited since last call to get_alternateanswers() 
+            	unset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid]);
 	            $alternateanswers = get_alternateanswers($qu);
 	            $mform->addElement('html', '<div class="alternateanswers">');
 	            $alternatelist = '';
@@ -150,6 +123,17 @@ class qtype_regexp_edit_form extends question_edit_form {
             }
         }
 
+        $disabled = '';
+        if ($this->showalternate) {
+            $disabled = '';
+        } else {
+            $disabled = 'disabled';
+        }
+        $buttonarray[] = $mform->createElement('submit', 'hidealternate', get_string('hidealternate', 'qtype_regexp'), $disabled);
+        $mform->registerNoSubmitButton('hidealternate');
+
+        $mform->addGroup($buttonarray, '', '', array(' '), false);
+        
         $mform->addElement('header', 'multitriesheader',
                 get_string('settingsformultipletries', 'qtype_regexp'));
         $withclearwrong = false;
@@ -199,7 +183,7 @@ class qtype_regexp_edit_form extends question_edit_form {
 
     protected function data_preprocessing($question) {
         global $CFG, $PAGE, $SESSION;
-        //$SESSION->qtype_regexp->showalternate = false;
+
         $question = parent::data_preprocessing($question);
         $question = $this->data_preprocessing_answers($question);
         $question = $this->data_preprocessing_hints($question);
@@ -207,6 +191,7 @@ class qtype_regexp_edit_form extends question_edit_form {
         if (!empty($question->options)) {
             $question->usecase = $question->options->usecase;
             $question->usehint = $question->options->usehint;
+            $question->studentshowalternate = $question->options->studentshowalternate;
         } else {
             $key = 0;
             $default_values['fraction['.$key.']'] = 1;
@@ -235,13 +220,14 @@ class qtype_regexp_edit_form extends question_edit_form {
         $grades = $data['fraction'];
         $answercount = 0;
         $illegalmetacharacters = ". ^ $ * + ? { } \\";
+
         foreach ($answers as $key => $answer) {
             $trimmedanswer = trim($answer);
             if ($trimmedanswer !== ''){
                 $answercount++;
                 $parenserror = '';
                 $metacharserror = '';
-                //$errors["answer[$key]"] = null;
+
                 // we do not check parenthesis and square brackets in Answer 1 (correct answer)
                 if ($key > 0) {
                     $markedline = '';
@@ -297,6 +283,7 @@ class qtype_regexp_edit_form extends question_edit_form {
     }
 
     // JR moved here to get rid of pesky automatically added blank Answer field upon re-editing question
+    // pending fix of bug 
     protected function add_per_answer_fields(&$mform, $label, $gradeoptions,
         $minoptions = QUESTION_NUMANS_START, $addoptions = QUESTION_NUMANS_ADD) {
         $answersoption = '';
@@ -327,11 +314,5 @@ class qtype_regexp_edit_form extends question_edit_form {
     public function qtype() {
         return 'regexp';
     }
-    
-    public function save_question($question, $form) {
-        global $USER, $DB, $OUTPUT;
-echo"oui?";
-        list($question->category) = explode(',', $form->category);
-        $context = $this->get_context_by_category_id($question->category);
-    }
+
 }

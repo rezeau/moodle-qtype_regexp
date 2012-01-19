@@ -43,6 +43,9 @@ $string['regexpsummary'] = 'Like short answer but the analysis of the student\'s
 $string['settingsformultipletries'] = 'Settings for multiple tries and Buying letters or words';
 $string['showalternate'] = 'Show alternate answers';
 $string['showhidealternate'] = 'Show/Hide alternate answers';
+$string['studentshowalternate'] = 'Show alternate answers to student';
+$string['studentshowalternate_help'] = 'Show <strong>all</strong> correct alternative answers to student when on review page? If there are a lot 
+of automatically generated correct alternative answers, displaying them all can make the review page quite long.';
 $string['usehint'] = 'Help button mode';
 $string['usehint_help'] = 'Selecting a mode other than <strong>None</strong> will display 
 a button to allow the student to get the next letter or word. 
