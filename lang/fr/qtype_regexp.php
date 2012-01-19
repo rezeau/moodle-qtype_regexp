@@ -13,7 +13,7 @@ $string['clicktosubmit'] = 'Cliquez le bouton <strong>Vérifier</strong> pour En
 $string['correctansweris'] = '<strong>La réponse correcte est :</strong><br />{$a}.';
 $string['correctanswersare'] = '<strong>Les autres réponses acceptables sont :</strong>';
 $string['editingregexp'] = 'Modifier une question de type expression régulière';
-$string['filloutoneanswer'] = '<em>Réponse 1</em> doit être correcte (Note = 100%) et ne sera <strong>pas</strong> analysée en tant qu\'expression régulière.';
+$string['filloutoneanswer'] = '<strong>Réponse 1</strong> doit être correcte (Note = 100%) et ne sera <strong>pas</strong> analysée en tant qu\'expression régulière.';
 $string['hidealternate'] = 'Cacher les réponses alternatives';
 $string['illegalcharacters'] = '<strong>ERREUR !</strong> Dans les Réponses avec un score supérieur à 0%, ces métacaractères non <em>échappés</em> ne sont pas autorisés :<strong>{$a}</strong>';
 $string['letter'] = 'Lettre';
