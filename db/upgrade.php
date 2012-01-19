@@ -47,7 +47,7 @@ function xmldb_qtype_regexp_upgrade($oldversion) {
         if ($dbman->table_exists($table)) {
             $dbman->rename_table($table, 'qtype_regexp');
         }
-
+        // savepoint reached
         upgrade_plugin_savepoint(true, 2011102300,  'qtype', 'regexp');
     }
 
@@ -60,9 +60,19 @@ function xmldb_qtype_regexp_upgrade($oldversion) {
         if ($dbman->table_exists($table)) {
         	if ($dbman->field_exists($table, $field)) {
 		        $dbman->rename_field($table, $field, 'questionid');
-		        upgrade_plugin_savepoint(true, 2012010100,  'qtype', 'regexp');
         	}
         }
+    /// Define field studentshowalternate to be added to qtype_regexp
+        $table = new xmldb_table('qtype_regexp');
+        $field = new xmldb_field('studentshowalternate', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'usecase');
+        
+    /// Conditionally launch add field
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }    
+        
+        // savepoint reached
+        upgrade_plugin_savepoint(true, 2012010100,  'qtype', 'regexp');
     }
 
     return true;

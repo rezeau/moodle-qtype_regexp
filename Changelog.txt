@@ -1,3 +1,8 @@
+23:15 19/01/2012
+version  = 2012011000 (no version number change)
+added studentshowalternate option and updated XML table to add studentshowalternate field in qtype_regexp table (options) 
+added display alternative correct answers feature in question edit form
+----------------------------------------------
 19:27 10/01/2012
 version  = 2012011000
 - added backup/moodle1/lib.php to restore regexp questions from 1.9 backups

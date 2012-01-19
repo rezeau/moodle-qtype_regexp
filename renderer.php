@@ -221,27 +221,29 @@ class qtype_regexp_renderer extends qtype_renderer {
     }
 
     public function correct_response(question_attempt $qa) {
-        global $CFG;
         $question = $qa->get_question();
-        $alternateanswers = get_alternateanswers($question);
-        $bestcorrectanswer = $alternateanswers[1]['answers'][0];
         $display_responses = '';
+        $alternateanswers = get_alternateanswers($question);
+        $bestcorrectanswer = $alternateanswers[1]['answers'][0]; 
+
         if (count($alternateanswers) == 1 ) { // no alternative answers besides the only "correct" answer
             $display_responses .= get_string('correctansweris', 'qtype_regexp', $bestcorrectanswer);
         } else {
+            $display_responses .= get_string('bestcorrectansweris', 'qtype_regexp', $bestcorrectanswer).'<br />';
+        }
+        if ($question->studentshowalternate) {
             foreach ($alternateanswers as $key => $alternateanswer) {
-                if ($key == 1) { // first (correct) Answer
-                    $display_responses .= get_string('bestcorrectansweris', 'qtype_regexp', $bestcorrectanswer).'<br />';
-                    $display_responses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
+               if ($key == 1) { // first (correct) Answer
+                   $display_responses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
                 } else {
-                    $fraction = $alternateanswer['fraction'];
-                    $display_responses .= "<strong>$fraction</strong><br>";
-                    foreach($alternateanswer['answers'] as $alternate) {
-                        $display_responses .=  $alternate.'<br />';
+                   $fraction = $alternateanswer['fraction'];
+                   $display_responses .= "<strong>$fraction</strong><br>";
+                   foreach($alternateanswer['answers'] as $alternate) {
+                       $display_responses .=  $alternate.'<br />';
                     }
                 }
             }
-        }
+        }     
         return $display_responses;
     }
 }

@@ -12,7 +12,6 @@ $string['caseyes'] = 'Yes, case must match';
 $string['clicktosubmit'] = 'Click the <strong>Check</strong> button to submit this <strong>complete</strong> answer.';
 $string['correctansweris'] = '<strong>The correct answer is:</strong><br />{$a}';
 $string['correctanswersare'] = '<strong>The other accepted answers are:</strong>';
-$string['displayalternate'] = '<strong>The other accepted answers are:</strong>';
 $string['editingregexp'] = 'Editing regular expression question';
 $string['filloutoneanswer'] = '<strong>Answer 1</strong> must be a correct answer (grade = 100%) and it will not be analysed as a regular expression.';
 $string['hidealternate'] = 'Hide alternate answers';

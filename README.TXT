@@ -35,7 +35,7 @@ Download both and install to your <moodle>/question/behaviour/ folder.
 
 DOCUMENTATION
 
-http://docs.moodle.org/20/en/Regular_Expression_Short-Answer_question_type
+http://docs.moodle.org/22/en/Regular_Expression_Short-Answer_question_type
 
 CONTACT
 

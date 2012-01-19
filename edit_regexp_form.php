@@ -99,27 +99,27 @@ class qtype_regexp_edit_form extends question_edit_form {
             $moodle_val = $this->validation($data, '');
             if ((is_array($moodle_val) && count($moodle_val)!==0)) {
                 // non-empty array means errors
-            	foreach ($moodle_val as $element=>$msg) {
+                foreach ($moodle_val as $element=>$msg) {
                     $mform->setElementError($element, $msg);
                 }
                 // set to false in order to set hidealternate button to disabled
                 $this->showalternate = false;
             } else {
                 // we need to unset SESSION in case Answers have been edited since last call to get_alternateanswers() 
-            	unset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid]);
-	            $alternateanswers = get_alternateanswers($qu);
-	            $mform->addElement('html', '<div class="alternateanswers">');
-	            $alternatelist = '';
-	            foreach($alternateanswers as $key => $alternateanswer) {
-	                $mform->addElement('static', 'alternateanswer', get_string('answer').' '.$key.' ('.$alternateanswer['fraction'].')',
-	                    '<span class="regexp">'.$alternateanswer['regexp'].'</span>' );
-	                $list = '';
-	                foreach($alternateanswer['answers'] as $alternate) {
-	                    $list.= '<li>'.$alternate.'</li>';
-	                }
-	                $mform->addElement('static', 'alternateanswer', '', '<ul class="square">'.$list.'</ul>');
-	            }
-	            $mform->addElement('html', '</div>');
+                unset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid]);
+                $alternateanswers = get_alternateanswers($qu);
+                $mform->addElement('html', '<div class="alternateanswers">');
+                $alternatelist = '';
+                foreach($alternateanswers as $key => $alternateanswer) {
+                    $mform->addElement('static', 'alternateanswer', get_string('answer').' '.$key.' ('.$alternateanswer['fraction'].')',
+                        '<span class="regexp">'.$alternateanswer['regexp'].'</span>' );
+                    $list = '';
+                    foreach($alternateanswer['answers'] as $alternate) {
+                        $list.= '<li>'.$alternate.'</li>';
+                    }
+                    $mform->addElement('static', 'alternateanswer', '', '<ul class="square">'.$list.'</ul>');
+                }
+                $mform->addElement('html', '</div>');
             }
         }
 

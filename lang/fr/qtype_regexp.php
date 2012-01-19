@@ -42,6 +42,9 @@ $string['regexpsummary'] = 'Question à réponse courte où les réponses de l\'
 $string['settingsformultipletries'] = 'Paramètres de pénalités pour les essais incorrects et l\'achat de lettres ou de mots';
 $string['showalternate'] = 'Afficher les réponses alternatives';
 $string['showhidealternate'] = 'Afficher/Masquer les réponses alternatives';
+$string['studentshowalternate'] = 'Montrer les réponses alternatives à l\'étudiant';
+$string['studentshowalternate_help'] = 'Montrer <strong>toutes</strong> les réponses alternatives correctes à l\'étudiant sur la page "Relecture"&nbsp;? S\'il y a beaucoup  
+de réponses alternatives générées automatiquement, la page peut devenir très longue...';
 $string['usehint'] = 'Mode d\'aide';
 $string['usehint_help'] = 'Si un mode d\'aide autre que <strong>Aucun</strong> est sélectionné, un bouton d\'aide sera affiché 
 pour permettre à l\'étudiant d\'«&nbsp;acheter&nbsp;» une lettre ou un mot.
