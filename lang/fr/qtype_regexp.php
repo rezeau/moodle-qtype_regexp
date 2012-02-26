@@ -30,6 +30,11 @@ Si vous avez sélectionné comme mode d\'aide pour cette question <strong>Lettre
  la valeur indiquée pour la pénalité s\'appliquera également à tout «&nbsp;achat&nbsp;» de lettre ou de mot.';
 $string['pleaseenterananswer'] = 'Veuillez entrer votre réponse.';
 $string['pluginname'] = 'Réponse courte de type expression régulière';
+$string['pluginname_help'] = 'Clic droit sur le lien <em>Aide</em> ci-dessous pour ouvrir la page d\'aide de la documentation Moodle.';
+$string['pluginname_link'] = 'question/type/regexp';
+$string['pluginnameadding'] = 'Créer une question de type expression régulière';
+$string['pluginnameediting'] = 'Modifier une question de type expression régulière';
+$string['pluginnamesummary'] = 'Question à réponse courte où les réponses de l\'étudiant sont basées sur des expressions régulières';
 $string['regexp'] = 'Réponse courte de type <br />expression régulière';
 $string['regexp_help'] = 'Clic droit sur le lien <em>Aide</em> ci-dessous pour ouvrir la page d\'aide de la documentation Moodle.';
 $string['regexp_link'] = 'question/type/regexp';
