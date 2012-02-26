@@ -52,8 +52,24 @@ class qtype_regexp_edit_form extends question_edit_form {
         $this->fraction = optional_param('fraction', '', PARAM_RAW);
         $this->feedback = optional_param('feedback', '', PARAM_RAW);
         $this->currentanswers = optional_param('answer', '', PARAM_NOTAGS);
-
-        //general feedback has no meaning in the REGEXP question type, only specific feedback
+        
+        // JR added advanced settings to hide mostly unwanted hints and tags settings   
+        if ("" != optional_param('addhint', '', PARAM_RAW)) {
+            $this->hints = optional_param('hint', '', PARAM_NOTAGS);
+        } elseif (isset($this->question->hints)) {
+            $this->hints = $this->question->hints;
+        }
+        $counthints = 0;
+        if (isset($this->hints)) {
+            $counthints = count($this->hints);
+        }
+        $mform->setAdvanced('tags');
+        for ($i=0; $i<$counthints; $i++) {
+            $mform->setAdvanced("hint[$i]");
+        }
+        
+        // general feedback has no meaning in the REGEXP question type, only specific feedback
+        // so removing it from edit form
         $mform->removeElement('generalfeedback');
 
         // hint mode :: None / Letter / Word
@@ -75,7 +91,9 @@ class qtype_regexp_edit_form extends question_edit_form {
 
         $this->add_per_answer_fields($mform, get_string('answerno', 'qtype_shortanswer', '{no}'),
             question_bank::fraction_options(), $minoptions = 3, $addoptions =1); 
-        $mform->addElement('header', 'showhidealternateheader', get_string('showhidealternate', 'qtype_regexp'));
+        $mform->addElement('header', 'showhidealternate', get_string('showhidealternate', 'qtype_regexp'));
+        $mform->addHelpButton('showhidealternate', 'showhidealternate', 'qtype_regexp');
+        
         $buttonarray = array();
         $buttonarray[] = $mform->createElement('submit', 'showalternate', get_string('showalternate', 'qtype_regexp'));
         $mform->registerNoSubmitButton('showalternate');
@@ -106,7 +124,9 @@ class qtype_regexp_edit_form extends question_edit_form {
                 $this->showalternate = false;
             } else {
                 // we need to unset SESSION in case Answers have been edited since last call to get_alternateanswers() 
-                unset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid]);
+                if (isset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid])) {
+            	   unset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid]);
+                }
                 $alternateanswers = get_alternateanswers($qu);
                 $mform->addElement('html', '<div class="alternateanswers">');
                 $alternatelist = '';
@@ -162,23 +182,23 @@ class qtype_regexp_edit_form extends question_edit_form {
         $mform->addRule('penalty', null, 'required', null, 'client');
         $mform->addHelpButton('penalty', 'penaltyforeachincorrecttry', 'qtype_regexp');
         $mform->setDefault('penalty', 0.1);
-
-        if (isset($this->question->hints)) {
-            $counthints = count($this->question->hints);
-        } else {
-            $counthints = 0;
-        }
-
+        
         if ($this->question->formoptions->repeatelements) {
-            $repeatsatstart = max(self::DEFAULT_NUM_HINTS, $counthints);
+            //$repeatsatstart = max(self::DEFAULT_NUM_HINTS, $counthints);
+            // JR we suppose hints are not really needed in REGEXP question type, so set start nb at zero
+            $repeatsatstart = max(0, $counthints);
         } else {
             $repeatsatstart = $counthints;
         }
-
+        if ($counthints != 0) {
+        	$addhint = get_string('addanotherhint', 'question');
+        } else {
+        	$addhint = get_string('addahint', 'qtype_regexp');
+        }
         list($repeated, $repeatedoptions) = $this->get_hint_fields(
                 $withclearwrong, $withshownumpartscorrect);
         $this->repeat_elements($repeated, $repeatsatstart, $repeatedoptions,
-                'numhints', 'addhint', 1, get_string('addanotherhint', 'question'));
+                'numhints', 'addhint', 1, $addhint);
     }
 
     protected function data_preprocessing($question) {

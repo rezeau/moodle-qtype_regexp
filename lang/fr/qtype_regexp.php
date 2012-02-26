@@ -1,4 +1,5 @@
 ﻿<?php
+$string['addahint'] = 'Ajouter un indice';
 $string['addmoreanswers'] = 'Ajouter {no} réponse';
 $string['answer'] = 'Réponse :';
 $string['answermustbegiven'] = 'Ce champ Réponse ne peut pas être vide si vous avez entré une valeur de Score ou un message de Feedback.';
@@ -14,7 +15,7 @@ $string['correctansweris'] = '<strong>La réponse correcte est :</strong><br />{
 $string['correctanswersare'] = '<strong>Les autres réponses acceptables sont :</strong>';
 $string['editingregexp'] = 'Modifier une question de type expression régulière';
 $string['filloutoneanswer'] = '<strong>Réponse 1</strong> doit être correcte (Note = 100%) et ne sera <strong>pas</strong> analysée en tant qu\'expression régulière.';
-$string['hidealternate'] = 'Cacher les réponses alternatives';
+$string['hidealternate'] = 'Masquer les réponses alternatives';
 $string['illegalcharacters'] = '<strong>ERREUR !</strong> Dans les Réponses avec un score supérieur à 0%, ces métacaractères non <em>échappés</em> ne sont pas autorisés :<strong>{$a}</strong>';
 $string['letter'] = 'Lettre';
 $string['notenoughanswers'] = 'Ce type de question demande au moins une réponse';
@@ -42,6 +43,10 @@ $string['regexpsummary'] = 'Question à réponse courte où les réponses de l\'
 $string['settingsformultipletries'] = 'Paramètres de pénalités pour les essais incorrects et l\'achat de lettres ou de mots';
 $string['showalternate'] = 'Afficher les réponses alternatives';
 $string['showhidealternate'] = 'Afficher/Masquer les réponses alternatives';
+$string['showhidealternate_help'] = 'Calculer et afficher toutes les réponses alternatives correctes sur cette page&nbsp;? Cette opération peut surcharger votre serveur 
+selon le nombre et la complexité des expressions régulières que vous avez créées dans les champs Réponse.
+
+Cependant, afficher ces réponses alternatives maintenant est la meilleure façon de vérifier que vos expressions régulières sont correctement rédigées.';
 $string['studentshowalternate'] = 'Montrer les réponses alternatives à l\'étudiant';
 $string['studentshowalternate_help'] = 'Montrer <strong>toutes</strong> les réponses alternatives correctes à l\'étudiant sur la page "Relecture"&nbsp;? S\'il y a beaucoup  
 de réponses alternatives générées automatiquement, la page peut devenir très longue...';

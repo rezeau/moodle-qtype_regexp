@@ -26,12 +26,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_regexp';
-$plugin->version  = 2012010100;
+$plugin->version  = 2012022600;
 
 $plugin->requires = 2011070102.03;
 $plugin->dependencies = array(
-    'qbehaviour_regexpadaptivewithhelp'   => 2012010100,
-    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2012010100,
+    'qbehaviour_regexpadaptivewithhelp'   => 2012022600,
+    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2012022600,
 );
 
 $plugin->maturity  = MATURITY_STABLE;

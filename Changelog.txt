@@ -1,3 +1,9 @@
+16:22 26/02/2012
+version 2012022600
+- accept to give letter or word hint even with empty student answer
+- display misplaced words in student answer even if nothing matches at beginning of answer
+- removed obsolete showhint and addnextletter functions from module.js
+---------------------------------------------
 23:15 19/01/2012
 version  = 2012011000 (no version number change)
 added studentshowalternate option and updated XML table to add studentshowalternate field in qtype_regexp table (options) 

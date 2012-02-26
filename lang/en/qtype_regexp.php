@@ -1,4 +1,5 @@
 <?php
+$string['addahint'] = 'Add a hint';
 $string['addmoreanswers'] = 'Add {no} more answer';
 $string['answer'] = 'Answer: ';
 $string['answermustbegiven'] = 'You must enter an answer if there is a grade or feedback.';
@@ -42,6 +43,10 @@ $string['regexpsummary'] = 'Like short answer but the analysis of the student\'s
 $string['settingsformultipletries'] = 'Settings for multiple tries and Buying letters or words';
 $string['showalternate'] = 'Show alternate answers';
 $string['showhidealternate'] = 'Show/Hide alternate answers';
+$string['showhidealternate_help'] = 'Calculate and display all correct answers in this form? This may take quite some time on your server,
+depending on the number and complexity of the regular expressions you have entered in the Answer fields!
+
+On the other hand, it is the recommended way to check that your "correct answers" expressions are correctly written.';
 $string['studentshowalternate'] = 'Show alternate answers to student';
 $string['studentshowalternate_help'] = 'Show <strong>all</strong> correct alternative answers to student when on review page? If there are a lot 
 of automatically generated correct alternative answers, displaying them all can make the review page quite long.';
