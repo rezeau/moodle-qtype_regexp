@@ -30,6 +30,7 @@ If you have set the <strong>Help Button</strong> mode to <strong>Letter</strong>
 <strong><em>the same penalty</em></strong> applies each time the student clicks the <strong>Buy Letter/Word</strong> Button.';
 $string['pleaseenterananswer'] = 'Please enter an answer.';
 $string['pluginname'] = 'Regular expression short answer';
+$string['pluginnamesummary'] = 'Like short answer but the analysis of the student\'s responses is based on regular expressions';
 $string['regexp'] = 'Regular expression short answer';
 $string['regexp_help'] = 'Right-click on the <em>More Help</em> link below to open the Help page in a new tab/window.';
 $string['regexp_link'] = 'question/type/regexp';
