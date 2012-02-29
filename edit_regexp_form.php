@@ -45,14 +45,20 @@ class qtype_regexp_edit_form extends question_edit_form {
         $this->showalternate = false;
         if ("" != optional_param('showalternate', '', PARAM_RAW)) {
             $this->showalternate = true;
+            $this->questionid = optional_param('id', '', PARAM_NOTAGS);
+            $this->usecase = optional_param('usecase', '', PARAM_NOTAGS);
+            $this->studentshowalternate = optional_param('studentshowalternate', '', PARAM_NOTAGS);
+            $this->fraction = optional_param_array('fraction', '', PARAM_RAW);        
+            $this->currentanswers = optional_param_array('answer', '', PARAM_NOTAGS);
+            //$this->feedback = optional_param('feedback', '', PARAM_NOTAGS);
+            // no longer works in moodle 2.3 see http://moodle.org/mod/forum/discuss.php?d=197118
+            // so use data_submitted() instead
+            $feedback = data_submitted()->feedback;
+            // we only need to get the feedback text, for validation purposes when showalternate is requested
+            foreach($feedback as $key => $fb) {
+                $this->feedback[$key]['text'] = clean_param($fb['text'], PARAM_NOTAGS); 
+            }
         }
-        $this->questionid = optional_param('id', '', PARAM_NOTAGS);
-        $this->usecase = optional_param('usecase', '', PARAM_NOTAGS);
-        $this->studentshowalternate = optional_param('studentshowalternate', '', PARAM_NOTAGS);
-        $this->fraction = optional_param('fraction', '', PARAM_RAW);
-        $this->feedback = optional_param('feedback', '', PARAM_RAW);
-        $this->currentanswers = optional_param('answer', '', PARAM_NOTAGS);
-        
         // JR added advanced settings to hide mostly unwanted hints and tags settings   
         if ("" != optional_param('addhint', '', PARAM_RAW)) {
             $this->hints = optional_param('hint', '', PARAM_NOTAGS);
@@ -113,7 +119,7 @@ class qtype_regexp_edit_form extends question_edit_form {
                 $data['feedback'][$i] = $this->feedback[$i];
                 $i++;
             }
-            
+
             $moodle_val = $this->validation($data, '');
             if ((is_array($moodle_val) && count($moodle_val)!==0)) {
                 // non-empty array means errors
@@ -125,7 +131,7 @@ class qtype_regexp_edit_form extends question_edit_form {
             } else {
                 // we need to unset SESSION in case Answers have been edited since last call to get_alternateanswers() 
                 if (isset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid])) {
-            	   unset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid]);
+                   unset($SESSION->qtype_regexp_question->alternateanswers[$this->questionid]);
                 }
                 $alternateanswers = get_alternateanswers($qu);
                 $mform->addElement('html', '<div class="alternateanswers">');
@@ -191,9 +197,9 @@ class qtype_regexp_edit_form extends question_edit_form {
             $repeatsatstart = $counthints;
         }
         if ($counthints != 0) {
-        	$addhint = get_string('addanotherhint', 'question');
+            $addhint = get_string('addanotherhint', 'question');
         } else {
-        	$addhint = get_string('addahint', 'qtype_regexp');
+            $addhint = get_string('addahint', 'qtype_regexp');
         }
         list($repeated, $repeatedoptions) = $this->get_hint_fields(
                 $withclearwrong, $withshownumpartscorrect);
