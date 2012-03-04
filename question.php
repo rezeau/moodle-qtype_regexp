@@ -74,7 +74,7 @@ class qtype_regexp_question extends question_graded_by_strategy
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         if (isset($response['answer'])) {
             $answer = $response['answer'];
-            $closest = $this->closest;
+            $closest = find_closest($this, $currentanswer=$answer, $correct_response=false, $hintadded=true);
             return $answer.' => '.$closest[0];
         } else {
             return null;
