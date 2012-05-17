@@ -51,7 +51,7 @@ class qtype_regexp_edit_form extends question_edit_form {
             $this->fraction = optional_param_array('fraction', '', PARAM_RAW);        
             $this->currentanswers = optional_param_array('answer', '', PARAM_NOTAGS);
             //$this->feedback = optional_param('feedback', '', PARAM_NOTAGS);
-            // no longer works in moodle 2.3 see http://moodle.org/mod/forum/discuss.php?d=197118
+            // no longer works in moodle 2.2 and later see http://moodle.org/mod/forum/discuss.php?d=197118
             // so use data_submitted() instead
             $feedback = data_submitted()->feedback;
             // we only need to get the feedback text, for validation purposes when showalternate is requested
@@ -73,10 +73,6 @@ class qtype_regexp_edit_form extends question_edit_form {
         for ($i=0; $i<$counthints; $i++) {
             $mform->setAdvanced("hint[$i]");
         }
-        
-        // general feedback has no meaning in the REGEXP question type, only specific feedback
-        // so removing it from edit form
-        $mform->removeElement('generalfeedback');
 
         // hint mode :: None / Letter / Word
         $menu = array(get_string('none'), get_string('letter', 'qtype_regexp'), get_string('word', 'qtype_regexp'));
