@@ -154,7 +154,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         $result = '';
         $hint = null;
         if ($options->feedback) {
-            $result .= html_writer::nonempty_tag('div', $this->specific_feedback($qa, $options),
+            $result .= html_writer::nonempty_tag('div', $this->specific_feedback($qa/* , $options */),
                     array('class' => 'specificfeedback'));
             $hint = $qa->get_applicable_hint();
         }
@@ -182,9 +182,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         return $result;
     }
 
-    public function specific_feedback(question_attempt $qa, question_display_options $options) {
-        /// Use text services
-        $textlib = textlib_get_instance();
+    public function specific_feedback(question_attempt $qa/* , question_display_options $options */) {
         $question = $qa->get_question();
         $currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
         $ispreview = false;

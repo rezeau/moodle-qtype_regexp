@@ -172,7 +172,8 @@ class qtype_regexp extends question_type {
      * Export question using information from extra_question_fields function
      * If some of you fields contains id's you'll need to reimplement this
      */
-    function export_to_xml($question, $format, $extra=null) {
+    //function export_to_xml($question, $format, $extra=null) {
+    function export_to_xml($question, qformat_xml $format, $extra=null) {
         $extraquestionfields = $this->extra_question_fields();
         if (!is_array($extraquestionfields)) {
             return false;
@@ -207,7 +208,9 @@ class qtype_regexp extends question_type {
     ** @param extra mixed any additional format specific data that may be passed by the format (see format code for info)
     ** @return object question object suitable for save_options() call or false if cannot handle
     **/
-    function import_from_xml($data, $question, $format, $extra=null) {
+    //function import_from_xml($data, $question, $format, $extra=null) {
+    function import_from_xml($data, $question, qformat_xml $format, $extra=null) {
+    
         // check question is for us///
         $qtype = $data['@']['type'];
         if ($qtype=='regexp') {
