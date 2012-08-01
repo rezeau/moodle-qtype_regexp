@@ -101,12 +101,14 @@ class qtype_regexp_edit_form extends question_edit_form {
         $mform->registerNoSubmitButton('showalternate');
         
         if ($this->showalternate) {
+            $qu = new stdClass();
             $qu->id = $this->questionid;
             $qu->answers = array();
             $i = 0;
             $this->fraction[0] = 1;
             $data = array();
             foreach($this->currentanswers as $key => $answer) {
+                $qu->answers[$i] = new stdClass();
                 $qu->answers[$i]->answer = $answer;
                 $qu->answers[$i]->fraction = $this->fraction[$i];
                 // for sending $data to validation
