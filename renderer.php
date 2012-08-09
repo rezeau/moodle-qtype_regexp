@@ -87,6 +87,7 @@ class qtype_regexp_renderer extends qtype_renderer {
                 echo get_string('answer').' '.$key.' ('.$alternateanswer['fraction'].') ','<span class="regexp">'.$alternateanswer['regexp'].'</span>';
                 $list = '';
                 foreach($alternateanswer['answers'] as $alternate) {
+                    $alternate = str_replace(" ", "&nbsp;", $alternate);
                     $list.= '<li>'.$alternate.'</li>';
                 }
                 echo '<ul class="square">'.$list.'</ul>';

@@ -72,8 +72,8 @@ class qtype_regexp extends question_type {
                 $answer->feedback = '';
                 $answer->id = $DB->insert_record('question_answers', $answer);
             }
-
-            $answer->answer   = trim($answerdata);
+            // JR august 2012 remove any superfluous blanks in expressions before saving
+            $answer->answer = remove_blanks($answerdata);
             // set grade for Answer 1 to 1 (100%)
             if ($key === 0) {
                 $question->fraction[$key] = 1;
@@ -85,9 +85,6 @@ class qtype_regexp extends question_type {
             $DB->update_record('question_answers', $answer);
 
             $answers[] = $answer->id;
-            /*if ($question->fraction[$key] > $maxfraction) {
-                $maxfraction = $question->fraction[$key];
-            }*/
         }
 
         $question->answers = implode(',', $answers);
