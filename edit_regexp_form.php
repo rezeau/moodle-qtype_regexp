@@ -243,7 +243,7 @@ class qtype_regexp_edit_form extends question_edit_form {
         $data['fraction'][0] = 1;
         $grades = $data['fraction'];
         $answercount = 0;
-        $illegalmetacharacters = ". ^ $ * + ? { } \\";
+        $illegalmetacharacters = ". ^ $ * + { } \\";
 
         foreach ($answers as $key => $answer) {
             $trimmedanswer = trim($answer);
