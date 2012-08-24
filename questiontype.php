@@ -44,7 +44,8 @@ class qtype_regexp extends question_type {
     }
 
     function save_question_options($question) {
-        global $DB, $SESSION;
+        global $DB, $SESSION, $CFG;
+        require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         $result = new stdClass;
 
         $context = $question->context;
@@ -238,5 +239,5 @@ class qtype_regexp extends question_type {
         } else {
             return false;
         }
-    }
+    }   
 }
