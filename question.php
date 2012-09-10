@@ -109,6 +109,12 @@ class qtype_regexp_question extends question_graded_by_strategy
         if ($currentanswerwithhint) {
             $response['answer'] = $currentanswerwithhint;
         }
+        if (!$this->usecase) {
+            $correctresponse = $this->get_correct_response();
+            if (strtoupper($response['answer']) == strtoupper($correctresponse['answer'])) {
+                return true;
+            }
+        }
         if ($response == $this->get_correct_response()) {
             return true;
         }
