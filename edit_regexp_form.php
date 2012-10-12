@@ -254,13 +254,21 @@ class qtype_regexp_edit_form extends question_edit_form {
 
                 // we do not check parenthesis and square brackets in Answer 1 (correct answer)
                 if ($key > 0) {
+                    $parenserror = check_permutations($trimmedanswer);
+                    if ($parenserror) {
+                        $errors["answer[$key]"] = $parenserror.'<br />';
+                    }
                     $markedline = '';
                     for ($i=0;$i<strlen($trimmedanswer);$i++) {
                         $markedline .= ' ';
                     }
                     $parenserror = check_my_parens($trimmedanswer, $markedline);
                     if ($parenserror) {
-                        $errors["answer[$key]"] = get_string("regexperrorparen", "qtype_regexp").'<br />';
+                        if (empty($errors["answer[$key]"])) {
+                            $errors["answer[$key]"] = get_string("regexperrorparen", "qtype_regexp").'<br />';
+                        } else {
+                            $errors["answer[$key]"] .= get_string("regexperrorparen", "qtype_regexp").'<br />';
+                        }
                         $markedline = $parenserror;
                     }
                     // we do not test unescaped metacharacters in Answers expressions for incorrect responses (grade = None)

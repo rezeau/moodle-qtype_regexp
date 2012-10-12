@@ -128,6 +128,7 @@ class qtype_regexp_question extends question_graded_by_strategy
         if ($key == $answer->id) {
             return;
         }
+        $answer->answer = has_permutations($answer->answer); // JR added permutations OCT 2012 
         return self::compare_string_with_wildcard(
                 $response['answer'], $answer->answer, $answer->fraction, !$this->usecase);
     }
