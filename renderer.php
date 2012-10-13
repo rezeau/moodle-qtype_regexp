@@ -233,7 +233,9 @@ class qtype_regexp_renderer extends qtype_renderer {
         if ($question->studentshowalternate) {
             foreach ($alternateanswers as $key => $alternateanswer) {
                if ($key == 1) { // first (correct) Answer
-                   $display_responses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
+                   if (count($alternateanswers) > 1) {
+                       $display_responses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
+                   }
                 } else {
                    $fraction = $alternateanswer['fraction'];
                    $display_responses .= "<strong>$fraction</strong><br>";
