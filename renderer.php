@@ -54,27 +54,16 @@ class qtype_regexp_renderer extends qtype_renderer {
         $question->closest = $closest;
         $currentanswer = $closest[0];
 
-        //js script for showing / hiding regexp generated alternative sentences (for teacher only)
+        // showing / hiding regexp generated alternative sentences (for teacher only)
+        // changed from javascript to print_collapsible_region OCT 2012
+ 
         if ($ispreview) {
             $alternateanswers = get_alternateanswers($question);
             $response = $question->get_correct_response();
             $correctanswer = $response['answer'];
-            $id = "showhidebutton";
-            echo html_writer::start_tag('div');
-            echo html_writer::empty_tag('input', array(
-                'type' => 'button',
-                'value' => get_string("showalternate", "qtype_regexp"),
-                'id' =>$id,
-                'name' =>$id,
-            ));
-            echo html_writer::end_tag('div');
-            $this->page->requires->js_init_call('M.qtype_regexp.showhidealternate', array('#' .$id, '#alternateanswers'), false, array(
-                'name' => 'qtype_regexp',
-                'fullpath' => '/question/type/regexp/module.js',
-                'requires' => array('base', 'node', 'event'),
-                'strings' => array(array('showalternate', 'qtype_regexp'), array('hidealternate', 'qtype_regexp')),
-            ));
-            echo html_writer::start_tag('div', array('id' => 'alternateanswers', 'style' => 'display:none;'));
+            print_collapsible_region_start('', 'showhidealternate', get_string('showhidealternate', 'qtype_regexp'),
+                'core_question_preview_showhidealternate_collapsed', true);
+            echo html_writer::start_tag('div', array('id' => 'alternateanswers'));
             echo '<hr />';
             if ($question->usecase) {
                 $case = get_string('caseyes', 'qtype_regexp');
@@ -94,6 +83,7 @@ class qtype_regexp_renderer extends qtype_renderer {
             }
             echo("<hr />");
             echo html_writer::end_tag('div');
+            print_collapsible_region_end();
         }
 
         $inputattributes = array(
