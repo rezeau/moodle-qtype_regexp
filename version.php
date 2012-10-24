@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_regexp';
-$plugin->version  = 2012030400;
+$plugin->version  = 2012102400;
 
 $plugin->requires = 2011070102.03;
 $plugin->dependencies = array(
