@@ -221,6 +221,8 @@ class qtype_regexp_renderer extends qtype_renderer {
             $display_responses .= get_string('bestcorrectansweris', 'qtype_regexp', $bestcorrectanswer).'<br />';
         }
         if ($question->studentshowalternate) {
+            $display_responses .= print_collapsible_region_start('expandalternateanswers', 'id'.$question->id, get_string('showhidealternate', 'qtype_regexp'),
+                            'showhidealternate', true, true);
             foreach ($alternateanswers as $key => $alternateanswer) {
                if ($key == 1) { // first (correct) Answer
                    if (count($alternateanswers) > 1) {
@@ -228,12 +230,13 @@ class qtype_regexp_renderer extends qtype_renderer {
                    }
                 } else {
                    $fraction = $alternateanswer['fraction'];
-                   $display_responses .= "<strong>$fraction</strong><br>";
+                   $display_responses .= "<strong>$fraction</strong><br />";
                    foreach($alternateanswer['answers'] as $alternate) {
                        $display_responses .=  $alternate.'<br />';
                     }
                 }
             }
+            $display_responses .= print_collapsible_region_end(true);
         }     
         return $display_responses;
     }
