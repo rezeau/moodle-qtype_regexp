@@ -63,7 +63,7 @@ class qtype_regexp_renderer extends qtype_renderer {
             $correctanswer = $response['answer'];
             print_collapsible_region_start('', 'showhidealternate', get_string('showhidealternate', 'qtype_regexp'),
                 'core_question_preview_showhidealternate_collapsed', true);
-            echo html_writer::start_tag('div', array('id' => 'alternateanswers'));
+            echo html_writer::start_tag('div class="notifytiny"', array('id' => 'alternateanswers'));
             echo '<hr />';
             if ($question->usecase) {
                 $case = get_string('caseyes', 'qtype_regexp');
@@ -220,7 +220,9 @@ class qtype_regexp_renderer extends qtype_renderer {
         } else {
             $display_responses .= get_string('bestcorrectansweris', 'qtype_regexp', $bestcorrectanswer).'<br />';
         }
-        if ($question->studentshowalternate) {
+        // teacher can always view alternate answers; student can only view if question is set to studentshowalternate
+        $canview = question_has_capability_on($question, 'view');
+        if ($question->studentshowalternate || $canview) {
             $display_responses .= print_collapsible_region_start('expandalternateanswers', 'id'.$question->id, get_string('showhidealternate', 'qtype_regexp'),
                             'showhidealternate', true, true);
             foreach ($alternateanswers as $key => $alternateanswer) {

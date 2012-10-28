@@ -4,15 +4,6 @@
     display: inline;
     color:green;
 }
-/* for displaying alternate answers in question preview */
-#alternateanswers {
-    background-color: #FFFFCC;
-    line-height:1em;
-}
-/* for displaying alternate answers in question edit form */
-.alternateanswers {
-    background: #e4f1fa;
-}
 .alternateanswers .regexp,
 #alternateanswers .regexp {
     color:#333;
@@ -41,5 +32,5 @@
     margin:0;
 }
 .expandalternateanswers {
-	background-color: #ffffe0;
+	background-color: #FFFFCC;
 }
