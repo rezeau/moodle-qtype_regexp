@@ -15,11 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Short answer question type version information.
+ * Regexp question type version information.
  *
- * @package    qtype
- * @subpackage regexp
- * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
+ * @package    qtype_regexp
+ * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com} and Joseph Rézeau moodle@rezeau.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -34,6 +33,5 @@ $plugin->dependencies = array(
     'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2012022600,
 );
 
+$plugin->release = '2.3.0 for Moodle 2.3+';
 $plugin->maturity  = MATURITY_STABLE;
-
-
