@@ -24,7 +24,7 @@ This question type (for the Moodle quiz module) aims at a more advanced system o
 
 ***IMPORTANT***
 
-If you want to take full advantage of the regexp question *Help* feature, which allows the student to "buy" a letter, you'll have to install 2 more plugins on your moodle 2.1 installation. Those plugins are 2 question behaviours, located at:
+If you want to take full advantage of the regexp question *Help* feature, which allows the student to "buy" a letter, you'll have to install 2 more plugins on your moodle installation. Those plugins are 2 question behaviours, located at:
 https://github.com/rezeau/moodle-qbehaviour_regexpadaptivewithhelp
 and
 https://github.com/rezeau/moodle-qbehaviour_regexpadaptivewithhelpnopenalty
@@ -35,7 +35,7 @@ Download both and install to your <moodle>/question/behaviour/ folder.
 
 DOCUMENTATION
 
-http://docs.moodle.org/22/en/Regular_Expression_Short-Answer_question_type
+http://docs.moodle.org/23/en/Regular_Expression_Short-Answer_question_type
 
 CONTACT
 
