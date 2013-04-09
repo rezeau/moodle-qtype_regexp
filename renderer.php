@@ -173,7 +173,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         return $result;
     }
 
-    public function specific_feedback(question_attempt $qa/* , question_display_options $options */) {
+    public function specific_feedback(question_attempt $qa) {
         $question = $qa->get_question();
         $currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
         $ispreview = false;
