@@ -36,7 +36,8 @@ class qtype_regexp_edit_form extends question_edit_form {
      *
      * @param MoodleQuickForm $mform the form being built.
      */
-
+    // JR we suppose hints are not really needed in REGEXP question type, so set start nb at zero
+    const DEFAULT_NUM_HINTS = 0;
     protected function definition_inner($mform) {
         global $CFG, $OUTPUT, $SESSION;
         
@@ -58,20 +59,6 @@ class qtype_regexp_edit_form extends question_edit_form {
             foreach($feedback as $key => $fb) {
                 $this->feedback[$key]['text'] = clean_param($fb['text'], PARAM_NOTAGS); 
             }
-        }
-        // JR added advanced settings to hide mostly unwanted hints and tags settings   
-        if ("" != optional_param('addhint', '', PARAM_RAW)) {
-            $this->hints = optional_param('hint', '', PARAM_NOTAGS);
-        } elseif (isset($this->question->hints)) {
-            $this->hints = $this->question->hints;
-        }
-        $counthints = 0;
-        if (isset($this->hints)) {
-            $counthints = count($this->hints);
-        }
-        $mform->setAdvanced('tags');
-        for ($i=0; $i<$counthints; $i++) {
-            $mform->setAdvanced("hint[$i]");
         }
 
         // hint mode :: None / Letter / Word
@@ -186,23 +173,25 @@ class qtype_regexp_edit_form extends question_edit_form {
         $mform->addRule('penalty', null, 'required', null, 'client');
         $mform->addHelpButton('penalty', 'penaltyforeachincorrecttry', 'qtype_regexp');
         $mform->setDefault('penalty', 0.1);
-        
+
+        if (isset($this->question->hints)) {
+            $counthints = count($this->question->hints);
+        } else {
+            $counthints = 0;
+        }
+
         if ($this->question->formoptions->repeatelements) {
-            //$repeatsatstart = max(self::DEFAULT_NUM_HINTS, $counthints);
-            // JR we suppose hints are not really needed in REGEXP question type, so set start nb at zero
-            $repeatsatstart = max(0, $counthints);
+            $repeatsatstart = max(self::DEFAULT_NUM_HINTS, $counthints);
         } else {
             $repeatsatstart = $counthints;
         }
-        if ($counthints != 0) {
-            $addhint = get_string('addanotherhint', 'question');
-        } else {
-            $addhint = get_string('addahint', 'qtype_regexp');
-        }
+        
         list($repeated, $repeatedoptions) = $this->get_hint_fields(
                 $withclearwrong, $withshownumpartscorrect);
         $this->repeat_elements($repeated, $repeatsatstart, $repeatedoptions,
-                'numhints', 'addhint', 1, $addhint);
+                'numhints', 'addhint', 1, get_string('addahint', 'qtype_regexp'));
+        
+        $mform->setAdvanced('tags');
     }
 
     protected function data_preprocessing($question) {
