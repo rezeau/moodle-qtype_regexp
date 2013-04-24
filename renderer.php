@@ -145,7 +145,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         $result = '';
         $hint = null;
         if ($options->feedback) {
-            $result .= html_writer::nonempty_tag('div', $this->specific_feedback($qa/* , $options */),
+            $result .= html_writer::nonempty_tag('div', $this->specific_feedback($qa),
                     array('class' => 'specificfeedback'));
             $hint = $qa->get_applicable_hint();
         }
