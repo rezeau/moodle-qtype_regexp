@@ -214,13 +214,12 @@ class qtype_regexp_edit_form extends question_edit_form {
         // grade for Answer 1 will need to be automatically set to 1 in questiontype.php,  save_question_options($question)
         $i=1;
         foreach ($this->_form->_elements as $element) {
-            if ($element->_attributes['name'] == 'fraction[0]') {
+            if ($element->_attributes['name'] == 'answer[0]') {
+                $this->_form->_elements[$i]->_attributes['disabled'] = 'disabled';
                 break;
             }
             $i++;
         }
-        $this->_form->_elements[$i]->_attributes['disabled'] = 'disabled';
-
         return $question;
     }
 
