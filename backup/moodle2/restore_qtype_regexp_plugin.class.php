@@ -70,6 +70,10 @@ class restore_qtype_regexp_plugin extends restore_qtype_plugin {
             // Map sequence of question_answer ids
             $answersarr = explode(',', $data->answers);
             foreach ($answersarr as $key => $answer) {
+                //Postgresql does not handle empty strings as integer values
+                if ($answer == '') {
+                    $answer = null;
+                }
                 $answersarr[$key] = $this->get_mappingid('question_answer', $answer);
             }
             $data->answers = implode(',', $answersarr);
