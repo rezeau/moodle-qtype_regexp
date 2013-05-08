@@ -223,6 +223,7 @@ class qtype_regexp extends question_type {
             // get usecase
             $qo->usecase = $format->getpath($data, array('#','usecase',0,'#'), $qo->usecase );
             // get studentshowalternate
+            $qo->studentshowalternate = new stdClass;
             $qo->studentshowalternate = $format->getpath($data, array('#','studentshowalternate',0,'#'), $qo->studentshowalternate );
             
             // run through the answers
