@@ -75,11 +75,13 @@ class qtype_regexp_edit_form extends question_edit_form {
         $mform->addElement('select', 'studentshowalternate', get_string('studentshowalternate', 'qtype_regexp'), $menu);
         $mform->addHelpButton('studentshowalternate', 'studentshowalternate', 'qtype_regexp');
 
-        //$mform->closeHeaderBefore('answersinstruct');
         $mform->addElement('static', 'answersinstruct', 'Note.-', get_string('filloutoneanswer', 'qtype_regexp'));
+        $mform->closeHeaderBefore('answersinstruct');
 
         $this->add_per_answer_fields($mform, get_string('answerno', 'qtype_shortanswer', '{no}'),
-            question_bank::fraction_options(), $minoptions = 3, $addoptions =1); 
+                question_bank::fraction_options());
+        
+        
         $mform->addElement('header', 'showhidealternate', get_string('showhidealternate', 'qtype_regexp'));
         $mform->addHelpButton('showhidealternate', 'showhidealternate', 'qtype_regexp');
         
@@ -212,10 +214,10 @@ class qtype_regexp_edit_form extends question_edit_form {
         }
         // disable the score dropdown list for Answer 1 to make sure it remains at 100%
         // grade for Answer 1 will need to be automatically set to 1 in questiontype.php,  save_question_options($question)
-        $i=1;
-        foreach ($this->_form->_elements as $element) {
-            if ($element->_attributes['name'] == 'answer[0]') {
-                $this->_form->_elements[$i]->_attributes['disabled'] = 'disabled';
+        $i=0;
+        foreach ($this->_form->_elements as $element) {            
+            if ($element->_name == 'answeroptions[0]') {
+                $this->_form->_elements[$i]->_elements[1]->_attributes['disabled'] = 'disabled';
                 break;
             }
             $i++;
@@ -300,35 +302,6 @@ class qtype_regexp_edit_form extends question_edit_form {
         }
 
         return $errors;
-    }
-
-    // JR moved here to get rid of pesky automatically added blank Answer field upon re-editing question
-    // pending fix of bug 
-    protected function add_per_answer_fields(&$mform, $label, $gradeoptions,
-        $minoptions = QUESTION_NUMANS_START, $addoptions = QUESTION_NUMANS_ADD) {
-        $answersoption = '';
-        $repeatedoptions = array();
-        $repeated = $this->get_per_answer_fields($mform, $label, $gradeoptions,
-                $repeatedoptions, $answersoption);
-
-        if (isset($this->question->options)) {
-            $countanswers = count($this->question->options->$answersoption);
-        } else {
-            $countanswers = 0;
-        }
-        if ($this->question->formoptions->repeatelements) {
-            if ($countanswers) {
-                $repeatsatstart = $countanswers;
-            } else {
-                $repeatsatstart = $minoptions;
-            }
-        } else {
-            $repeatsatstart = $countanswers;
-        }
-
-        $this->repeat_elements($repeated, $repeatsatstart, $repeatedoptions,
-                'noanswers', 'addanswers', $addoptions,
-                get_string('addmoreanswers', 'qtype_regexp'));
     }
 
     public function qtype() {
