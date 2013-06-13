@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,11 +17,11 @@
 /**
  * @package    qtype
  * @subpackage regexp
- * @author     Joseph Rézeau
- * @copyright  2011 Joseph Rézeau
+ * @author     Joseph Rï¿½zeau
+ * @copyright  2011 Joseph Rï¿½zeau
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -45,12 +44,12 @@ class moodle1_qtype_regexp_handler extends moodle1_qtype_handler {
      */
     public function process_question(array $data, array $raw) {
 
-        // convert and write the answers first
+        // Convert and write the answers first.
         if (isset($data['answers'])) {
             $this->write_answers($data['answers'], $this->pluginname);
         }
 
-        // convert and write the regexp extra fields
+        // Convert and write the regexp extra fields.
         foreach ($data['regexp'] as $regexp) {
             $regexp['id'] = $this->converter->get_nextid();
             $this->write_xml('regexp', $regexp, array('/regexp/id'));

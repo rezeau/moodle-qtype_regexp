@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/// important: this file must be utf8-encoded
-
 defined('MOODLE_INTERNAL') || die();
 
 
@@ -54,9 +52,9 @@ class qtype_regexp_renderer extends qtype_renderer {
         $question->closest = $closest;
         $currentanswer = $closest[0];
 
-        // showing / hiding regexp generated alternative sentences (for teacher only)
-        // changed from javascript to print_collapsible_region OCT 2012
- 
+        // Showing / hiding regexp generated alternative sentences (for teacher only).
+        // Changed from javascript to print_collapsible_region OCT 2012.
+
         if ($ispreview) {
             $alternateanswers = get_alternateanswers($question);
             $response = $question->get_correct_response();
@@ -72,10 +70,11 @@ class qtype_regexp_renderer extends qtype_renderer {
             }
             echo get_string('casesensitive', 'qtype_regexp').' : <b>'.$case.'</b><hr />';
 
-            foreach($alternateanswers as $key => $alternateanswer) {
-                echo get_string('answer').' '.$key.' ('.$alternateanswer['fraction'].') ','<span class="regexp">'.$alternateanswer['regexp'].'</span>';
+            foreach ($alternateanswers as $key => $alternateanswer) {
+                echo get_string('answer').' '.$key.' ('.$alternateanswer['fraction'].') ',
+                    '<span class="regexp">'.$alternateanswer['regexp'].'</span>';
                 $list = '';
-                foreach($alternateanswer['answers'] as $alternate) {
+                foreach ($alternateanswer['answers'] as $alternate) {
                     $alternate = str_replace(" ", "&nbsp;", $alternate);
                     $list.= '<li>'.$alternate.'</li>';
                 }
@@ -184,9 +183,9 @@ class qtype_regexp_renderer extends qtype_renderer {
             break;
         }
         $closest = $question->closest;
-        if ($hintadded) { // hint added one letter or hint added letter and answer is complete
+        if ($hintadded) { // Hint added one letter or hint added letter and answer is complete.
             $answer = $question->get_matching_answer(array('answer' => $closest[0]));
-            // help has added letter OR word and answer is complete
+            // Help has added letter OR word and answer is complete.
             $isstateimprovable = $qa->get_behaviour()->is_state_improvable($qa->get_state());
             if ($closest[2] == 'complete' && $isstateimprovable) {
                 $closestcomplete = true;
@@ -197,10 +196,11 @@ class qtype_regexp_renderer extends qtype_renderer {
             $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
         }
         if ($closest[3]) {
-            $closest[3] = '['.$closest[3].']'; // rest of submitted answer, in red
+            $closest[3] = '['.$closest[3].']'; // Rest of submitted answer, in red.
         }
-        $f = ''; // student's response with corrections to be displayed in feedback div
-            $f = '<span style="color:#0000FF;">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3]; // color blue for correct words/letters
+        $f = ''; // Student's response with corrections to be displayed in feedback div.
+            // Color blue for correct words/letters.
+            $f = '<span style="color:#0000FF;">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3];
         if ($answer && $answer->feedback || $closestcomplete == true) {
             return $question->format_text($f.$answer->feedback.$completemessage, $answer->feedbackformat,
                 $qa, 'question', 'answerfeedback', $answer->id);
@@ -213,33 +213,34 @@ class qtype_regexp_renderer extends qtype_renderer {
         $question = $qa->get_question();
         $display_responses = '';
         $alternateanswers = get_alternateanswers($question);
-        $bestcorrectanswer = $alternateanswers[1]['answers'][0]; 
+        $bestcorrectanswer = $alternateanswers[1]['answers'][0];
 
-        if (count($alternateanswers) == 1 ) { // no alternative answers besides the only "correct" answer
+        if (count($alternateanswers) == 1 ) { // No alternative answers besides the only "correct" answer.
             $display_responses .= get_string('correctansweris', 'qtype_regexp', $bestcorrectanswer);
         } else {
             $display_responses .= get_string('bestcorrectansweris', 'qtype_regexp', $bestcorrectanswer).'<br />';
         }
-        // teacher can always view alternate answers; student can only view if question is set to studentshowalternate
+        // Teacher can always view alternate answers; student can only view if question is set to studentshowalternate.
         $canview = question_has_capability_on($question, 'view');
         if ($question->studentshowalternate || $canview) {
-            $display_responses .= print_collapsible_region_start('expandalternateanswers', 'id'.$question->id, get_string('showhidealternate', 'qtype_regexp'),
+            $display_responses .= print_collapsible_region_start('expandalternateanswers', 'id'.
+                            $question->id, get_string('showhidealternate', 'qtype_regexp'),
                             'showhidealternate', true, true);
             foreach ($alternateanswers as $key => $alternateanswer) {
-               if ($key == 1) { // first (correct) Answer
-                   if (count($alternateanswers) > 1) {
-                       $display_responses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
-                   }
+                if ($key == 1) { // First (correct) Answer.
+                    if (count($alternateanswers) > 1) {
+                        $display_responses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
+                    }
                 } else {
-                   $fraction = $alternateanswer['fraction'];
-                   $display_responses .= "<strong>$fraction</strong><br />";
-                   foreach($alternateanswer['answers'] as $alternate) {
-                       $display_responses .=  $alternate.'<br />';
+                    $fraction = $alternateanswer['fraction'];
+                    $display_responses .= "<strong>$fraction</strong><br />";
+                    foreach ($alternateanswer['answers'] as $alternate) {
+                        $display_responses .=  $alternate.'<br />';
                     }
                 }
             }
             $display_responses .= print_collapsible_region_end(true);
-        }     
+        }
         return $display_responses;
     }
 }

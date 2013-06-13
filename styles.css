@@ -1,3 +1,6 @@
+.error pre {
+    margin-bottom: -10px;
+}
 .que.regexp .answer {
     padding: 0.3em;
     width: auto;
@@ -21,7 +24,7 @@
 /* must be a monospace font for correct display of erroneous characters position */
 .displayvalidationerrors {
 	font-family: Courier New, Courier, monospace;
-	color: blue;
+	color:maroon;
 	font-size: 0.9em;
 }
 .alternateanswers ul.square,
@@ -58,7 +61,7 @@ body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] label[for
 }
 
 body#page-question-type-regexp div[id^=fitem_id_][id*=fraction_] {
-	background: #EEE;
+    background: #EEE;
     margin-bottom: 0;
     margin-top: 0;
     padding-bottom: 5px;
@@ -69,7 +72,7 @@ body#page-question-type-regexp div[id^=fitem_id_][id*=fraction_] {
 }
 
 body#page-question-type-regexp div[id^=fitem_id_][id*=feedback_] {
-	background: #EEE;
+    background: #EEE;
     margin-bottom: 2em;
     margin-top: 0;
     padding-bottom: 5px;
