@@ -50,7 +50,9 @@ class qtype_regexp_renderer extends qtype_renderer {
         }
         $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
         $question->closest = $closest;
-        $currentanswer = $closest[0];
+        if ($closest[0]) {
+            $currentanswer = $closest[0];
+        }
 
         // Showing / hiding regexp generated alternative sentences (for teacher only).
         // Changed from javascript to print_collapsible_region OCT 2012.

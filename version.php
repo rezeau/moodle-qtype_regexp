@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information for the Regexp question type. 
+ * Version information for the Regexp question type.
  *
- * @package    qtype 
+ * @package    qtype
  * @subpackage regexp
  * @copyright  2011 Joseph Rézeau moodle@rezeau.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_regexp';
-$plugin->version  = 2013040900;
+$plugin->version  = 2013040901;
 
 $plugin->requires = 2013050100;
 $plugin->dependencies = array(
