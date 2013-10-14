@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_regexp';
-$plugin->version  = 2013040901;
+$plugin->version  = MOODLE_26_STABLE;
 
 $plugin->requires = 2013050100;
 $plugin->dependencies = array(
@@ -34,5 +34,5 @@ $plugin->dependencies = array(
     'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2013040900,
 );
 
-$plugin->release = '2.5.0 for Moodle 2.5+';
+$plugin->release = '2.6.0 for Moodle 2.6';
 $plugin->maturity  = MATURITY_STABLE;
