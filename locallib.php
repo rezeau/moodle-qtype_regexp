@@ -429,22 +429,21 @@ function check_beginning( $guess, $answer, $ignorecase) {
         $answer = strtoupper($answer);
     }
 
-    $i1 = textlib::strlen($guess);
-    $i2 = textlib::strlen($answer);
-
+    $i1 = core_text::strlen($guess);
+    $i2 = core_text::strlen($answer);
     for ($i=0; ( $i< $i1 && $i< $i2); $i++) {
         if (strlen($answer) < $i ) {
             break;
         }
-        if (textlib::substr($guess, $i, 1) == textlib::substr($answer, $i , 1)) {
-            $outstring .= textlib::substr($guess, $i, 1);
+        if (core_text::substr($guess, $i, 1) == core_text::substr($answer, $i , 1)) {
+            $outstring .= core_text::substr($guess, $i, 1);
         } else {
             break;
         }
     }
 
     if ($ignorecase) {
-        $outstring = textlib::substr($guessoriginal, 0, textlib::strlen($outstring));
+        $outstring = core_text::substr($guessoriginal, 0, core_text::strlen($outstring));
     }
     return $outstring;
 }
@@ -457,7 +456,7 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
     $closest[3] = ''; // Student's guess (rest of).
     $closest[4] = ''; // Added letter or word (according to Help mode).
     $closesta = '';
-    $l = textlib::strlen($guess);
+    $l = core_text::strlen($guess);
     $ignorebegin = '';
     if ($ishint) {
         $closest[2] = 'nil';
@@ -475,20 +474,20 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
         for ($i=0; $i<$s; $i++) {
             $a = $rightbits[0][$i];
             $g = $rightbits[1][$i];
-            if (textlib::strlen($g) > $longest) {
-                $longest = textlib::strlen($g);
+            if (core_text::strlen($g) > $longest) {
+                $longest = core_text::strlen($g);
                 $closesta = $g;
                 if ($ishint) {
                     $closest[2] = 'plus';
                     $closesta_hint = $closesta;
-                    $closesta_hint .= textlib::substr($a, $longest, 1);
-                    $lenguess = textlib::strlen($guess);
-                    $lenclosesta_hint = textlib::strlen($closesta_hint) - 1;
+                    $closesta_hint .= core_text::substr($a, $longest, 1);
+                    $lenguess = core_text::strlen($guess);
+                    $lenclosesta_hint = core_text::strlen($closesta_hint) - 1;
                     if ($lenguess > $lenclosesta_hint) {
                         $closest[2] = 'minus';
                     }
-                    if (textlib::substr($a, $longest, 1) == ' ') { // If hint letter is a space, add next one.
-                        $closesta_hint .= textlib::substr($a, $longest + 1, 1);
+                    if (core_text::substr($a, $longest, 1) == ' ') { // If hint letter is a space, add next one.
+                        $closesta_hint .= core_text::substr($a, $longest + 1, 1);
                     }
                     // Word help ADDED JR 18 DEC 2011.
                     if ($ishint > 1) {
@@ -632,7 +631,7 @@ function find_closest($question, $currentanswer, $correct_response=false, $hinta
     // Give first character of firstcorrectanswer to student (if option usehint for this question).
     // TODO JR maybe not?
     /*if ($closest[0] == '' && ($question->usehint == true) && $closest[2] == 'nil' ) {
-        $closest[0] = $textlib->substr($firstcorrectanswer, 0, 1);
+        $closest[0] = $core_text->substr($firstcorrectanswer, 0, 1);
     }*/
     return $closest;
 }
@@ -782,13 +781,13 @@ function check_unescaped_metachars ($myregexp, $markedline) {
 // When displaying unescaped_metachars or unbalanced brackets, too long strings need to be cut up into chunks.
 // Change $maxlen if necessary (e.g. to fit smaller width screens).
 function splitstring ($longstring, $maxlen=75) {
-    $len = textlib::strlen($longstring);
+    $len = core_text::strlen($longstring);
     $stringchunks = array();
     if ($len < $maxlen) {
         $stringchunks [] = $longstring;
     } else {
         for ($i=0; $i<$len; $i += $maxlen) {
-            $stringchunks [] = textlib::substr($longstring, $i, $maxlen);
+            $stringchunks [] = core_text::substr($longstring, $i, $maxlen);
         }
     }
     return $stringchunks;
