@@ -44,7 +44,7 @@ function expand_regexp($myregexp) {
         $result = $matches[0][0];
         $offset = $matches[0][1];
         $stringleft = substr($myregexp, 0, $offset +1);
-            $stringright = substr($myregexp, $offset + strlen($result) -1);
+        $stringright = substr($myregexp, $offset + strlen($result) -1);
         $c1 = $result[1];
         $c3 = $result[3];
         $rs = '';
@@ -69,17 +69,19 @@ function expand_regexp($myregexp) {
 
     // Change [abc] to (a|b|c).
     $pattern =  '/\[.*?\]/';     // Find [abc] in $myregexp.
+    // Added core_text to deal with utf8 accents etc.
     while (preg_match($pattern, $myregexp, $matches, PREG_OFFSET_CAPTURE) ) {
         $result = $matches[0][0];
         $offset = $matches[0][1];
-        $stringleft = substr($myregexp, 0, $offset);
-        $stringright = substr($myregexp, $offset + strlen($result));
-        $rs = substr($result, 1, strlen($result) -2);
+        $stringleft = core_text::substr($myregexp, 0, $offset);
+        $stringright = core_text::substr($myregexp, $offset + core_text::strlen($result));
+        $rs = core_text::substr($result, 1, core_text::strlen($result) -2);
         $r = '';
-        for ($i=0; $i < strlen($rs); $i++) {
-            $r .= $rs[$i].'|';
+        $l = core_text::strlen($rs);
+        for ($i=0; $i < $l; $i++) {
+            $r .= core_text::substr($rs, $i, 1).'|';
         }
-        $rs = '('.substr($r, 0, strlen($r)-1).')';
+        $rs = '('.core_text::substr($r, 0, core_text::strlen($r) - 1).')';
         $myregexp = $stringleft.$rs.$stringright;
     }
 

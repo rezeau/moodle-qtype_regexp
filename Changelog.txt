@@ -1,3 +1,8 @@
+15:13 08/01/2014
+version  = 2013111801
+Fixed incorrect processing of utf8 characters between []
+See this discussion: https://moodle.org/mod/forum/discuss.php?d=251510 (FR)
+
 16:36 29/10/2012
 version 2012102900
 - removed French fr from lang folder (moved to AMOS)
