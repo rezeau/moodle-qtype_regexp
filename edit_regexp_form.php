@@ -70,7 +70,7 @@ class qtype_regexp_edit_form extends question_edit_form {
         $mform->addHelpButton('studentshowalternate', 'studentshowalternate', 'qtype_regexp');
 
         $mform->closeHeaderBefore('answersinstruct');
-        $mform->addElement('static', 'answersinstruct', 'Note.-',
+        $mform->addElement('static', 'answersinstruct', get_string('notice').'.-',
                 get_string('filloutoneanswer', 'qtype_regexp'));
 
         $this->add_per_answer_fields($mform, get_string('answerno', 'qtype_shortanswer', '{no}'),
