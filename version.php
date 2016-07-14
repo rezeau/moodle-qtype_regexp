@@ -15,25 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Short answer question type version information.
+ * Version information for the Regexp question type.
  *
  * @package    qtype
  * @subpackage regexp
- * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
+ * @copyright  2011 Joseph Rézeau moodle@rezeau.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_regexp';
-$plugin->version  = 2012030400;
-
-$plugin->requires = 2011070102.03;
 $plugin->dependencies = array(
-    'qbehaviour_regexpadaptivewithhelp'   => 2012022600,
-    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2012022600,
+    'qbehaviour_regexpadaptivewithhelp'   => 2016070100,
+    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2016070100,
 );
-
-$plugin->maturity  = MATURITY_BETA;
-
-
+$plugin->version  = 2016070100;
+$plugin->requires = 2014041100; // Moodle version.
+$plugin->release = '2.9.0 for Moodle 2.7-2.9';
+$plugin->maturity  = MATURITY_STABLE;

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -33,32 +32,32 @@ class backup_qtype_regexp_plugin extends backup_qtype_plugin {
      */
     protected function define_question_plugin_structure() {
 
-        // Define the virtual plugin element with the condition to fulfill
+        // Define the virtual plugin element with the condition to fulfill.
         $plugin = $this->get_plugin_element(null, '../../qtype', 'regexp');
 
-        // Create one standard named plugin element (the visible container)
+        // Create one standard named plugin element (the visible container).
         $pluginwrapper = new backup_nested_element($this->get_recommended_name());
 
-        // connect the visible container ASAP
+        // Connect the visible container ASAP.
         $plugin->add_child($pluginwrapper);
 
         // This qtype uses standard question_answers, add them here
-        // to the tree before any other information that will use them
+        // to the tree before any other information that will use them.
         $this->add_question_question_answers($pluginwrapper);
 
-        // Now create the qtype own structures
+        // Now create the qtype own structures.
         $regexp = new backup_nested_element('regexp', array('id'), array(
             'answers', 'usecase', 'usehint'));
 
-        // Now the own qtype tree
+        // Now the own qtype tree.
         $pluginwrapper->add_child($regexp);
 
-        // set source to populate the data
-        //  JR changed table name to match new table name system in moodle 2.1 DEC 2011
-        //  JR changed field name question to questionid JAN 2012
+        // Set source to populate the data.
+        // JR changed table name to match new table name system in moodle 2.1 DEC 2011.
+        // JR changed field name question to questionid JAN 2012.
         $regexp->set_source_table('qtype_regexp', array('questionid' => backup::VAR_PARENTID));
 
-        // don't need to annotate ids nor files
+        // Don't need to annotate ids nor files.
 
         return $plugin;
     }

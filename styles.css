@@ -1,17 +1,11 @@
+.error pre {
+    margin-bottom: -10px;
+}
 .que.regexp .answer {
     padding: 0.3em;
     width: auto;
     display: inline;
     color:green;
-}
-/* for displaying alternate answers in question preview */
-#alternateanswers {
-    background-color: #FFFFCC;
-    line-height:1em;
-}
-/* for displaying alternate answers in question edit form */
-.alternateanswers {
-    background: #e4f1fa;
 }
 .alternateanswers .regexp,
 #alternateanswers .regexp {
@@ -30,7 +24,7 @@
 /* must be a monospace font for correct display of erroneous characters position */
 .displayvalidationerrors {
 	font-family: Courier New, Courier, monospace;
-	color: blue;
+	color:maroon;
 	font-size: 0.9em;
 }
 .alternateanswers ul.square,
@@ -39,4 +33,50 @@
 }
 .alternateanswers ul {
     margin:0;
+}
+.expandalternateanswers {
+	background-color: #FFFFCC;
+}
+
+/* Editing form. */
+body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] {
+    background: #EEE;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border: 1px solid #BBB;
+    border-bottom: 0;
+}
+
+body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] .fgrouplabel label{
+    font-weight: bold;
+}
+
+body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] label[for^='id_answer_']{
+    position: absolute;
+    left: -10000px;
+    font-weight: normal;
+    font-size: 1em;
+}
+
+body#page-question-type-regexp div[id^=fitem_id_][id*=fraction_] {
+    background: #EEE;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border: 1px solid #BBB;
+    border-top: 0;
+    border-bottom: 0;
+}
+
+body#page-question-type-regexp div[id^=fitem_id_][id*=feedback_] {
+    background: #EEE;
+    margin-bottom: 2em;
+    margin-top: 0;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border: 1px solid #BBB;
+    border-top: 0;
 }

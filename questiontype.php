@@ -1,17 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-///////////////////
-/// REGEXP ///
-///////////////////
-// Jean-Michel Vedrine & Joseph Rezeau
-// based on shortanswer/questiontype
+/**
+ * Serve question type files
+ *
+ * @since      2.0
+ * @package    qtype
+ * @subpackage regexp
+ * @copyright  Jean-Michel Vedrine  & Joseph Rézeau
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-/// QUESTION TYPE CLASS //////////////////
-
-///
-/// This class contains some special features in order to make the
-/// question type embeddable within a multianswer (cloze) question
-///
 /**
  * @package questionbank
  * @subpackage questiontypes
@@ -43,8 +55,9 @@ class qtype_regexp extends question_type {
         $this->delete_files_in_answers($questionid, $contextid);
     }
 
-    function save_question_options($question) {
-        global $DB, $SESSION;
+    public function save_question_options ($question) {
+        global $DB, $SESSION, $CFG;
+        require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         $result = new stdClass;
 
         $context = $question->context;
@@ -53,9 +66,8 @@ class qtype_regexp extends question_type {
                 array('question' => $question->id), 'id ASC');
 
         $answers = array();
-        //$maxfraction = -1;
 
-        // Insert all the new answers
+        // Insert all the new answers.
         foreach ($question->answer as $key => $answerdata) {
             // Check for, and ignore, completely blank answer from the form.
             if (trim($answerdata) == '' && $question->fraction[$key] == 0 &&
@@ -72,9 +84,9 @@ class qtype_regexp extends question_type {
                 $answer->feedback = '';
                 $answer->id = $DB->insert_record('question_answers', $answer);
             }
-
-            $answer->answer   = trim($answerdata);
-            // set grade for Answer 1 to 1 (100%)
+            // JR august 2012 remove any superfluous blanks in expressions before saving.
+            $answer->answer = remove_blanks($answerdata);
+            // Set grade for Answer 1 to 1 (100%).
             if ($key === 0) {
                 $question->fraction[$key] = 1;
             }
@@ -85,39 +97,31 @@ class qtype_regexp extends question_type {
             $DB->update_record('question_answers', $answer);
 
             $answers[] = $answer->id;
-            /*if ($question->fraction[$key] > $maxfraction) {
-                $maxfraction = $question->fraction[$key];
-            }*/
         }
 
         $question->answers = implode(',', $answers);
         $parentresult = parent::save_question_options($question);
         if ($parentresult !== null) {
-            // Parent function returns null if all is OK
+            // Parent function returns null if all is OK.
             return $parentresult;
         }
 
         // Delete any left over old answer records.
         $fs = get_file_storage();
-        foreach($oldanswers as $oldanswer) {
+        foreach ($oldanswers as $oldanswer) {
             $fs->delete_area_files($context->id, 'question', 'answerfeedback', $oldanswer->id);
             $DB->delete_records('question_answers', array('id' => $oldanswer->id));
         }
         $this->save_hints($question);
 
-        // JR dec 2011 unset alternateanswers and alternatecorrectanswers after question has been edited, just in case
+        // JR dec 2011 unset alternateanswers and alternatecorrectanswers after question has been edited, just in case.
         $qid = $question->id;
         if (isset($SESSION->qtype_regexp_question->alternateanswers[$qid])) {
-           unset($SESSION->qtype_regexp_question->alternateanswers[$qid]);
+            unset($SESSION->qtype_regexp_question->alternateanswers[$qid]);
         }
         if (isset($SESSION->qtype_regexp_question->alternatecorrectanswers[$qid])) {
-           unset($SESSION->qtype_regexp_question->alternatecorrectanswers[$qid]);
+            unset($SESSION->qtype_regexp_question->alternatecorrectanswers[$qid]);
         }
-        // Perform sanity checks on fractional grades
-/*        if ($maxfraction != 1) {
-            $result->noticeyesno = get_string('fractionsnomax', 'quiz', $maxfraction * 100);
-            return $result;
-        }*/
     }
 
     protected function initialise_question_instance(question_definition $question, $questiondata) {
@@ -138,26 +142,24 @@ class qtype_regexp extends question_type {
         return 0;
     }
 
-        public function get_possible_responses($questiondata) {
+    public function get_possible_responses ($questiondata) {
         $responses = array();
 
         foreach ($questiondata->options->answers as $aid => $answer) {
-            $responses[$aid] = new question_possible_response($answer->answer,
-                    $answer->fraction);
+            $responses[$aid] = new question_possible_response($answer->answer, $answer->fraction);
         }
         $responses[null] = question_possible_response::no_response();
-
         return array($questiondata->id => $responses);
     }
 
-/**
-    * Provide export functionality for xml format
-    * @param question object the question object
-    * @param format object the format object so that helper methods can be used
-    * @param extra mixed any additional format specific data that may be passed by the format (see format code for info)
-    * @return string the data to append to the output buffer or false if error
-    */
-/// IMPORT/EXPORT FUNCTIONS ///
+    /**
+     * Provide export functionality for xml format
+     * @param question object the question object
+     * @param format object the format object so that helper methods can be used
+     * @param extra mixed any additional format specific data that may be passed by the format (see format code for info)
+     * @return string the data to append to the output buffer or false if error
+     */
+    // IMPORT/EXPORT FUNCTIONS.
 
     /*
      * Imports question from the Moodle XML format
@@ -172,13 +174,13 @@ class qtype_regexp extends question_type {
      * Export question using information from extra_question_fields function
      * If some of you fields contains id's you'll need to reimplement this
      */
-    //function export_to_xml($question, $format, $extra=null) {
-    function export_to_xml($question, qformat_xml $format, $extra=null) {
+
+    public function export_to_xml ($question, qformat_xml $format, $extra=null) {
         $extraquestionfields = $this->extra_question_fields();
         if (!is_array($extraquestionfields)) {
             return false;
         }
-        //omit table name (question)
+        // Omit table name (question).
         array_shift($extraquestionfields);
         $expout='';
         foreach ($extraquestionfields as $field) {
@@ -197,37 +199,38 @@ class qtype_regexp extends question_type {
             $expout .= "      </feedback>\n";
             $expout .= "    </answer>\n";
         }
-        return $expout;       
+        return $expout;
     }
 
-   /**
-    ** Provide import functionality for xml format
-    ** @param data mixed the segment of data containing the question
-    ** @param question object question object processed (so far) by standard import code
-    ** @param format object the format object so that helper methods can be used (in particular error())
-    ** @param extra mixed any additional format specific data that may be passed by the format (see format code for info)
-    ** @return object question object suitable for save_options() call or false if cannot handle
-    **/
-    //function import_from_xml($data, $question, $format, $extra=null) {
-    function import_from_xml($data, $question, qformat_xml $format, $extra=null) {
-    
-        // check question is for us///
+    /**
+     * Provide import functionality for xml format
+     * @param data mixed the segment of data containing the question
+     * @param question object question object processed (so far) by standard import code
+     * @param format object the format object so that helper methods can be used (in particular error())
+     * @param extra mixed any additional format specific data that may be passed by the format (see format code for info)
+     * @return object question object suitable for save_options() call or false if cannot handle
+     **/
+
+    public function import_from_xml ($data, $question, qformat_xml $format, $extra=null) {
+        // Check question is for us.
         $qtype = $data['@']['type'];
         if ($qtype=='regexp') {
             $qo = $format->import_headers( $data );
 
-            // header parts particular to regexp
+            // Header parts particular to regexp.
             $qo->qtype = "regexp";
             $qo->usehint = 0;
 
-            // get usehint
-            $qo->usehint = $format->getpath($data, array('#','usehint',0,'#'), $qo->usehint );
-            // get usecase
-            $qo->usecase = $format->getpath($data, array('#','usecase',0,'#'), $qo->usecase );
-            // get studentshowalternate
-            $qo->studentshowalternate = $format->getpath($data, array('#','studentshowalternate',0,'#'), $qo->studentshowalternate );
-            
-            // run through the answers
+            // Get usehint.
+            $qo->usehint = $format->getpath($data, array('#', 'usehint', 0, '#'), $qo->usehint );
+            // Get usecase.
+            $qo->usecase = $format->getpath($data, array('#', 'usecase', 0, '#'), $qo->usecase );
+            // Get studentshowalternate.
+            $qo->studentshowalternate = new stdClass;
+            $qo->studentshowalternate = $format->getpath($data, array('#', 'studentshowalternate', 0, '#'),
+                            $qo->studentshowalternate );
+
+            // Run through the answers.
             $answers = $data['#']['answer'];
             $a_count = 0;
             foreach ($answers as $answer) {
@@ -237,7 +240,7 @@ class qtype_regexp extends question_type {
                 $qo->feedback[$a_count] = $ans->feedback;
                 ++$a_count;
             }
-           return $qo;
+            return $qo;
         } else {
             return false;
         }

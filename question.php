@@ -33,19 +33,20 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-//class qtype_regexp_question extends question_graded_by_strategy
+// Class qtype_regexp_question extends question_graded_by_strategy.
+
 class qtype_regexp_question extends question_graded_by_strategy
         implements question_response_answer_comparer {
 
     /** @var boolean whether answers should be graded case-sensitively. */
     public $usecase;
-    
+
     /** @var usehint : hint mode :: None / Letter / Word */
     public $usehint;
-    
+
     /** @var boolean whether all correct alternate answers should be displayed to student on review page. */
     public $studentshowalternate;
-    
+
     /** @var array of question_answer. */
     public $answers = array();
 
@@ -109,32 +110,40 @@ class qtype_regexp_question extends question_graded_by_strategy
         if ($currentanswerwithhint) {
             $response['answer'] = $currentanswerwithhint;
         }
+        if (!$this->usecase) {
+            $correctresponse = $this->get_correct_response();
+            if (strtoupper($response['answer']) == strtoupper($correctresponse['answer'])) {
+                return true;
+            }
+        }
         if ($response == $this->get_correct_response()) {
             return true;
         }
-        // do NOT match student response against Answer 1 : if it matches, already matched by get_correct_response() above
-        // and Answer 1 may contain metacharacters that do not follow correct regex syntax
-        // get id of Answer 1
-        foreach ($this->answers as $key=>$value) {
+
+        // Do NOT match student response against Answer 1 : if it matches, already matched by get_correct_response() above
+        // and Answer 1 may contain metacharacters that do not follow correct regex syntax.
+        // Get id of Answer 1.
+        foreach ($this->answers as $key => $value) {
             break;
         }
-        // if this is Answer 1 then return; do not try to match
+        // If this is Answer 1 then return; do not try to match.
         if ($key == $answer->id) {
             return;
         }
+        $answer->answer = has_permutations($answer->answer); // JR added permutations OCT 2012.
         return self::compare_string_with_wildcard(
                 $response['answer'], $answer->answer, $answer->fraction, !$this->usecase);
     }
     public static function compare_string_with_wildcard($string, $pattern, $grade, $ignorecase) {
-        if (substr($pattern,0,2) != '--') {
-            // answers with a positive grade must be anchored for strict match
-            // incorrect answers are not strictly matched
+        if (substr($pattern, 0, 2) != '--') {
+            // Answers with a positive grade must be anchored for strict match.
+            // Incorrect answers are not strictly matched.
             if ($grade > 0) {
-               $regexp = '/^' . $pattern . '$/';
+                $regexp = '/^' . $pattern . '$/';
             } else {
                 $regexp = '/' . $pattern. '/';
             }
-            $regexp .= 'u'; // for potential utf-8 characters
+            $regexp .= 'u'; // For potential utf-8 characters.
             // Make the match insensitive if requested to.
             if ($ignorecase) {
                 $regexp .= 'i';
@@ -143,18 +152,19 @@ class qtype_regexp_question extends question_graded_by_strategy
                 return true;
             }
         }
-        // testing for absence of needed (right) elements in student's answer, through initial -- coding
-        if (substr($pattern,0,2) == '--') {
+        // Testing for absence of needed (right) elements in student's answer, through initial -- coding.
+        if (substr($pattern, 0, 2) == '--') {
             if ($ignorecase) {
                 $ignorecase = 'i';
             }
-            
-            $response1 = substr($pattern,2);
+
+            $response1 = substr($pattern, 2);
             $response0 = $string;
-            // testing for absence of more than one needed word
+
+            // Testing for absence of more than one needed word.
             if (preg_match('/^.*\&\&.*$/', $response1)) {
                 $pattern = '/&&[^(|)]*/';
-                $missingstrings = preg_match_all($pattern,$response1, $matches, PREG_OFFSET_CAPTURE);
+                $missingstrings = preg_match_all($pattern, $response1, $matches, PREG_OFFSET_CAPTURE);
                 $strmissingstrings = $matches[0][0][0];
                 $strmissingstrings = substr($strmissingstrings, 2);
                 $openparenpos = $matches[0][0][1] -1;
@@ -168,7 +178,7 @@ class qtype_regexp_question extends question_graded_by_strategy
                         return true;
                     }
                 }
-            } else {  // this is *not* a NOT (a OR b OR c etc.) request
+            } else {  // This is *not* a NOT (a OR b OR c etc.) request.
                 if (preg_match('/^'.$response1.'$/'.$ignorecase, $response0)  == 0) {
                     return true;
                 }
@@ -182,7 +192,7 @@ class qtype_regexp_question extends question_graded_by_strategy
         if ($component == 'question' && $filearea == 'answerfeedback') {
 
             $answer = $qa->get_question()->get_matching_answer(array('answer' => $currentanswer));
-            $answerid = reset($args); // itemid is answer id.
+            $answerid = reset($args); // Itemid is answer id.
             return $options->feedback && $answerid == $answer->id;
 
         } else if ($component == 'question' && $filearea == 'hint') {
@@ -196,17 +206,18 @@ class qtype_regexp_question extends question_graded_by_strategy
 
     public function make_behaviour(question_attempt $qa, $preferredbehaviour) {
         GLOBAL $CFG;
-        // check that regexpadaptivewithhelp behaviour has been installed
+        // Check that regexpadaptivewithhelp behaviour has been installed
         // if not installed, then the regexp questions will follow the "standard" behaviours
-        // and Help button will not be available
+        // and Help button will not be available.
         // NOTE: from 2.2 you cannot install regexp if corresponding behaviours have not been installed first
-        // see plugin->dependencies in version.php file
-        // only use the regexpadaptivewithhelp behaviour is question uses hint
+        // see plugin->dependencies in version.php file.
+        // Only use the regexpadaptivewithhelp behaviour is question uses hint.
         if ($this->usehint) {
             if ($preferredbehaviour == 'adaptive' && file_exists($CFG->dirroot.'/question/behaviour/regexpadaptivewithhelp/')) {
                 return question_engine::make_behaviour('regexpadaptivewithhelp', $qa, $preferredbehaviour);
             }
-            if ($preferredbehaviour == 'adaptivenopenalty' && file_exists($CFG->dirroot.'/question/behaviour/regexpadaptivewithhelpnopenalty/')) {
+            if ($preferredbehaviour == 'adaptivenopenalty' &&
+                            file_exists($CFG->dirroot.'/question/behaviour/regexpadaptivewithhelpnopenalty/')) {
                 return question_engine::make_behaviour('regexpadaptivewithhelpnopenalty', $qa, $preferredbehaviour);
             }
         }

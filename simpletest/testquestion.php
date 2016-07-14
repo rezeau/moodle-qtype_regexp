@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -43,9 +42,8 @@ class test_regexp_question_maker extends test_question_maker {
         self::initialise_a_question($pm);
         $pm->name = 'Regular expression short answer question';
         $pm->questiontext = 'French flag colors : __________';
-        // generalfeedback is not needed in the REGEXP question type
-        //$pm->generalfeedback = 'Generalfeedback: ';
-        //$pm->regexpoptions = new regexp_options();
+        $pm->generalfeedback = 'Generalfeedback: ';
+        $pm->regexpoptions = new regexp_options();
         $pm->answers = array(
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'ok', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'yes', FORMAT_HTML),
@@ -55,7 +53,6 @@ class test_regexp_question_maker extends test_question_maker {
         $pm->qtype = question_bank::get_qtype('regexp');
         return $pm;
     }
-
 
 }
 
@@ -127,27 +124,25 @@ class qtype_regexp_question_test extends UnitTestCase {
                 'Frog*toad', 'Frog\*toad', false));
         $this->assertTrue(qtype_regexp_question::compare_string_with_wildcard(
                 'a', '[a-z]', false));
-        // See http://moodle.org/mod/forum/discuss.php?d=120557
+        // See http://moodle.org/mod/forum/discuss.php?d=120557.
         $this->assertTrue(qtype_regexp_question::compare_string_with_wildcard(
                 'ITÁLIE', 'Itálie', true));
-        
-        // Test match using 'missing words'
-        //detect missing word 'blue' :: True
+
+        // Test match using 'missing words'.
+        // Detect missing word 'blue' :: True.
         $this->assertTrue(qtype_regexp_question::compare_string_with_wildcard(
                 "orange and black", '--.*blue.*', false));
-        //detect missing word 'blue' :: False
+        // Detect missing word 'blue' :: False.
         $this->assertFalse(qtype_regexp_question::compare_string_with_wildcard(
                 "orange and blue", '--.*blue.*', false));
-        
+
         // Test match using 'missing words'
-        //detect missing words 'blue' OR 'red' OR 'white' :: True
+        // Detect missing words 'blue' OR 'red' OR 'white' :: True.
         $this->assertTrue(qtype_regexp_question::compare_string_with_wildcard(
                 "orange and black", '--.*(&&blue&&red&&white).*' , false));
-        //detect missing words 'blue' OR 'red' OR 'white' :: False
+        // Detect missing words 'blue' OR 'red' OR 'white' :: False.
         $this->assertFalse(qtype_regexp_question::compare_string_with_wildcard(
                 "orange blue white black red", '--.*(&&blue&&red&&white).*' , false));
-        
-    
     }
 
     public function test_is_complete_response() {
@@ -225,5 +220,5 @@ class qtype_regexp_question_test extends UnitTestCase {
         $this->assertEqual(array(
                 question_classified_response::no_response()),
                 $sa->classify_response(array('answer' => '')));
-    }    
+    }
 }
