@@ -27,10 +27,10 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_regexp';
 $plugin->dependencies = array(
-    'qbehaviour_regexpadaptivewithhelp'   => 2016070100,
-    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2016070100,
+    'qbehaviour_regexpadaptivewithhelp'   => 2016071400,
+    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2016071400,
 );
-$plugin->version  = 2016070100;
-$plugin->requires = 2014041100; // Moodle version.
-$plugin->release = '2.9.0 for Moodle 2.7-2.9';
+$plugin->version  = 2016071400;
+$plugin->requires = 2015051100; // Moodle version.
+$plugin->release = '3.1.0 for Moodle 2.9-3.1';
 $plugin->maturity  = MATURITY_STABLE;
