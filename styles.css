@@ -3,57 +3,58 @@
 }
 .que.regexp .answer {
     padding: 0.3em;
-    width: auto;
     display: inline;
-    color:green;
+    color: green;
 }
 .alternateanswers .regexp,
 #alternateanswers .regexp {
-    color:#333;
+    color: #333;
     font-weight: bold;
-	}
+}
 .que.regexp .answer input {
     width: 80%;
 }
-.misplacedword, wrongword, maxtotalpenalties {
-    color:#FF0000;
+.misplacedword,
+.wrongword,
+.maxtotalpenalties {
+    color: #f00;
 }
 .wrongword {
-    text-decoration:line-through;
+    text-decoration: line-through;
 }
 /* must be a monospace font for correct display of erroneous characters position */
 .displayvalidationerrors {
-	font-family: Courier New, Courier, monospace;
-	color:maroon;
-	font-size: 0.9em;
+    font-family: Courier New, Courier, monospace;
+    color: maroon;
+    font-size: 0.9em;
 }
 .alternateanswers ul.square,
 #alternateanswers ul.square {
     list-style: square;
 }
 .alternateanswers ul {
-    margin:0;
+    margin: 0;
 }
 .expandalternateanswers {
-	background-color: #FFFFCC;
+    background-color: #ffc;
 }
 
 /* Editing form. */
 body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] {
-    background: #EEE;
+    background: #eee;
     margin-top: 0;
     margin-bottom: 0;
     padding-bottom: 5px;
     padding-top: 5px;
-    border: 1px solid #BBB;
+    border: 1px solid #bbb;
     border-bottom: 0;
 }
 
-body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] .fgrouplabel label{
+body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] .fgrouplabel label {
     font-weight: bold;
 }
 
-body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] label[for^='id_answer_']{
+body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] label[for^='id_answer_'] {
     position: absolute;
     left: -10000px;
     font-weight: normal;
@@ -61,22 +62,22 @@ body#page-question-type-regexp div[id^=fgroup_id_][id*=answeroptions_] label[for
 }
 
 body#page-question-type-regexp div[id^=fitem_id_][id*=fraction_] {
-    background: #EEE;
+    background: #eee;
     margin-bottom: 0;
     margin-top: 0;
     padding-bottom: 5px;
     padding-top: 5px;
-    border: 1px solid #BBB;
+    border: 1px solid #bbb;
     border-top: 0;
     border-bottom: 0;
 }
 
 body#page-question-type-regexp div[id^=fitem_id_][id*=feedback_] {
-    background: #EEE;
+    background: #eee;
     margin-bottom: 2em;
     margin-top: 0;
     padding-bottom: 5px;
     padding-top: 5px;
-    border: 1px solid #BBB;
+    border: 1px solid #bbb;
     border-top: 0;
 }
