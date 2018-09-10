@@ -92,6 +92,10 @@ class qtype_regexp_edit_form extends question_edit_form {
             $i = 0;
             $this->fraction[0] = 1;
             $data = array();
+            
+            // Add current question category to $data for validation!
+            $data['category'] = $this->category; 
+            
             foreach ($this->currentanswers as $key => $answer) {
                 $qu->answers[$i] = new stdClass();
                 $qu->answers[$i]->answer = $answer;
@@ -242,7 +246,7 @@ class qtype_regexp_edit_form extends question_edit_form {
                 }
                 $answercount++;
             }
-        }
+        }                
         return $errors;
     }
 
