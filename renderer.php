@@ -49,8 +49,16 @@ class qtype_regexp_renderer extends qtype_renderer {
                 break;
         }
         $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
+        echo 'renderer line 52 closest = <pre>';
+        print_r($closest);
+        echo '</pre>';
         $question->closest = $closest;
-        if ($closest[0]) {
+        // If start of student answer is wrong, remove it (in regexpadaptive behaviours only).
+
+        $currbehaviourname = get_class($qa->get_behaviour() );
+        if (strpos ($currbehaviourname, 'regexpadaptive')) {
+            $currentanswer = $closest[0];
+        } else if ($closest[0] !== '') {
             $currentanswer = $closest[0];
         }
 
@@ -176,7 +184,7 @@ class qtype_regexp_renderer extends qtype_renderer {
 
     public function specific_feedback(question_attempt $qa) {
         $question = $qa->get_question();
-        $currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
+        //$currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
         $ispreview = false;
         $completemessage = '';
         $closestcomplete = false;
@@ -197,17 +205,38 @@ class qtype_regexp_renderer extends qtype_renderer {
         } else {
             $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
         }
-        if ($closest[3]) {
-            $closest[3] = '['.$closest[3].']'; // Rest of submitted answer, in red.
+            $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
+            echo "renderer line 204 <pre>answer ";
+            print_r($answer);
+            echo 'closest ';
+            print_r($closest);
+            echo '</pre>';
+        $labelerrors = '';
+        $guesserrors = $closest[5];
+        if ($guesserrors) {
+            $labelwrongwords = '<span class="wrongword">'.get_string("wrongwords", "qtype_regexp").'</span>';
+            $labelmisplacedwords = '<span class="misplacedword">'.get_string("misplacedwords", "qtype_regexp").'</span>';
+            switch ($guesserrors) {
+                case 1 :
+                    $labelerrors = '<div>'.$labelmisplacedwords.'</div>';
+                    break;
+                case 10 :
+                    $labelerrors = '<div>'.$labelwrongwords.'</div>';
+                    break;
+                case 11 :
+                    $labelerrors = '<div>'.$labelwrongwords. ' '. $labelmisplacedwords.'</div>';
+                    break;
+            }
         }
-        $f = ''; // Student's response with corrections to be displayed in feedback div.
-            // Color blue for correct words/letters.
-            $f = '<span style="color:#0000FF;">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3];
+
+        // Student's response with corrections to be displayed in feedback div.
+        $f = '<span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3];
+
         if ($answer && $answer->feedback || $closestcomplete == true) {
             return $question->format_text($f.$answer->feedback.$completemessage, $answer->feedbackformat,
                 $qa, 'question', 'answerfeedback', $answer->id);
         } else {
-            return $f;
+            return $f.$labelerrors;
         }
     }
 

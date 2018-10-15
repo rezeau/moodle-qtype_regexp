@@ -14,13 +14,22 @@
 .que.regexp .answer input {
     width: 80%;
 }
-.misplacedword,
-.wrongword,
 .maxtotalpenalties {
     color: #f00;
 }
+.misplacedword,
+.wrongword  {
+    color: white;
+    font-size: 75%;
+}
+.misplacedword {
+    background-color: #5cb85c;
+}
+.que.regexp .correctword {
+    color: #0000FF;
+}
 .wrongword {
-    text-decoration: line-through;
+    background-color: #d9534f;
 }
 /* must be a monospace font for correct display of erroneous characters position */
 .displayvalidationerrors {

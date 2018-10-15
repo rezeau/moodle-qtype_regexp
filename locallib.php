@@ -39,7 +39,7 @@ function expand_regexp($myregexp) {
     $charlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
     // Change [a-c] to [abc] NOTE: ^ metacharacter is not processed inside [].
-        $pattern = '/\\[\w-\w\\]/';     // Find [a-c] in $myregexp.
+    $pattern = '/\\[\w-\w\\]/';     // Find [a-c] in $myregexp.
     while (preg_match($pattern, $myregexp, $matches, PREG_OFFSET_CAPTURE) ) {
         $result = $matches[0][0];
         $offset = $matches[0][1];
@@ -447,6 +447,7 @@ function check_beginning( $guess, $answer, $ignorecase) {
     if ($ignorecase) {
         $outstring = core_text::substr($guessoriginal, 0, core_text::strlen($outstring));
     }
+    echo "local line 450 outstring =$outstring<br>";
     return $outstring;
 }
 
@@ -457,6 +458,7 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
                       // Complete (correct response achieved), nil (beginning of sentence).
     $closest[3] = ''; // Student's guess (rest of).
     $closest[4] = ''; // Added letter or word (according to Help mode).
+    $closest[5] = ''; // Flag the type of errors: [0]wrong; [1]misplaced;
     $closesta = '';
     $l = core_text::strlen($guess);
     $ignorebegin = '';
@@ -468,8 +470,12 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
         $rightbits[0][] = $answer;
         $rightbits[1][] = check_beginning($guess, $answer, $ignorecase, $ishint);
     }
+    echo '<pre>';
+    print_r($rightbits);
+    echo '</pre>';
     $s = count($rightbits);
     $longest = 0;
+    echo "local line 479 s = $s<br>";
     if ($s) {
         $a = $rightbits[0];
         $s = count($a);
@@ -479,10 +485,12 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
             if (core_text::strlen($g) > $longest) {
                 $longest = core_text::strlen($g);
                 $closesta = $g;
+                echo "locallib 483 closesta = $closesta<br>";
                 if ($ishint) {
                     $closest[2] = 'plus';
                     $closesta_hint = $closesta;
                     $closesta_hint .= core_text::substr($a, $longest, 1);
+                    echo "locallib 488 closesta_hint = $closesta_hint<br>";
                     $lenguess = core_text::strlen($guess);
                     $lenclosesta_hint = core_text::strlen($closesta_hint) - 1;
                     if ($lenguess > $lenclosesta_hint) {
@@ -493,8 +501,11 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
                     }
                     // Word help ADDED JR 18 DEC 2011.
                     if ($ishint > 1) {
-                        if (preg_match('/\s.*/', $a, $matches, PREG_OFFSET_CAPTURE, strlen($g) + 1) ) {
-                            $closesta_hint = substr($a, 0, $matches[0][1]);
+                        $pattern = '/\s/';
+                        $offset = strlen($g) + 1;
+                        $isamatch = preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, $offset);
+                        if ($isamatch) {
+                            $closesta_hint = substr($a, 0, $matches[0][1] + 1);
                         } else {
                             $closesta_hint = $a;
                         }
@@ -502,8 +513,9 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
 
                     // JR 13 OCT 2012 to fix potential html format tags inside correct answer.
                     $aa = preg_replace("/\//", "\/", $a);
-
+                    echo "locallib line 509 guess + $guess<br>aa = $aa<br>a = $a<br>closesta_hint = $closesta_hint<br><hr>";
                     if ( preg_match('/^'.$aa.'$/'.$ignorecase, $closesta_hint)) {
+                    //if ( $a == $closesta_hint) {
                         $closest[2] = 'complete'; // Hint gives a complete correct answer.
                         $state = new stdClass(); // Instantiate $state explicitely for PHP 5.3 compliance.
                         $state->raw_grade = 0;
@@ -517,6 +529,7 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
         }
     }
     $closest[0] = $closesta;
+    echo "line 527 closesta = $closesta<br>";
     // Student clicked the help button with an empty answer.
     if ($closest[0] == '' && $ishint) {
     	$closest[2] = 'plus';
@@ -564,27 +577,48 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
             $minus = 1;
         }
         $restofanswer = substr($guess, $lenclosesta - $minus);
-        // 24 APRIL 2013 thanks to Jeff F.
-        // this does not work in case expected answer is e.g. "two twenty thirty" and student guess is "twenty two thirty"
-        // so for the moment, let's replace this loop with simply setting $restofanswers to $rightbits[0][0].
-        $restofanswers = $rightbits[0][0];
+        // We must test the longest rightbits to determine the current alternate answer correctly started.
+        // JR 1ST OCTOBER 2018.
+        $index_of_longest = getmax($rightbits[1], 0, 0);
+        $restofanswers = $rightbits[0][$index_of_longest];
+
         if ($restofanswer) {
-            $wordsinrestofanswer = preg_split('/ /', $restofanswer);
-            $i = 0;
-            unset($array1, $array1);
-            $array1 = preg_split("/[\s,]+/", $restofanswer);
-            $array2 = preg_split("/[\s,]+/", $restofanswers);
+            unset($array1, $array2);
+            // JR OCTOBER 1ST 2018 changed the split pattern to treat punctuation signs as words.
+            $pattern = "/(?!['\p{N},.-\/\p{N}])([\s\p{Po}\p{Ps}\p{Pe}])/";
+            $pattern = "/(?!\p{N}[,.-\/]\p{N})(\s)/";
+            // JR DEV
+            $pattern = "/(?!\p{N}[,.-\/]\p{N})([\s\p{P}])/";
+            $flags = PREG_SPLIT_DELIM_CAPTURE;
+
+            $array1 = preg_split($pattern, $restofanswer, -1, $flags);
+            $array2 = preg_split($pattern, $restofanswers, -1, $flags);
+            // Filter arrays to remove empty values.
+            $array1 = array_filter(array_map('trim',$array1));
+            $array2 = array_filter(array_map('trim',$array2));
+
+            echo '<pre> line 599 +++++++++++++++++++';
+            print_r($array1);
+            print_r($array2);
+            echo '</pre>++++++++++++';
+
             $misplacedwords = array_intersect($array1, $array2);
+            foreach ($misplacedwords as $key => $value) {
+                $misplacedwords[$key] = '<span class="misplacedword">&nbsp;'.$value.'&nbsp;</span>';
+            }
             $wrongwords = array_diff($array1, $array2);
+            $closest[5] = (count($misplacedwords) !== 0);
+            if (count($wrongwords) !== 0) {
+                $closest[5] = $closest[5] + 10;
+            }
             foreach ($wrongwords as $key => $value) {
-                $wrongwords[$key] = '<span class="wrongword">'.$value.'</span>';
+                $wrongwords[$key] = '<span class="wrongword">&nbsp;'.$value.'&nbsp;</span> ';
             }
             unset ($result);
             $result =  $misplacedwords + $wrongwords;
             ksort($result);
-            $result = implode (" | ", $result);
-            $guess = '<span class="misplacedword">'.$result.'</span>';
-            $closest[3] = $guess;
+            $result = implode (' ', $result);
+            $closest[3] = $result;
             unset ($result);
         }
     }
@@ -630,11 +664,7 @@ function find_closest($question, $currentanswer, $correct_response=false, $hinta
     if ($closest[2] == 'complete') {
         return $closest;
     }
-    // Give first character of firstcorrectanswer to student (if option usehint for this question).
-    // TODO JR maybe not?
-    /*if ($closest[0] == '' && ($question->usehint == true) && $closest[2] == 'nil' ) {
-        $closest[0] = $core_text->substr($firstcorrectanswer, 0, 1);
-    }*/
+
     return $closest;
 }
 
@@ -911,4 +941,10 @@ function has_permutations($ans) {
     }
     $result .= $staticparts[$i];
     return $result;
+}
+
+// See https://stackoverflow.com/questions/1762191/how-to-get-the-length-of-longest-string-in-an-array#1762216
+function getmax($array, $cur, $curmax) {
+    return $cur >= count($array) ? $curmax :
+        getmax($array, $cur + 1, strlen($array[$cur]) > strlen($array[$curmax]) ? $cur : $curmax);
 }

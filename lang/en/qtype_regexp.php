@@ -96,3 +96,5 @@ In <strong>Adaptive No penalty</strong> mode the button displayed will say "<str
 By default Help button mode value is set at <b>None</b>';
 $string['word'] = 'Word';
 $string['privacy:metadata'] = 'The RegExp Question Type plugin does not store any personal data.';
+$string['wrongwords'] = 'Wrong words';
+$string['misplacedwords'] = 'Misplaced words';
