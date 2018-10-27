@@ -447,7 +447,6 @@ function check_beginning( $guess, $answer, $ignorecase) {
     if ($ignorecase) {
         $outstring = core_text::substr($guessoriginal, 0, core_text::strlen($outstring));
     }
-    echo "local line 450 outstring =$outstring<br>";
     return $outstring;
 }
 
@@ -470,12 +469,8 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
         $rightbits[0][] = $answer;
         $rightbits[1][] = check_beginning($guess, $answer, $ignorecase, $ishint);
     }
-    echo '<pre>';
-    print_r($rightbits);
-    echo '</pre>';
     $s = count($rightbits);
     $longest = 0;
-    echo "local line 479 s = $s<br>";
     if ($s) {
         $a = $rightbits[0];
         $s = count($a);
@@ -485,37 +480,55 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
             if (core_text::strlen($g) > $longest) {
                 $longest = core_text::strlen($g);
                 $closesta = $g;
-                echo "locallib 483 closesta = $closesta<br>";
                 if ($ishint) {
                     $closest[2] = 'plus';
                     $closesta_hint = $closesta;
                     $closesta_hint .= core_text::substr($a, $longest, 1);
-                    echo "locallib 488 closesta_hint = $closesta_hint<br>";
                     $lenguess = core_text::strlen($guess);
                     $lenclosesta_hint = core_text::strlen($closesta_hint) - 1;
                     if ($lenguess > $lenclosesta_hint) {
                         $closest[2] = 'minus';
                     }
                     if (core_text::substr($a, $longest, 1) == ' ') { // If hint letter is a space, add next one.
-                        $closesta_hint .= core_text::substr($a, $longest + 1, 1);
+                       $closesta_hint .= core_text::substr($a, $longest + 1, 1);
                     }
                     // Word help ADDED JR 18 DEC 2011.
-                    if ($ishint > 1) {
-                        $pattern = '/\s/';
-                        $offset = strlen($g) + 1;
-                        $isamatch = preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, $offset);
-                        if ($isamatch) {
-                            $closesta_hint = substr($a, 0, $matches[0][1] + 1);
-                        } else {
-                            $closesta_hint = $a;
-                        }
+                    // 2018 add word or punctuation hint value 3
+                    switch ($ishint) {
+                        case 2: // Word (including punctuation).
+                            $pattern = '/\s.*/';
+                            if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g) + 1) ) {
+                                $closesta_hint = substr($a, 0, $matches[0][1]);
+                            } else {
+                                $pattern = '/.*$/'; // End of sentence
+                                if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g)) ) {
+                                    $closesta_hint = $a;
+                                    $closest[2] = 'complete'; // Hint gives a complete correct answer.
+                                    $i = $s;
+                                }
+                            }
+                            break;
+                        case 3:  // Word OR punctuation (outside word).
+                            $pattern = '/(\s|(?<!\w)[\p{P}]|[\p{P}](?!\w))/';
+                            if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g) + 1) ) {
+                                $pattern = '/\s[\p{P}]/';
+                                $index = preg_match($pattern, $closesta_hint, $m, PREG_OFFSET_CAPTURE, strlen($g));
+                                $closesta_hint = substr($a, 0, $matches[0][1] + $index);
+                            } else {
+                                $pattern = '/.*$/'; // End of sentence
+                                if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g)) ) {
+                                    $closesta_hint = $a;
+                                    $closest[2] = 'complete'; // Hint gives a complete correct answer.
+                                    $i = $s;
+                                }
+                            }
+                            break;
                     }
 
                     // JR 13 OCT 2012 to fix potential html format tags inside correct answer.
                     $aa = preg_replace("/\//", "\/", $a);
-                    echo "locallib line 509 guess + $guess<br>aa = $aa<br>a = $a<br>closesta_hint = $closesta_hint<br><hr>";
+
                     if ( preg_match('/^'.$aa.'$/'.$ignorecase, $closesta_hint)) {
-                    //if ( $a == $closesta_hint) {
                         $closest[2] = 'complete'; // Hint gives a complete correct answer.
                         $state = new stdClass(); // Instantiate $state explicitely for PHP 5.3 compliance.
                         $state->raw_grade = 0;
@@ -529,20 +542,20 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
         }
     }
     $closest[0] = $closesta;
-    echo "line 527 closesta = $closesta<br>";
     // Student clicked the help button with an empty answer.
     if ($closest[0] == '' && $ishint) {
-    	$closest[2] = 'plus';
-    	$answer = $answers[0];
-    	switch ($ishint) {
-    		case 1: // Add letter.
-    			$closesta_hint = $answer[0];
-    			break;
+        $closest[2] = 'plus';
+        $answer = $answers[0];
+        switch ($ishint) {
+            case 1: // Add letter.
+                $closesta_hint = $answer[0];
+                break;
             case 2: // Add word.
-            	$words = explode(' ', $answer);
+            case 3: // Add word or punctuation.
+                $words = explode(' ', $answer);
                 $closesta_hint = $words[0];
                 break;
-    	}
+        }
     }
 
     // Type of hint state.
@@ -553,11 +566,12 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
             if ($ignorebegin) {
                 $closest[1] = '';
             }
-            $closest[4] = str_replace($guess, "", $closesta_hint);
+            $closest[4] = substr ($closesta_hint, strlen($closesta));
             break;
         case 'minus':
             $closest[0] = $closesta_hint;
             $closest[1] = $closesta;
+            $closest[4] = substr ($closesta_hint, strlen($closesta));
             break;
         case 'complete':
             $closest[0] = $a;
@@ -571,12 +585,8 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
     // and even if closest answer is null JR 26 FEB 2012.
     if ($closest[2] != 'complete') {
         $nbanswers = count ($answers);
-        $lenclosesta = strlen($closest[0]);
-        $minus = 0;
-        if ($closest[2] == 'minus') {
-            $minus = 1;
-        }
-        $restofanswer = substr($guess, $lenclosesta - $minus);
+        $lenclosesta = strlen($closest[1]);
+        $restofanswer = substr($guess, $lenclosesta);
         // We must test the longest rightbits to determine the current alternate answer correctly started.
         // JR 1ST OCTOBER 2018.
         $index_of_longest = getmax($rightbits[1], 0, 0);
@@ -584,24 +594,20 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
 
         if ($restofanswer) {
             unset($array1, $array2);
-            // JR OCTOBER 1ST 2018 changed the split pattern to treat punctuation signs as words.
-            $pattern = "/(?!['\p{N},.-\/\p{N}])([\s\p{Po}\p{Ps}\p{Pe}])/";
-            $pattern = "/(?!\p{N}[,.-\/]\p{N})(\s)/";
-            // JR DEV
-            $pattern = "/(?!\p{N}[,.-\/]\p{N})([\s\p{P}])/";
+            $pattern = "/(\s)/";
             $flags = PREG_SPLIT_DELIM_CAPTURE;
+            // JR DEV count punctuation marks as words - except within within words themselves.
+            // Does not work for French number format (space).
+            $pattern = "/(\s|(?<!\w)[\p{P}])/";
+            // should work fine
+            $pattern = "/(\s|(?<!\w)[\p{P}]|[\p{P}](?!\w))/";
 
             $array1 = preg_split($pattern, $restofanswer, -1, $flags);
             $array2 = preg_split($pattern, $restofanswers, -1, $flags);
+
             // Filter arrays to remove empty values.
             $array1 = array_filter(array_map('trim',$array1));
             $array2 = array_filter(array_map('trim',$array2));
-
-            echo '<pre> line 599 +++++++++++++++++++';
-            print_r($array1);
-            print_r($array2);
-            echo '</pre>++++++++++++';
-
             $misplacedwords = array_intersect($array1, $array2);
             foreach ($misplacedwords as $key => $value) {
                 $misplacedwords[$key] = '<span class="misplacedword">&nbsp;'.$value.'&nbsp;</span>';

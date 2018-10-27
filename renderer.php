@@ -49,9 +49,6 @@ class qtype_regexp_renderer extends qtype_renderer {
                 break;
         }
         $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
-        echo 'renderer line 52 closest = <pre>';
-        print_r($closest);
-        echo '</pre>';
         $question->closest = $closest;
         // If start of student answer is wrong, remove it (in regexpadaptive behaviours only).
 
@@ -184,7 +181,7 @@ class qtype_regexp_renderer extends qtype_renderer {
 
     public function specific_feedback(question_attempt $qa) {
         $question = $qa->get_question();
-        //$currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
+        $currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
         $ispreview = false;
         $completemessage = '';
         $closestcomplete = false;
@@ -205,12 +202,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         } else {
             $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
         }
-            $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
-            echo "renderer line 204 <pre>answer ";
-            print_r($answer);
-            echo 'closest ';
-            print_r($closest);
-            echo '</pre>';
+
         $labelerrors = '';
         $guesserrors = $closest[5];
         if ($guesserrors) {
@@ -231,10 +223,9 @@ class qtype_regexp_renderer extends qtype_renderer {
 
         // Student's response with corrections to be displayed in feedback div.
         $f = '<span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3];
-
         if ($answer && $answer->feedback || $closestcomplete == true) {
-            return $question->format_text($f.$answer->feedback.$completemessage, $answer->feedbackformat,
-                $qa, 'question', 'answerfeedback', $answer->id);
+            return $question->format_text($f.$answer->feedback.$completemessage, $answer->feedbackformat, $qa, 'question',
+                'answerfeedback', $answer->id).$labelerrors;
         } else {
             return $f.$labelerrors;
         }

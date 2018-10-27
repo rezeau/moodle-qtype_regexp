@@ -55,8 +55,9 @@ class qtype_regexp_edit_form extends question_edit_form {
             }
         }
 
-        // Hint mode :: None / Letter / Word.
-        $menu = array(get_string('none'), get_string('letter', 'qtype_regexp'), get_string('word', 'qtype_regexp'));
+        // Hint mode :: None / Letter / Word (including punctuation) / Word OR Punctuation.
+        $menu = array(get_string('none'), get_string('letter', 'qtype_regexp'),
+            get_string('word', 'qtype_regexp'), get_string('wordorpunctuation', 'qtype_regexp'));
         $mform->addElement('select', 'usehint', get_string('usehint', 'qtype_regexp'), $menu);
         $mform->addHelpButton('usehint', 'usehint', 'qtype_regexp');
 
