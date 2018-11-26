@@ -51,7 +51,6 @@ class qtype_regexp_renderer extends qtype_renderer {
         $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
         $question->closest = $closest;
         // If start of student answer is wrong, remove it (in regexpadaptive behaviours only).
-
         $currbehaviourname = get_class($qa->get_behaviour() );
         if (strpos ($currbehaviourname, 'regexpadaptive')) {
             $currentanswer = $closest[0];
@@ -61,36 +60,7 @@ class qtype_regexp_renderer extends qtype_renderer {
 
         // Showing / hiding regexp generated alternative sentences (for teacher only).
         // Changed from javascript to print_collapsible_region OCT 2012.
-
-        if ($ispreview) {
-            $alternateanswers = get_alternateanswers($question);
-            $response = $question->get_correct_response();
-            $correctanswer = $response['answer'];
-            print_collapsible_region_start('', 'showhidealternate', get_string('showhidealternate', 'qtype_regexp'),
-                'core_question_preview_showhidealternate_collapsed', true);
-            echo html_writer::start_tag('div class="notifytiny"', array('id' => 'alternateanswers'));
-            echo '<hr />';
-            if ($question->usecase) {
-                $case = get_string('caseyes', 'qtype_regexp');
-            } else {
-                $case = get_string('caseno', 'qtype_regexp');
-            }
-            echo get_string('casesensitive', 'qtype_regexp').' : <b>'.$case.'</b><hr />';
-
-            foreach ($alternateanswers as $key => $alternateanswer) {
-                echo get_string('answer').' '.$key.' ('.$alternateanswer['fraction'].') ',
-                    '<span class="regexp">'.$alternateanswer['regexp'].'</span>';
-                $list = '';
-                foreach ($alternateanswer['answers'] as $alternate) {
-                    $alternate = str_replace(" ", "&nbsp;", $alternate);
-                    $list.= '<li>'.$alternate.'</li>';
-                }
-                echo '<ul class="square">'.$list.'</ul>';
-            }
-            echo("<hr />");
-            echo html_writer::end_tag('div');
-            print_collapsible_region_end();
-        }
+        // Removed for compatibility with the Embed questions plugin see https://moodle.org/plugins/filter_embedquestion
 
         $inputattributes = array(
             'type' => 'text',
@@ -198,6 +168,7 @@ class qtype_regexp_renderer extends qtype_renderer {
                 $closestcomplete = true;
                 $class = '"correctness correct"';
                 $completemessage = '<div class='.$class.'>'.get_string("clicktosubmit", "qtype_regexp").'</div>';
+
             }
         } else {
             $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
@@ -222,16 +193,16 @@ class qtype_regexp_renderer extends qtype_renderer {
         }
 
         // Student's response with corrections to be displayed in feedback div.
-        $f = '<span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3];
+        $f = '<div><span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3].'</div>';
         if ($answer && $answer->feedback || $closestcomplete == true) {
-            return $question->format_text($f.$answer->feedback.$completemessage, $answer->feedbackformat, $qa, 'question',
-                'answerfeedback', $answer->id).$labelerrors;
+            return $question->format_text($f.$answer->feedback.$completemessage, $answer->feedbackformat,
+                $qa, 'question', 'answerfeedback', $answer->id).$labelerrors;
         } else {
             return $f.$labelerrors;
         }
     }
 
-    public function correct_response(question_attempt $qa) {
+    public function correct_response(question_attempt $qa) {    
         $question = $qa->get_question();
         $display_responses = '';
         $alternateanswers = get_alternateanswers($question);

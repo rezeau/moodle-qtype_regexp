@@ -56,23 +56,39 @@ function expand_regexp($myregexp) {
     }
     // Provisionally replace existing escaped [] before processing the change [abc] to (a|b|c) JR 11-9-2007.
     // See Oleg http://moodle.org/mod/forum/discuss.php?d=38542&parent=354095.
-    while (strpos($myregexp, '\[')) {
-        $c1 = strpos($myregexp, '\[');
-        $c0 = $myregexp[$c1];
-        $myregexp = substr($myregexp, 0, $c1  ) .'¬' .substr($myregexp, $c1 + 2);
-    }
-    while (strpos($myregexp, '\]')) {
-        $c1 = strpos($myregexp, '\]');
-        $c0 = $myregexp[$c1];
-        $myregexp = substr($myregexp, 0, $c1  ) .'¤' .substr($myregexp, $c1 + 2);
-    }
+    // See https://moodle.org/mod/forum/discuss.php?d=251510#p1090642
+    // Replacement character changed to Unicode character Halloween 2018.
+
+    $pattern = '/\\\\\[/';
+    // Replace \[ with Unicode Character 'LEFT WHITE SQUARE BRACKET' (U+301A).
+    $replacement = '〚';
+    $count = 0;
+    $myregexp = preg_replace ($pattern, $replacement, $myregexp, -1, $count);
+
+    $pattern = '/\\\\\]/';
+    // Replace \] with Unicode Character 'RIGHT WHITE SQUARE BRACKET' (U+301B).
+    $replacement = '〛';
+    $myregexp = preg_replace ($pattern, $replacement, $myregexp, -1, $count);
+
+    // Halloween 2018 version: added similar treatment for excaped parentheses.
+    $pattern = '/\\\\\(/';
+    // Replace \( with Unicode Character 'FULLWIDTH LEFT PARENTHESIS' (U+FF08).
+    $replacement = '（';
+    $count = 0;
+    $myregexp = preg_replace ($pattern, $replacement, $myregexp, -1, $count);
+
+    $pattern = '/\\\\\)/';
+    // Replace \) with Unicode Character 'FULLWIDTH RIGHT PARENTHESIS' (U+FF09).
+    $replacement = '）';
+    $myregexp = preg_replace ($pattern, $replacement, $myregexp, -1, $count);
 
     // Change [abc] to (a|b|c).
     $pattern =  '/\[.*?\]/';     // Find [abc] in $myregexp.
     // Added core_text to deal with utf8 accents etc.
     while (preg_match($pattern, $myregexp, $matches, PREG_OFFSET_CAPTURE) ) {
         $result = $matches[0][0];
-        $offset = $matches[0][1];
+        // Fixed utf8 problem in lengths.
+        $offset = core_text::strlen(substr($myregexp, 0, $matches[0][1]));
         $stringleft = core_text::substr($myregexp, 0, $offset);
         $stringright = core_text::substr($myregexp, $offset + core_text::strlen($result));
         $rs = core_text::substr($result, 1, core_text::strlen($result) -2);
@@ -85,17 +101,16 @@ function expand_regexp($myregexp) {
         $myregexp = $stringleft.$rs.$stringright;
     }
 
-    // We can now safely restore the previously replaced escaped [].
-    while (strpos($myregexp, '¬')) {
-        $c1 = strpos($myregexp, '¬');
-        $c0 = $myregexp[$c1];
-        $myregexp = substr($myregexp, 0, $c1  ) .'\[' .substr($myregexp, $c1 + 2);
-    }
-    while (strpos($myregexp, '¤')) {
-        $c1 = strpos($myregexp, '¤');
-        $c0 = $myregexp[$c1];
-        $myregexp = substr($myregexp, 0, $c1  ) .'\]' .substr($myregexp, $c1 + 2);
-    }
+    // We can now safely restore the previously replaced escaped square brakets.
+    $pattern = '/〚/';
+    $replacement = '\[';
+    $count = 0;
+    $myregexp = preg_replace ($pattern, $replacement, $myregexp, -1, $count);
+
+    $pattern = '/〛/';
+    $replacement = '\]';
+    $myregexp = preg_replace ($pattern, $replacement, $myregexp, -1, $count);
+
 
     // Process ? in regexp (zero or one occurrence of preceding char).
     while (strpos($myregexp, '?')) {
@@ -121,7 +136,7 @@ function expand_regexp($myregexp) {
         $c2 = '('.$c0.'|)';
         $myregexp = str_replace($c0.'?', $c2, $myregexp);
     }
-    // Teplaces possible temporary ¬ char with escaped question mark.
+    // Replaces possible temporary ¬ char with escaped question mark.
     if (strpos( $myregexp, '¬') != -1) {
         $myregexp = str_replace('¬', '\?', $myregexp);
         $regexporiginal = $myregexp;
@@ -168,10 +183,21 @@ function expand_regexp($myregexp) {
     }
 
     $result = find_ors($myregexp);     // Expand parenthesis contents.
-    if ( is_array($result) ) {
-        $results = implode('\n', $result);
+
+    // We can now restore any previously replaced escaped parentheses.
+    if ( !is_array($result) ) {
+        $results[0] = $result;
+    } else {
+        $results = $result;
     }
-    return $result;    // Returns array of alternate strings.
+    $i = 0;
+    foreach ($results as $result) {
+        $to_replace = array('（', '）');
+        $replace_with = array('(', ')');
+        $results[$i] = strtr($result, array_combine($to_replace, $replace_with));
+        $i++;
+    }
+    return $results;    // Returns array of alternate strings.
 }
 
 // Find individual $nestedors expressions in $myregexp.
@@ -469,92 +495,97 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
         $rightbits[0][] = $answer;
         $rightbits[1][] = check_beginning($guess, $answer, $ignorecase, $ishint);
     }
-    $s = count($rightbits);
-    $longest = 0;
-    if ($s) {
-        $a = $rightbits[0];
-        $s = count($a);
-        for ($i=0; $i<$s; $i++) {
-            $a = $rightbits[0][$i];
-            $g = $rightbits[1][$i];
-            if (core_text::strlen($g) > $longest) {
-                $longest = core_text::strlen($g);
-                $closesta = $g;
-                if ($ishint) {
-                    $closest[2] = 'plus';
-                    $closesta_hint = $closesta;
-                    $closesta_hint .= core_text::substr($a, $longest, 1);
-                    $lenguess = core_text::strlen($guess);
-                    $lenclosesta_hint = core_text::strlen($closesta_hint) - 1;
-                    if ($lenguess > $lenclosesta_hint) {
-                        $closest[2] = 'minus';
-                    }
-                    if (core_text::substr($a, $longest, 1) == ' ') { // If hint letter is a space, add next one.
-                       $closesta_hint .= core_text::substr($a, $longest + 1, 1);
-                    }
-                    // Word help ADDED JR 18 DEC 2011.
-                    // 2018 add word or punctuation hint value 3
-                    switch ($ishint) {
-                        case 2: // Word (including punctuation).
-                            $pattern = '/\s.*/';
-                            if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g) + 1) ) {
-                                $closesta_hint = substr($a, 0, $matches[0][1]);
-                            } else {
-                                $pattern = '/.*$/'; // End of sentence
-                                if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g)) ) {
-                                    $closesta_hint = $a;
-                                    $closest[2] = 'complete'; // Hint gives a complete correct answer.
-                                    $i = $s;
-                                }
-                            }
-                            break;
-                        case 3:  // Word OR punctuation (outside word).
-                            $pattern = '/(\s|(?<!\w)[\p{P}]|[\p{P}](?!\w))/';
-                            if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g) + 1) ) {
-                                $pattern = '/\s[\p{P}]/';
-                                $index = preg_match($pattern, $closesta_hint, $m, PREG_OFFSET_CAPTURE, strlen($g));
-                                $closesta_hint = substr($a, 0, $matches[0][1] + $index);
-                            } else {
-                                $pattern = '/.*$/'; // End of sentence
-                                if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g)) ) {
-                                    $closesta_hint = $a;
-                                    $closest[2] = 'complete'; // Hint gives a complete correct answer.
-                                    $i = $s;
-                                }
-                            }
-                            break;
-                    }
-
-                    // JR 13 OCT 2012 to fix potential html format tags inside correct answer.
-                    $aa = preg_replace("/\//", "\/", $a);
-
-                    if ( preg_match('/^'.$aa.'$/'.$ignorecase, $closesta_hint)) {
+    $longestanswerlen = max(array_map('core_text::strlen', $rightbits[1]));
+    // Function getMax located at the end of this locallib.
+    $index_of_longest = getMax($rightbits[1], 0, 0);
+    if ($longestanswerlen) {
+        // $a = alternative correct answer.
+        // $g = current best student answer so far.
+        $a = $rightbits[0][$index_of_longest];
+        $g = $rightbits[1][$index_of_longest];
+        $closesta = trim($g);
+        $closesta_hint = '';
+        if ($ishint) {
+            $closest[2] = 'plus';
+            $closesta_hint = $closesta;
+        }
+        switch ($ishint) {
+            case 1: // Get or buy one character (letter of punctuation mark).
+                $closesta_hint = $closesta;
+                $closesta_hint .= core_text::substr($a, $longestanswerlen, 1);
+                $lenguess = core_text::strlen($guess);
+                $lenclosesta_hint = core_text::strlen($closesta_hint) ;
+                if ($lenguess > $lenclosesta_hint) {
+                    $closest[2] = 'minus';
+                }
+                if (core_text::substr($a, $longestanswerlen, 1) == ' ') { // If hint letter is a space, add next one.
+                   $closesta_hint .= core_text::substr($a, $longestanswerlen + 1, 1);
+                }
+                break;
+            case 2: // Get or buy one word (including punctuation).
+                $pattern = '/\s.*/';
+                if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g) + 1) ) {
+                    $closesta_hint = substr($a, 0, $matches[0][1]);
+                } else {
+                    $pattern = '/.*$/'; // End of sentence
+                    if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, core_text::strlen($g)) ) {
+                        $closesta_hint = $a;
                         $closest[2] = 'complete'; // Hint gives a complete correct answer.
-                        $state = new stdClass(); // Instantiate $state explicitely for PHP 5.3 compliance.
-                        $state->raw_grade = 0;
-                        break;
                     }
-                    if ($ignorecase) {
-                        $ignorebegin = !preg_match('/'.$g.'/', $a);
+                }
+                break;
+            case 3:  // Get or buy one word OR one punctuation mark.
+                $pattern = '/(\s|(?<!\w)[\p{P}]|[\p{P}](?!\w))/';
+                if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, strlen($g) + 1) ) {
+                    $index = 0;
+                    $pattern = '/\s[\p{P}]/';
+                    if (preg_match($pattern, $a, $ma, PREG_OFFSET_CAPTURE, strlen($g)) ) {
+                        if ($matches[0][1] == $ma[0][1] + 1) {
+                            $index = 1;
+                        }
+                    }
+                    $closesta_hint = substr($a, 0, $matches[0][1] + $index);
+                } else {
+                    $pattern = '/.*$/'; // End of sentence
+                    if (preg_match($pattern, $a, $matches, PREG_OFFSET_CAPTURE, core_text::strlen($g)) ) {
+                        $closesta_hint = $a;
+                        $closest[2] = 'complete'; // Hint gives a complete correct answer.
                     }
                 }
             }
-        }
+
+        // JR 13 OCT 2012 to fix potential html format tags inside correct answer.
+            $aa = preg_replace("/\//", "\/", $a);
+            if ( preg_match('/^'.$aa.'$/'.$ignorecase, $closesta_hint)) {
+                $closest[2] = 'complete'; // Hint gives a complete correct answer.
+                $state = new stdClass(); // Instantiate $state explicitely for PHP 5.3 compliance.
+                $state->raw_grade = 0;
+            }
+            // Don't know what this does!
+            if ($ignorecase) {
+                //$ignorebegin = !preg_match('/'.$g.'/', $a);
+            }
+
     }
-    $closest[0] = $closesta;
+
     // Student clicked the help button with an empty answer.
-    if ($closest[0] == '' && $ishint) {
+    $a = $rightbits[0][$index_of_longest];
+    if ($closesta == '' && $ishint) {
         $closest[2] = 'plus';
         $answer = $answers[0];
         switch ($ishint) {
             case 1: // Add letter.
-                $closesta_hint = $answer[0];
+                $closesta_hint = core_text::substr($a, 0, 1);
                 break;
             case 2: // Add word.
-            case 3: // Add word or punctuation.
                 $words = explode(' ', $answer);
                 $closesta_hint = $words[0];
                 break;
+            case 3: // Add word or punctuation.
+                // Return fist word OR punctuation sign (e.g. Spanish inverted ? or !).
+                $pattern = '/^([\p{P}]|\s*([a-zA-Z0-9]+))/u';
+                preg_match ($pattern, $a, $matches, PREG_OFFSET_CAPTURE);
+                $closesta_hint = $matches[0][0];
         }
     }
 
@@ -584,31 +615,29 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
     // Search for correct *words* in student's guess, after closest answer has been found
     // and even if closest answer is null JR 26 FEB 2012.
     if ($closest[2] != 'complete') {
-        $nbanswers = count ($answers);
-        $lenclosesta = strlen($closest[1]);
+        $lenclosesta = strlen($closest[0]) - strlen($closest[4]);
+        $closest[1] = substr($closest[0], 0, $lenclosesta);
         $restofanswer = substr($guess, $lenclosesta);
-        // We must test the longest rightbits to determine the current alternate answer correctly started.
-        // JR 1ST OCTOBER 2018.
-        $index_of_longest = getmax($rightbits[1], 0, 0);
+        $restofanswer = implode(' ', explode(' ', $restofanswer));
+
+        // Local function getMax at end of this locallib.
+        $index_of_longest = getMax($rightbits[1],0 ,0);
         $restofanswers = $rightbits[0][$index_of_longest];
 
         if ($restofanswer) {
             unset($array1, $array2);
-            $pattern = "/(\s)/";
-            $flags = PREG_SPLIT_DELIM_CAPTURE;
-            // JR DEV count punctuation marks as words - except within within words themselves.
-            // Does not work for French number format (space).
-            $pattern = "/(\s|(?<!\w)[\p{P}])/";
-            // should work fine
+            // Count punctuation marks as words - except within within words themselves.
+            // Does not work for French number format (space separator).
             $pattern = "/(\s|(?<!\w)[\p{P}]|[\p{P}](?!\w))/";
-
+            $flags = PREG_SPLIT_DELIM_CAPTURE;
             $array1 = preg_split($pattern, $restofanswer, -1, $flags);
             $array2 = preg_split($pattern, $restofanswers, -1, $flags);
-
             // Filter arrays to remove empty values.
             $array1 = array_filter(array_map('trim',$array1));
             $array2 = array_filter(array_map('trim',$array2));
             $misplacedwords = array_intersect($array1, $array2);
+            // Remove potential duplicate words.
+            $misplacedwords = array_unique($misplacedwords);
             foreach ($misplacedwords as $key => $value) {
                 $misplacedwords[$key] = '<span class="misplacedword">&nbsp;'.$value.'&nbsp;</span>';
             }
@@ -950,7 +979,7 @@ function has_permutations($ans) {
 }
 
 // See https://stackoverflow.com/questions/1762191/how-to-get-the-length-of-longest-string-in-an-array#1762216
-function getmax($array, $cur, $curmax) {
+function getMax($array, $cur, $curmax) {
     return $cur >= count($array) ? $curmax :
         getmax($array, $cur + 1, strlen($array[$cur]) > strlen($array[$curmax]) ? $cur : $curmax);
 }
