@@ -177,8 +177,8 @@ class qtype_regexp_renderer extends qtype_renderer {
         $labelerrors = '';
         $guesserrors = $closest[5];
         if ($guesserrors) {
-            $labelwrongwords = '<span class="wrongword">'.get_string("wrongwords", "qtype_regexp").'</span>';
-            $labelmisplacedwords = '<span class="misplacedword">'.get_string("misplacedwords", "qtype_regexp").'</span>';
+            $labelwrongwords = '<span class="labelwrongword">'.get_string("wrongwords", "qtype_regexp").'</span>';
+            $labelmisplacedwords = '<span class="labelmisplacedword">'.get_string("misplacedwords", "qtype_regexp").'</span>';
             switch ($guesserrors) {
                 case 1 :
                     $labelerrors = '<div>'.$labelmisplacedwords.'</div>';
@@ -195,8 +195,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         // Student's response with corrections to be displayed in feedback div.
         $f = '<div><span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3].'</div>';
         if ($answer && $answer->feedback || $closestcomplete == true) {
-            return $question->format_text($f.$answer->feedback.$completemessage, $answer->feedbackformat,
-                $qa, 'question', 'answerfeedback', $answer->id).$labelerrors;
+            return $question->format_text($f.$labelerrors.$answer->feedback.$completemessage, $answer->feedbackformat, $qa, 'question', 'answerfeedback', $answer->id);
         } else {
             return $f.$labelerrors;
         }

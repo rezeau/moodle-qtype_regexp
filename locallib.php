@@ -268,6 +268,10 @@ function find_nested_ors ($myregexp) {
             $leftchar = $nestedors[strpos($nestedors, $myparent) - 1];
             $rightchar = $nestedors[strpos($nestedors, $myparent) + strlen($myparent)];
             $outerchars = $leftchar.$rightchar;
+            // Fixed DECEMBER 2018.
+            $leftpar = '';
+            $rightpar = '';
+            // End fix.
             switch ($outerchars) {
                 case '||':
                 case '()':

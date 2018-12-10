@@ -18,19 +18,28 @@
     color: #f00;
 }
 .misplacedword,
-.wrongword  {
+.wrongword,
+.labelmisplacedword,
+.labelwrongword {
     color: white;
-    font-size: 75%;
 }
-.misplacedword {
+.misplacedword,
+.labelmisplacedword {
     background-color: #5cb85c;
 }
+.wrongword,
+.labelwrongword {
+    background-color: #d9534f;
+}
+.labelmisplacedword,
+.labelwrongword {
+    font-size: 75%;
+}
+
 .que.regexp .correctword {
     color: #0000FF;
 }
-.wrongword {
-    background-color: #d9534f;
-}
+
 /* must be a monospace font for correct display of erroneous characters position */
 .displayvalidationerrors {
     font-family: Courier New, Courier, monospace;

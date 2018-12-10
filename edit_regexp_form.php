@@ -95,7 +95,8 @@ class qtype_regexp_edit_form extends question_edit_form {
             $data = array();
             
             // Add current question category to $data for validation!
-            $data['category'] = $this->category; 
+            // Modified for moodle 3.6 compatibility
+            $data['category'] = $this->category->id.','.$this->category->contextid;
             
             foreach ($this->currentanswers as $key => $answer) {
                 $qu->answers[$i] = new stdClass();
@@ -176,6 +177,7 @@ class qtype_regexp_edit_form extends question_edit_form {
         global $CFG;
 
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
+        //$data['category'] = $this->category->id.','.$this->category->contextid;
         $errors = parent::validation($data, $files);
         $answers = $data['answer'];
         $data['fraction'][0] = 1;
