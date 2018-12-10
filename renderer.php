@@ -50,11 +50,10 @@ class qtype_regexp_renderer extends qtype_renderer {
         }
         $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
         $question->closest = $closest;
-        // If start of student answer is wrong, remove it (in regexpadaptive behaviours only).
+        // If regexpadaptive behaviours replace current student response with correct beginning.
         $currbehaviourname = get_class($qa->get_behaviour() );
-        if (strpos ($currbehaviourname, 'regexpadaptive')) {
-            $currentanswer = $closest[0];
-        } else if ($closest[0] !== '') {
+        $currstate = $qa->get_state();
+        if (strpos ($currbehaviourname, 'regexpadaptive') && $currstate == 'todo') {
             $currentanswer = $closest[0];
         }
 
