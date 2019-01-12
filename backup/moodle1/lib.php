@@ -15,21 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    qtype
- * @subpackage regexp
- * @author     Joseph R�zeau
- * @copyright  2011 Joseph R�zeau
+ * Regexp question conversion handler.
+ *
+ * @package    qtype_regexp
+ * @copyright  2011 Joseph REZEAU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Joseph Rézeau
+ * @copyright  2011 Joseph Rézeau
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * REGEXP question type conversion handler
+ * Regexp question conversion handler.
+ * @copyright  2011 Joseph Rézeau
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class moodle1_qtype_regexp_handler extends moodle1_qtype_handler {
 
     /**
+     * Returns the question subpaths.
      * @return array
      */
     public function get_question_subpaths() {
@@ -40,7 +46,9 @@ class moodle1_qtype_regexp_handler extends moodle1_qtype_handler {
     }
 
     /**
-     * Appends the regexp specific information to the question
+     * Appends the regexp specific information to the question.
+     * @param array $data
+     * @param array $raw
      */
     public function process_question(array $data, array $raw) {
 

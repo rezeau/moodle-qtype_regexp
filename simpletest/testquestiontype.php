@@ -17,12 +17,10 @@
 /**
  * Unit tests for the regexp question type class.
  *
- * @package    qtype
- * @subpackage regexp
+ * @package    qtype_regexp
  * @copyright  2007 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -36,21 +34,42 @@ require_once($CFG->dirroot . '/question/type/regexp/questiontype.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_regexp_test extends UnitTestCase {
+
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     public static $includecoverage = array(
         'question/type/questiontypebase.php',
         'question/type/regexp/questiontype.php',
     );
 
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     protected $qtype;
 
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     public function setUp() {
         $this->qtype = new qtype_regexp();
     }
 
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     public function tearDown() {
         $this->qtype = null;
     }
 
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     protected function get_test_question_data() {
         $q = new stdClass();
         $q->id = 1;
@@ -60,19 +79,35 @@ class qtype_regexp_test extends UnitTestCase {
         return $q;
     }
 
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     public function test_name() {
         $this->assertEqual($this->qtype->name(), 'regexp');
     }
 
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     public function test_can_analyse_responses() {
         $this->assertTrue($this->qtype->can_analyse_responses());
     }
 
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     public function test_get_random_guess_score() {
         $q = $this->get_test_question_data();
         $this->assertEqual(0.1, $this->qtype->get_random_guess_score($q));
     }
 
+    /**
+     *  explained here https://docs.moodle.org/dev/Unit_test_API
+     * @var array
+     */
     public function test_get_possible_responses() {
         $q = $this->get_test_question_data();
 

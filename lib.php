@@ -18,18 +18,24 @@
  * Serve question type files
  *
  * @since      2.0
- * @package    qtype
- * @subpackage regexp
+ * @package    qtype_regexp
  * @copyright  Joseph REZEAU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 defined('MOODLE_INTERNAL') || die();
-
 
 /**
  * Checks file access for regexp questions.
+ * @package  qtype_regexp
+ * @category files
+ * @param stdClass $course course object
+ * @param stdClass $cm course module object
+ * @param stdClass $context context object
+ * @param string $filearea file area
+ * @param array $args extra arguments
+ * @param bool $forcedownload whether or not force download
+ *
  */
 function qtype_regexp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
     global $DB, $CFG;

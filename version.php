@@ -17,8 +17,7 @@
 /**
  * Version information for the Regexp question type.
  *
- * @package    qtype
- * @subpackage regexp
+ * @package    qtype_regexp
  * @copyright  2011 Joseph Rézeau moodle@rezeau.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

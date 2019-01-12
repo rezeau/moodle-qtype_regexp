@@ -22,10 +22,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// To enable moodle mobile test site to upload my css files
-header('Access-Control-Allow-Origin: *');
-
 defined('MOODLE_INTERNAL') || die();
+// To enable moodle mobile test site to upload my css files.
+header('Access-Control-Allow-Origin: *');
 
 $addons = array(
     "qtype_regexp" => array(
@@ -34,7 +33,7 @@ $addons = array(
                 'displaydata' => array(
                     'title' => 'Regular Expression Short Answer',
                     'icon' => '/question/type/regexp/pix/icon.gif',
-                    'class' => '', //What does this do?
+                    'class' => '', // What does this do?
                 ),
                 'delegate' => 'CoreQuestionDelegate', // Delegate (where to display the link to the add-on).
                 'method' => 'regexp_view',
@@ -43,11 +42,12 @@ $addons = array(
                 ), // Function needs caching for offline.
 
                'styles' => array(
-                    'url' => '/question/type/regexp/styles_app.css',
+                    'url' => '/question/type/regexp/mobile/styles_app.css',
                     'version' => '1.00'
                 ),
                 'lang' => array(
-                    array('Question name', 'pluginname')
+                    array('pluginname', 'qtype_regexp'),
+                    array('buyword', 'qbehaviour_regexpadaptivewithhelp')
                 )
             )
         ),

@@ -14,10 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace qtype_regexp\output;
-
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Mobile output class for question type regexp.
  *
@@ -25,15 +21,24 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2018 Joseph Rézeau
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mobile {
 
+namespace qtype_regexp\output;
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Mobile output class for question type regexp.
+ * @copyright 2018 Joseph Rézeau
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class mobile {
+    /**
+     * Returns the regexp question view for the mobile app.
+     *
+     * @return void
+     */
     public static function regexp_view() {
         global $CFG;
-        // General notes:
-        // If you have worked on mobile activities, there is no cmid or courseid in $args here.
-        // This is not equivalent to mod/quiz/attempt.php?attempt=57&cmid=147, rather
-        // this is just a section of that page, with all the access checking already done for us.
-        // The full file path is required even though file_get_contents should work with relative paths.
         return [
             'templates' => [[
                 'id' => 'main',

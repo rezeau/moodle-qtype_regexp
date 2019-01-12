@@ -99,3 +99,6 @@ body#page-question-type-regexp div[id^=fitem_id_][id*=feedback_] {
     border: 1px solid #bbb;
     border-top: 0;
 }
+.btn .helpme[disabled] {
+    display:none;
+}

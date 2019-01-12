@@ -17,8 +17,7 @@
 /**
  * Regexp question renderer class.
  *
- * @package    qtype
- * @subpackage regexp
+ * @package    qtype_regexp
  * @copyright  2011 Joseph REZEAU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,6 +33,14 @@ defined('MOODLE_INTERNAL') || die();
  */
 class qtype_regexp_renderer extends qtype_renderer {
 
+    /**
+     * Generate the display of the formulation part of the question shown at runtime
+     * in a quiz.
+     *
+     * @param question_attempt $qa the question attempt to display.
+     * @param question_display_options $options controls what should and should not be displayed.
+     * @return string HTML fragment.
+     */
     public function formulation_and_controls(question_attempt $qa, question_display_options $options) {
         global $CFG, $currentanswerwithhint;
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
@@ -48,18 +55,18 @@ class qtype_regexp_renderer extends qtype_renderer {
             $hintadded = $step->has_behaviour_var('_helps') === true;
                 break;
         }
-        $closest = find_closest($question, $currentanswer, $correct_response=false, $hintadded);
+        $closest = find_closest($question, $currentanswer, $correctresponse = false, $hintadded);
         $question->closest = $closest;
         // If regexpadaptive behaviours replace current student response with correct beginning.
         $currbehaviourname = get_class($qa->get_behaviour() );
         $currstate = $qa->get_state();
-        if (strpos ($currbehaviourname, 'regexpadaptive') && $currstate == 'todo') {
+        if (strpos ($currbehaviourname, 'adaptive') && $currstate == 'todo') {
             $currentanswer = $closest[0];
         }
 
         // Showing / hiding regexp generated alternative sentences (for teacher only).
         // Changed from javascript to print_collapsible_region OCT 2012.
-        // Removed for compatibility with the Embed questions plugin see https://moodle.org/plugins/filter_embedquestion
+        // Removed for compatibility with the Embed questions plugin see https://moodle.org/plugins/filter_embedquestion.
 
         $inputattributes = array(
             'type' => 'text',
@@ -116,12 +123,19 @@ class qtype_regexp_renderer extends qtype_renderer {
         return $result;
     }
 
+    /**
+     * Get feedback.
+     *
+     * @param question_attempt $qa the question attempt to display.
+     * @param question_display_options $options controls what should and should not be displayed.
+     * @return string HTML fragment.
+     */
     public function feedback(question_attempt $qa, question_display_options $options) {
         $result = '';
         $hint = null;
         if ($options->feedback) {
             $result .= html_writer::nonempty_tag('div', $this->specific_feedback($qa),
-                    array('class' => 'specificfeedback'));
+                    array('class' => 'specificfeedback qtype-regexp'));
             $hint = $qa->get_applicable_hint();
         }
 
@@ -140,14 +154,20 @@ class qtype_regexp_renderer extends qtype_renderer {
         }
 
         if ($options->rightanswer) {
-            $display_correct_answers = $this->correct_response($qa);
-            $result .= html_writer::nonempty_tag('div', $display_correct_answers,
+            $displaycorrectanswers = $this->correct_response($qa);
+            $result .= html_writer::nonempty_tag('div', $displaycorrectanswers,
                     array('class' => 'rightanswer'));
         }
 
         return $result;
     }
 
+    /**
+     * Get feedback/hint information
+     *
+     * @param question_attempt $qa
+     * @return string
+     */
     public function specific_feedback(question_attempt $qa) {
         $question = $qa->get_question();
         $currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
@@ -194,44 +214,53 @@ class qtype_regexp_renderer extends qtype_renderer {
         // Student's response with corrections to be displayed in feedback div.
         $f = '<div><span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3].'</div>';
         if ($answer && $answer->feedback || $closestcomplete == true) {
-            return $question->format_text($f.$labelerrors.$answer->feedback.$completemessage, $answer->feedbackformat, $qa, 'question', 'answerfeedback', $answer->id);
+            return $question->format_text($f.$labelerrors.$answer->feedback.$completemessage,
+                $answer->feedbackformat, $qa, 'question', 'answerfeedback', $answer->id);
         } else {
             return $f.$labelerrors;
         }
     }
 
-    public function correct_response(question_attempt $qa) {    
+    /**
+     * Get correct response
+     *
+     * @param question_attempt $qa
+     * @return string
+     */
+    public function correct_response(question_attempt $qa) {
         $question = $qa->get_question();
-        $display_responses = '';
+        $displayresponses = '';
         $alternateanswers = get_alternateanswers($question);
         $bestcorrectanswer = $alternateanswers[1]['answers'][0];
 
         if (count($alternateanswers) == 1 ) { // No alternative answers besides the only "correct" answer.
-            $display_responses .= get_string('correctansweris', 'qtype_regexp', $bestcorrectanswer);
+            $displayresponses .= get_string('correctansweris', 'qtype_regexp', $bestcorrectanswer);
+            // No need to display alternate answers!
+            return $displayresponses;
         } else {
-            $display_responses .= get_string('bestcorrectansweris', 'qtype_regexp', $bestcorrectanswer).'<br />';
+            $displayresponses .= get_string('bestcorrectansweris', 'qtype_regexp', $bestcorrectanswer).'<br />';
         }
         // Teacher can always view alternate answers; student can only view if question is set to studentshowalternate.
         $canview = question_has_capability_on($question, 'view');
         if ($question->studentshowalternate || $canview) {
-            $display_responses .= print_collapsible_region_start('expandalternateanswers', 'id'.
+            $displayresponses .= print_collapsible_region_start('expandalternateanswers', 'id'.
                             $question->id, get_string('showhidealternate', 'qtype_regexp'),
                             'showhidealternate', true, true);
             foreach ($alternateanswers as $key => $alternateanswer) {
                 if ($key == 1) { // First (correct) Answer.
                     if (count($alternateanswers) > 1) {
-                        $display_responses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
+                        $displayresponses .= get_string('correctanswersare', 'qtype_regexp').'<br />';
                     }
                 } else {
                     $fraction = $alternateanswer['fraction'];
-                    $display_responses .= "<strong>$fraction</strong><br />";
+                    $displayresponses .= "<strong>$fraction</strong><br />";
                     foreach ($alternateanswer['answers'] as $alternate) {
-                        $display_responses .=  $alternate.'<br />';
+                        $displayresponses .= $alternate.'<br />';
                     }
                 }
             }
-            $display_responses .= print_collapsible_region_end(true);
+            $displayresponses .= print_collapsible_region_end(true);
         }
-        return $display_responses;
+        return $displayresponses;
     }
 }

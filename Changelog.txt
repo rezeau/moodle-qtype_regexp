@@ -1,3 +1,6 @@
+12/01/1019
+halloween version: many changes
+--------------------------------------------------------------------------------
 15:13 08/01/2014
 version  = 2013111801
 Fixed incorrect processing of utf8 characters between []

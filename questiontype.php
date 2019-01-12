@@ -15,46 +15,62 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Serve question type files
+ * The question type class for the regexp question type.
  *
- * @since      2.0
- * @package    qtype
- * @subpackage regexp
+ * @package    qtype_regexp
  * @copyright  Jean-Michel Vedrine  & Joseph Rézeau
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/**
- * @package questionbank
- * @subpackage questiontypes
- */
 defined('MOODLE_INTERNAL') || die();
-
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/engine/lib.php');
 require_once($CFG->dirroot . '/question/type/regexp/question.php');
 
 /**
- * The regexp question type.
+ * The question type class for the regexp question type.
  *
- *
- *
+ * @package    qtype_regexp
+ * @copyright  Jean-Michel Vedrine  & Joseph Rézeau
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_regexp extends question_type {
+
+    /**
+     * data used by export_to_xml (among other things possibly
+     * @return array
+     */
     public function extra_question_fields() {
         return array('qtype_regexp', 'usehint', 'usecase', 'studentshowalternate');
     }
 
+    /**
+     * Move all the files belonging to this question from one context to another.
+     * @param int $questionid the question being moved.
+     * @param int $oldcontextid the context it is moving from.
+     * @param int $newcontextid the context it is moving to.
+     *
+     */
     public function move_files($questionid, $oldcontextid, $newcontextid) {
         parent::move_files($questionid, $oldcontextid, $newcontextid);
         $this->move_files_in_answers($questionid, $oldcontextid, $newcontextid);
     }
 
+    /**
+     * Delete all the files belonging to this question.Seems the same as in the parent
+     * @param int $questionid the question being deleted.
+     * @param int $contextid the context the question is in.
+     */
     protected function delete_files($questionid, $contextid) {
         parent::delete_files($questionid, $contextid);
         $this->delete_files_in_answers($questionid, $contextid);
     }
 
+    /**
+     * Saves question options.
+     * @param stdClass $question
+     * @return object
+     */
     public function save_question_options ($question) {
         global $DB, $SESSION, $CFG;
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
@@ -124,6 +140,12 @@ class qtype_regexp extends question_type {
         }
     }
 
+    /**
+     * Called when previewing or at runtime in a quiz.
+     *
+     * @param question_definition $question
+     * @param stdClass $questiondata
+     */
     protected function initialise_question_instance(question_definition $question, $questiondata) {
         parent::initialise_question_instance($question, $questiondata);
         $question->usecase = $questiondata->options->usecase;
@@ -133,6 +155,11 @@ class qtype_regexp extends question_type {
         $qid = $question->id;
     }
 
+    /**
+     * Gets random guess score.
+     *
+     * @param stdClass $questiondata
+     */
     public function get_random_guess_score($questiondata) {
         foreach ($questiondata->options->answers as $aid => $answer) {
             if ('*' == trim($answer->answer)) {
@@ -142,6 +169,11 @@ class qtype_regexp extends question_type {
         return 0;
     }
 
+    /**
+     * Gets possible responses.
+     *
+     * @param stdClass $questiondata
+     */
     public function get_possible_responses ($questiondata) {
         $responses = array();
 
@@ -153,28 +185,13 @@ class qtype_regexp extends question_type {
     }
 
     /**
-     * Provide export functionality for xml format
-     * @param question object the question object
-     * @param format object the format object so that helper methods can be used
-     * @param extra mixed any additional format specific data that may be passed by the format (see format code for info)
-     * @return string the data to append to the output buffer or false if error
-     */
-    // IMPORT/EXPORT FUNCTIONS.
-
-    /*
-     * Imports question from the Moodle XML format
-     *
-     * Imports question using information from extra_question_fields function
-     * If some of you fields contains id's you'll need to reimplement this
-     */
-
-    /*
      * Export question to the Moodle XML format
      *
-     * Export question using information from extra_question_fields function
-     * If some of you fields contains id's you'll need to reimplement this
+     * @param object $question
+     * @param qformat_xml $format
+     * @param object $extra
+     * @return string
      */
-
     public function export_to_xml ($question, qformat_xml $format, $extra=null) {
         $extraquestionfields = $this->extra_question_fields();
         if (!is_array($extraquestionfields)) {
@@ -182,7 +199,7 @@ class qtype_regexp extends question_type {
         }
         // Omit table name (question).
         array_shift($extraquestionfields);
-        $expout='';
+        $expout = '';
         foreach ($extraquestionfields as $field) {
             $exportedvalue = $question->options->$field;
             if (!empty($exportedvalue) && htmlspecialchars($exportedvalue) != $exportedvalue) {
@@ -203,18 +220,18 @@ class qtype_regexp extends question_type {
     }
 
     /**
-     * Provide import functionality for xml format
-     * @param data mixed the segment of data containing the question
-     * @param question object question object processed (so far) by standard import code
-     * @param format object the format object so that helper methods can be used (in particular error())
-     * @param extra mixed any additional format specific data that may be passed by the format (see format code for info)
-     * @return object question object suitable for save_options() call or false if cannot handle
-     **/
-
+     * Create a question from reading in a file in Moodle xml format
+     *
+     * @param array $data
+     * @param stdClass $question (might be an array)
+     * @param qformat_xml $format
+     * @param stdClass $extra
+     * @return boolean
+     */
     public function import_from_xml ($data, $question, qformat_xml $format, $extra=null) {
         // Check question is for us.
         $qtype = $data['@']['type'];
-        if ($qtype=='regexp') {
+        if ($qtype == 'regexp') {
             $qo = $format->import_headers( $data );
 
             // Header parts particular to regexp.
@@ -232,13 +249,13 @@ class qtype_regexp extends question_type {
 
             // Run through the answers.
             $answers = $data['#']['answer'];
-            $a_count = 0;
+            $acount = 0;
             foreach ($answers as $answer) {
                 $ans = $format->import_answer($answer);
-                $qo->answer[$a_count] = $ans->answer['text'];
-                $qo->fraction[$a_count] = $ans->fraction;
-                $qo->feedback[$a_count] = $ans->feedback;
-                ++$a_count;
+                $qo->answer[$acount] = $ans->answer['text'];
+                $qo->fraction[$acount] = $ans->fraction;
+                $qo->feedback[$acount] = $ans->feedback;
+                ++$acount;
             }
             return $qo;
         } else {

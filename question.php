@@ -17,15 +17,12 @@
 /**
  * Regexp question definition class.
  *
- * @package    qtype
- * @subpackage regexp
+ * @package    qtype_regexp
  * @copyright  2011 Joseph REZEAU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 defined('MOODLE_INTERNAL') || die();
-
 
 /**
  * Represents a regexp question.
@@ -33,8 +30,6 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-// Class qtype_regexp_question extends question_graded_by_strategy.
-
 class qtype_regexp_question extends question_graded_by_strategy
         implements question_response_answer_comparer {
 
@@ -50,18 +45,31 @@ class qtype_regexp_question extends question_graded_by_strategy
     /** @var array of question_answer. */
     public $answers = array();
 
+    /**
+     * Contruct new question.
+     */
     public function __construct() {
         parent::__construct(new question_first_matching_answer_grading_strategy($this));
     }
 
+    /**
+     * Get expected data.
+     */
     public function get_expected_data() {
         return array('answer' => PARAM_RAW_TRIMMED);
     }
 
+    /**
+     * Get data.
+     */
     public function get_data() {
         return array('answer' => PARAM_RAW_TRIMMED);
     }
 
+    /**
+     * Summarise response.
+     * @param array $response
+     */
     public function summarise_response(array $response) {
         if (isset($response['answer'])) {
             return $response['answer'];
@@ -70,23 +78,35 @@ class qtype_regexp_question extends question_graded_by_strategy
         }
     }
 
+    /**
+     * Summarise response with help.
+     * @param array $response
+     */
     public function summarise_response_withhelp(array $response) {
         global $CFG;
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         if (isset($response['answer'])) {
             $answer = $response['answer'];
-            $closest = find_closest($this, $currentanswer=$answer, $correct_response=false, $hintadded=true);
+            $closest = find_closest($this, $currentanswer = $answer, $correctresponse = false, $hintadded = true);
             return $answer.' => '.$closest[0];
         } else {
             return null;
         }
     }
 
+    /**
+     * Check if response is complete.
+     * @param array $response
+     */
     public function is_complete_response(array $response) {
         return array_key_exists('answer', $response) &&
                 ($response['answer'] || $response['answer'] === '0');
     }
 
+    /**
+     * Check validation.
+     * @param array $response
+     */
     public function get_validation_error(array $response) {
         if ($this->is_gradable_response($response)) {
             return '';
@@ -94,15 +114,29 @@ class qtype_regexp_question extends question_graded_by_strategy
         return get_string('pleaseenterananswer', 'qtype_regexp');
     }
 
+    /**
+     * Check if is same response.
+     * @param array $prevresponse
+     * @param array $newresponse
+     **/
     public function is_same_response(array $prevresponse, array $newresponse) {
         return question_utils::arrays_same_at_key_missing_is_blank(
                 $prevresponse, $newresponse, 'answer');
     }
 
+    /**
+     * Get answers
+     **/
     public function get_answers() {
         return $this->answers;
     }
 
+    /**
+     * Compare response with answer.
+     * @param array $response
+     * @param question_answer $answer
+     * @return boolean
+     */
     public function compare_response_with_answer(array $response, question_answer $answer) {
         global $CFG, $currentanswerwithhint;
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
@@ -120,7 +154,7 @@ class qtype_regexp_question extends question_graded_by_strategy
             return true;
         }
 
-        // Do NOT match student response against Answer 1 : if it matches, already matched by get_correct_response() above
+        // Do NOT match student response against Answer 1 : if it matches, already matched by get_correctresponse() above
         // and Answer 1 may contain metacharacters that do not follow correct regex syntax.
         // Get id of Answer 1.
         foreach ($this->answers as $key => $value) {
@@ -134,6 +168,15 @@ class qtype_regexp_question extends question_graded_by_strategy
         return self::compare_string_with_wildcard(
                 $response['answer'], $answer->answer, $answer->fraction, !$this->usecase);
     }
+
+    /**
+     * Compare string with wildcard.
+     * @param string $string
+     * @param string $pattern
+     * @param int $grade
+     * @param boolean $ignorecase
+     * @return boolean
+     */
     public static function compare_string_with_wildcard($string, $pattern, $grade, $ignorecase) {
         if (substr($pattern, 0, 2) != '--') {
             // Answers with a positive grade must be anchored for strict match.
@@ -167,7 +210,7 @@ class qtype_regexp_question extends question_graded_by_strategy
                 $missingstrings = preg_match_all($pattern, $response1, $matches, PREG_OFFSET_CAPTURE);
                 $strmissingstrings = $matches[0][0][0];
                 $strmissingstrings = substr($strmissingstrings, 2);
-                $openparenpos = $matches[0][0][1] -1;
+                $openparenpos = $matches[0][0][1] - 1;
                 $closeparenpos = $openparenpos + strlen($strmissingstrings) + 4;
                 $start = substr($response1 , 0, $openparenpos);
                 $finish = substr($response1 , $closeparenpos);
@@ -179,7 +222,7 @@ class qtype_regexp_question extends question_graded_by_strategy
                     }
                 }
             } else {  // This is *not* a NOT (a OR b OR c etc.) request.
-                if (preg_match('/^'.$response1.'$/'.$ignorecase, $response0)  == 0) {
+                if (preg_match('/^'.$response1.'$/'.$ignorecase, $response0) == 0) {
                     return true;
                 }
             }
@@ -187,6 +230,16 @@ class qtype_regexp_question extends question_graded_by_strategy
         return false;
     }
 
+    /**
+     * Checks whether the users is allow to be served a particular file.
+     * @param array $qa
+     * @param question_display_options $options the options that control display of the question.
+     * @param string $component the name of the component we are serving files for.
+     * @param string $filearea the name of the file area.
+     * @param array $args the remaining bits of the file path.
+     * @param bool $forcedownload whether the user must be forced to download the file.
+     * @return bool true if the user can access this file.
+     */
     public function check_file_access($qa, $options, $component, $filearea,
         $args, $forcedownload) {
         if ($component == 'question' && $filearea == 'answerfeedback') {
@@ -204,6 +257,26 @@ class qtype_regexp_question extends question_graded_by_strategy
         }
     }
 
+    /**
+     * Create the appropriate behaviour for an attempt at this quetsion,
+     * given the desired (archetypal) behaviour.
+     *
+     * This default implementation will suit most normal graded questions.
+     *
+     * If your question is of a patricular type, then it may need to do something
+     * different. For example, if your question can only be graded manually, then
+     * it should probably return a manualgraded behaviour, irrespective of
+     * what is asked for.
+     *
+     * If your question wants to do somthing especially complicated is some situations,
+     * then you may wish to return a particular behaviour related to the
+     * one asked for. For example, you migth want to return a
+     * qbehaviour_interactive_adapted_for_myqtype.
+     *
+     * @param question_attempt $qa the attempt we are creating a behaviour for.
+     * @param string $preferredbehaviour the requested type of behaviour.
+     * @return question_behaviour the new behaviour object.
+     */
     public function make_behaviour(question_attempt $qa, $preferredbehaviour) {
         GLOBAL $CFG;
         // Check that regexpadaptivewithhelp behaviour has been installed

@@ -1,0 +1,58 @@
+.qtype-regexp .misplacedword,
+.qtype-regexp .wrongword,
+.qtype-regexp .labelmisplacedword,
+.qtype-regexp .labelwrongword {
+    color: white;
+}
+.qtype-regexp .misplacedword,
+.qtype-regexp .labelmisplacedword {
+    background-color: #5cb85c;
+}
+.qtype-regexp .wrongword,
+.qtype-regexp .labelwrongword {
+    background-color: #d9534f;
+}
+.qtype-regexp .labelmisplacedword,
+.qtype-regexp .labelwrongword {
+    font-size: 75%;
+}
+.qtype-regexp .correctword {
+    color: #0000FF;
+}
+.qtype-regexp .wrongword {
+    background-color: #d9534f;
+}
+.collapsibleregioncaption {
+    display: none;
+}
+.qtype-regexp .text-input,
+.qtype-regexp .text-input-md {
+    border: 1px solid #ccc;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin: 0px 0px;
+    width: calc(100% - 20px);
+    font-size: 1.4rem;
+}
+.qtype-regexp .item-input {
+    padding-left: 6px;
+    margin-top: -14px;
+}
+.qtype-regexp .question-correct:after,
+.qtype-regexp .question-incorrect:after,
+.qtype-regexp .question-partiallycorrect:after {
+    font-family: FontAwesome;
+    padding-left: 3px;
+}
+.qtype-regexp .question-correct:after {
+    content: "\f00c";
+    color: #5e8100;
+}
+.qtype-regexp .question-incorrect:after {
+    content: "\f00d";
+    color: #cb3d4d;
+}
+.qtype-regexp .question-partiallycorrect:after {
+    content: "\f046";
+    color: #f98012;
+}

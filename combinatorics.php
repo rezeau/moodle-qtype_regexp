@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreStart
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
@@ -10,44 +11,31 @@
  *
  * PHP version 5
  *
- * @category   Math
- * @package    Combinatorics
+ * @package    qtype_regexp
  * @author     David Sanders <shangxiao@php.net>
+ * @copyright  David Sanders <shangxiao@php.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    Release: 1.0.0
  * @link       http://pyrus.sourceforge.net/Math_Combinatorics.html
  */
-
 
 /**
  * Math_Combinatorics
- *
- * Math_Combinatorics provides the ability to find all combinations and
- * permutations given an set and a subset size.  Associative arrays are
- * preserved.
- *
- * @category   Math
- * @package    Combinatorics
- * @author     David Sanders <shangxiao@php.net>
+ * @package    qtype_regexp
+ * @copyright  David Sanders <shangxiao@php.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    Release: 1.0.0
- * @link       http://pyrus.sourceforge.net/Math_Combinatorics.html
  */
-
 class Math_Combinatorics
 {
     /**
      * List of pointers that record the current combination.
      *
      * @var array
-     * @access private
      */
     private $_pointers = array();
 
     /**
      * Find all combinations given a set and a subset size.
      *
-     * @access public
      * @param  array $set          Parent set
      * @param  int   $subset_size  Subset size
      * @return array An array of combinations
@@ -84,7 +72,6 @@ class Math_Combinatorics
      * Recursive function used to advance the list of 'pointers' that record the
      * current combination.
      *
-     * @access private
      * @param  int $pointer_number The ID of the pointer that is being advanced
      * @param  int $limit          Pointer limit
      * @return bool True if a pointer was advanced, false otherwise
@@ -112,7 +99,6 @@ class Math_Combinatorics
     /**
      * Get the current combination.
      *
-     * @access private
      * @param  array $set The parent set
      * @return array The current combination
      */
@@ -132,7 +118,6 @@ class Math_Combinatorics
     /**
      * Find all permutations given a set and a subset size.
      *
-     * @access public
      * @param  array $set          Parent set
      * @param  int   $subset_size  Subset size
      * @return array An array of permutations
@@ -153,7 +138,6 @@ class Math_Combinatorics
     /**
      * Recursive function to find the permutations of the current combination.
      *
-     * @access private
      * @param array $set Current combination set
      * @return array Permutations of the current combination
      */
@@ -196,7 +180,6 @@ class Math_Combinatorics
     /**
      * Associative version of array_shift()
      *
-     * @access public
      * @param  array $array Reference to the array to shift
      * @return array Array with 1st element as the shifted key and the 2nd
      *               element as the shifted value
@@ -214,7 +197,6 @@ class Math_Combinatorics
      * Get the first key of an associative array
      *
      * @param  array $array Array to find the first key
-     * @access private
      * @return mixed The first key of the given array
      */
     private function _firstKey($array)
@@ -225,5 +207,4 @@ class Math_Combinatorics
         return $key;
     }
 }
-
-?>
+// @codingStandardsIgnoreEnd

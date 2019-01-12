@@ -15,17 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    moodlecore
+ *
+ * Regexp question type restorationr
+ *
+ * @package    qtype_regexp
  * @subpackage backup-moodle2
- * @copyright  2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
+ * @copyright  2011 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * restore plugin class that provides the necessary information
- * needed to restore one regexp qtype plugin
+ * Information to restore a backup of a regexp question *
+ *
+ * Also used if you click the duplicate quiz button in a course.
+ *
+ * @copyright  2017 Joseph Rézeau
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_qtype_regexp_plugin extends restore_qtype_plugin {
 
@@ -49,6 +55,8 @@ class restore_qtype_regexp_plugin extends restore_qtype_plugin {
 
     /**
      * Process the qtype/regexp element
+     *
+     * @param array $data
      */
     public function process_regexp($data) {
         global $DB;
