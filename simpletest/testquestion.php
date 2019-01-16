@@ -68,9 +68,9 @@ class test_regexp_question_maker extends test_question_maker {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_regexp_question_test extends UnitTestCase {
-/**
- * Unit tests for the REGEXP question definition class.
- */
+    /**
+     * Unit tests for the REGEXP question definition class.
+     */
     public function test_compare_string_with_wildcard() {
         // Test case sensitive literal matches.
         $this->assertTrue(qtype_regexp_question::compare_string_with_wildcard(
@@ -152,9 +152,9 @@ class qtype_regexp_question_test extends UnitTestCase {
                 "orange blue white black red", '--.*(&&blue&&red&&white).*' , false));
     }
 
- /**
- * Unit tests for the REGEXP question definition class.
- */
+    /**
+     * Unit tests for the REGEXP question definition class.
+     */
     public function test_is_complete_response() {
         $question = test_regexp_question_maker::make_a_regexp_question();
 
@@ -165,9 +165,9 @@ class qtype_regexp_question_test extends UnitTestCase {
         $this->assertTrue($question->is_complete_response(array('answer' => 'x')));
     }
 
- /**
- * Unit tests for the REGEXP question definition class.
- */
+    /**
+     * Unit tests for the REGEXP question definition class.
+     */
     public function test_is_gradable_response() {
         $question = test_regexp_question_maker::make_a_regexp_question();
 
@@ -178,9 +178,9 @@ class qtype_regexp_question_test extends UnitTestCase {
         $this->assertTrue($question->is_gradable_response(array('answer' => 'x')));
     }
 
- /**
- * Unit tests for the REGEXP question definition class.
- */
+    /**
+     * Unit tests for the REGEXP question definition class.
+     */
     public function test_grading() {
         $question = test_regexp_question_maker::make_a_regexp_question();
 
@@ -192,9 +192,9 @@ class qtype_regexp_question_test extends UnitTestCase {
                 $question->grade_response(array('answer' => 'blue, white, red')));
     }
 
- /**
- * Unit tests for the REGEXP question definition class.
- */
+    /**
+     * Unit tests for the REGEXP question definition class.
+     */
     public function test_get_correct_response() {
         $question = test_regexp_question_maker::make_a_regexp_question();
 
@@ -202,27 +202,27 @@ class qtype_regexp_question_test extends UnitTestCase {
                 $question->get_correct_response());
     }
 
- /**
- * Unit tests for the REGEXP question definition class.
- */
+    /**
+     * Unit tests for the REGEXP question definition class.
+     */
     public function test_get_question_summary() {
         $question = test_regexp_question_maker::make_a_regexp_question();
         $qsummary = $question->get_question_summary();
         $this->assertEqual('French flag colors : __________', $qsummary);
     }
 
- /**
- * Unit tests for the REGEXP question definition class.
- */
+    /**
+     * Unit tests for the REGEXP question definition class.
+     */
     public function test_summarise_response() {
         $question = test_regexp_question_maker::make_a_regexp_question();
         $summary = $question->summarise_response(array('answer' => 'dog'));
         $this->assertEqual('dog', $summary);
     }
 
- /**
- * Unit tests for the REGEXP question definition class.
- */
+    /**
+     * Unit tests for the REGEXP question definition class.
+     */
     public function test_classify_response() {
         $sa = test_regexp_question_maker::make_a_regexp_question();
         $sa->start_attempt(new question_attempt_step(), 1);
