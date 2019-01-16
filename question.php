@@ -231,7 +231,8 @@ class qtype_regexp_question extends question_graded_by_strategy
     }
 
     /**
-     * Checks whether the users is allow to be served a particular file.
+     * Checks whether the user is allow to be served a particular file.
+     * Copied from shortanswer/question.php
      * @param array $qa
      * @param question_display_options $options the options that control display of the question.
      * @param string $component the name of the component we are serving files for.
@@ -241,12 +242,12 @@ class qtype_regexp_question extends question_graded_by_strategy
      * @return bool true if the user can access this file.
      */
     public function check_file_access($qa, $options, $component, $filearea,
-        $args, $forcedownload) {
+            $args, $forcedownload) {
         if ($component == 'question' && $filearea == 'answerfeedback') {
-
-            $answer = $qa->get_question()->get_matching_answer(array('answer' => $currentanswer));
+            $currentanswer = $qa->get_last_qt_var('answer');
+            $answer = $this->get_matching_answer(array('answer' => $currentanswer));
             $answerid = reset($args); // Itemid is answer id.
-            return $options->feedback && $answerid == $answer->id;
+            return $options->feedback && $answer && $answerid == $answer->id;
 
         } else if ($component == 'question' && $filearea == 'hint') {
             return $this->check_hint_file_access($qa, $options, $args);
