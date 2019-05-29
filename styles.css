@@ -37,7 +37,7 @@
 }
 
 .que.regexp .correctword {
-    color: #0000FF;
+    color: #0000ff;
 }
 
 /* must be a monospace font for correct display of erroneous characters position */
@@ -100,5 +100,5 @@ body#page-question-type-regexp div[id^=fitem_id_][id*=feedback_] {
     border-top: 0;
 }
 .btn .helpme[disabled] {
-    display:none;
+    display: none;
 }

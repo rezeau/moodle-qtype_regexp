@@ -11,4 +11,4 @@ M.qtype_regexp.showhidealternate = function(Y, buttonel, showhideel) {
         }
         e.halt();
     });
-}
+};

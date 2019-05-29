@@ -17,7 +17,7 @@
     font-size: 75%;
 }
 .qtype-regexp .correctword {
-    color: #0000FF;
+    color: #0000ff;
 }
 .qtype-regexp .wrongword {
     background-color: #d9534f;
@@ -30,7 +30,6 @@
     border: 1px solid #ccc;
     padding: 4px 6px;
     border-radius: 4px;
-    margin: 0px 0px;
     width: calc(100% - 20px);
     font-size: 1.4rem;
 }

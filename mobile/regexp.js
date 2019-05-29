@@ -7,12 +7,12 @@ var result = {
             console.warn('Aborting because of no question received.');
             return that.CoreQuestionHelperProvider.showComponentError(that.onAbort);
         }
-        const div = document.createElement('div');
+        var div = document.createElement('div');
         div.innerHTML = this.question.html;
          // Get question questiontext.
-        const questiontext = div.querySelector('.qtext');
+        var questiontext = div.querySelector('.qtext');
          // Get question input.
-        const input = div.querySelector('input[type="text"][name*=answer]');
+        var input = div.querySelector('input[type="text"][name*=answer]');
 
         if (div.querySelector('.readonly') !== null) {
             this.question.readonly = true;
