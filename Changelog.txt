@@ -1,3 +1,8 @@
+04/06/2019
+version 2019052100 for moodle 3.7
+version 2019052101
+added the inline input feature for the mobile version (based on same feature for short answer question for mobile)
+--------------------------------------------------------------------------------
 12/01/2019
 version  = 2019011301
 - Version Halloween 2018 has many changes
