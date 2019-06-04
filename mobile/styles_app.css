@@ -25,14 +25,6 @@
 .collapsibleregioncaption {
     display: none;
 }
-.qtype-regexp .text-input,
-.qtype-regexp .text-input-md {
-    border: 1px solid #ccc;
-    padding: 4px 6px;
-    border-radius: 4px;
-    width: calc(100% - 20px);
-    font-size: 1.4rem;
-}
 .qtype-regexp .item-input {
     padding-left: 6px;
     margin-top: -14px;
@@ -54,4 +46,15 @@
 .qtype-regexp .question-partiallycorrect:after {
     content: "\f046";
     color: #f98012;
+}
+
+.qtype-regexp .inlineinput {
+    display: inline-block;
+    border: 1px solid #9e9e9e;
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.qtype-regexp .question-partiallycorrect {
+    box-shadow: inset 0 -1px 0 0 #5e8100;
 }

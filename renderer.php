@@ -74,6 +74,7 @@ class qtype_regexp_renderer extends qtype_renderer {
             'value' => $currentanswer,
             'id' => $inputname,
             'size' => 80,
+            'class' => 'form-control d-inline',
         );
 
         if ($options->readonly) {
@@ -88,7 +89,7 @@ class qtype_regexp_renderer extends qtype_renderer {
             } else {
                 $fraction = 0;
             }
-            $inputattributes['class'] = $this->feedback_class($fraction);
+            $inputattributes['class'] .= ' ' . $this->feedback_class($fraction);
             $feedbackimg = $this->feedback_image($fraction);
         }
         $questiontext = $question->format_questiontext($qa);
@@ -96,6 +97,9 @@ class qtype_regexp_renderer extends qtype_renderer {
         if (preg_match('/_____+/', $questiontext, $matches)) {
             $placeholder = $matches[0];
             $inputattributes['size'] = round(strlen($placeholder) * 1.1);
+
+            // Added for correct display of input inside question text in the mobile version.
+            $inputattributes['class'] .= ' ' . 'inlineinput';
         }
 
         $input = html_writer::empty_tag('input', $inputattributes) . $feedbackimg;

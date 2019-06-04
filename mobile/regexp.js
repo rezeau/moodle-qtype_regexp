@@ -30,13 +30,24 @@ var result = {
             return this.CoreQuestionHelperProvider.showComponentError(this.onAbort);
         }
 
-        // Check if question is marked as correct.
+        // Check if question is marked as correct for displaying relevant icon & its colour.
+
         if (input.classList.contains('incorrect')) {
-            this.question.input.correctClass = 'qtype-regexp question-incorrect';
+            this.question.input.correctIcon = 'fa-remove';
+            this.question.input.correctIconColor = 'danger';
         } else if (input.classList.contains('correct')) {
-            this.question.input.correctClass = 'qtype-regexp question-correct';
+            this.question.input.correctIcon = 'fa-check';
+            this.question.input.correctIconColor = 'success';
         } else if (input.classList.contains('partiallycorrect')) {
-            this.question.input.correctClass = 'qtype-regexp question-partiallycorrect';
+            this.question.input.correctIcon = 'fa-check-square';
+            this.question.input.correctIconColor = 'warning';
+        }
+
+        // Check if the answer is inside the question text.
+        if (input.classList.contains ('inlineinput')) {
+            this.question.input.isInline = true;
+        } else {
+            this.question.input.isInline = false;
         }
 
         // @codingStandardsIgnoreStart
