@@ -23,8 +23,11 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-// To enable moodle mobile test site to upload my css files.
-header('Access-Control-Allow-Origin: *');
+
+if (defined('CLI_SCRIPT') === false) {
+    // To enable moodle mobile test site to upload my css files.
+    header('Access-Control-Allow-Origin: *');
+}
 
 $addons = array(
     "qtype_regexp" => array(
