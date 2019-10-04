@@ -32,12 +32,8 @@ function expand_regexp($myregexp) {
     global $regexporiginal;
 
     // JR 16 DEC 2011 add parentheses if necessary; still need to detect un-parenthesized pipe.
-    $firstletter = substr($myregexp, 1);
-    $lastletter = substr($myregexp, - 1);
-    if ( strstr($myregexp, '|') && $firstletter != '(' && $lastletter != ')') {
-        $myregexp = '('.$myregexp.')';
-    }
-
+    // JR 04 OCT 2019 removed this feature which caused a bug.
+    
     $regexporiginal = $myregexp;
 
     $charlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
