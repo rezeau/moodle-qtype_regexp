@@ -721,8 +721,7 @@ function find_closest($question, $currentanswer, $correctresponse = false, $hint
                     $alternatecorrectanswers[] = $alternate;
                 }
             }
-            $SESSION->qtype_regexp_question->alternatecorrectanswers[$qid] = $alternatecorrectanswers;
-        }
+        } 
     }
     // Testing ignorecase.
     $ignorecase = 'i';

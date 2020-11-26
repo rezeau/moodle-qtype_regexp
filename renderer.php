@@ -60,10 +60,6 @@ class qtype_regexp_renderer extends qtype_renderer {
         // If regexpadaptive behaviours replace current student response with correct beginning.
         $currbehaviourname = get_class($qa->get_behaviour() );
         $currstate = $qa->get_state();
-        if (strpos ($currbehaviourname, 'adaptive') && $currstate == 'todo') {
-            $currentanswer = $closest[0];
-        }
-
         // Showing / hiding regexp generated alternative sentences (for teacher only).
         // Changed from javascript to print_collapsible_region OCT 2012.
         // Removed for compatibility with the Embed questions plugin see https://moodle.org/plugins/filter_embedquestion.
