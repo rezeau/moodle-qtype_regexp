@@ -173,7 +173,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         $currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
         $ispreview = false;
         $completemessage = '';
-        $closestcomplete = false;
+        $closestcomplete = false;                                                           
         foreach ($qa->get_reverse_step_iterator() as $step) {
             $hintadded = $step->has_behaviour_var('_helps') === true;
             break;
@@ -185,34 +185,40 @@ class qtype_regexp_renderer extends qtype_renderer {
             $isstateimprovable = $qa->get_behaviour()->is_state_improvable($qa->get_state());
             if ($closest[2] == 'complete' && $isstateimprovable) {
                 $closestcomplete = true;
-                $class = '"correctness correct"';
+                $class = '"validationerror"';
                 $completemessage = '<div class='.$class.'>'.get_string("clicktosubmit", "qtype_regexp").'</div>';
 
             }
         } else {
             $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
         }
-
+        
         $labelerrors = '';
-        $guesserrors = $closest[5];
-        if ($guesserrors) {
-            $labelwrongwords = '<span class="labelwrongword">'.get_string("wrongwords", "qtype_regexp").'</span>';
-            $labelmisplacedwords = '<span class="labelmisplacedword">'.get_string("misplacedwords", "qtype_regexp").'</span>';
-            switch ($guesserrors) {
-                case 1 :
-                    $labelerrors = '<div>'.$labelmisplacedwords.'</div>';
-                    break;
-                case 10 :
-                    $labelerrors = '<div>'.$labelwrongwords.'</div>';
-                    break;
-                case 11 :
-                    $labelerrors = '<div>'.$labelwrongwords. ' '. $labelmisplacedwords.'</div>';
-                    break;
+        $f = '';
+        if (!empty($closest)) {
+            $guesserrors = $closest[5];
+            if ($guesserrors) {
+                $labelwrongwords = '<span class="labelwrongword">'.get_string("wrongwords", "qtype_regexp").'</span>';
+                $labelmisplacedwords = '<span class="labelmisplacedword">'.get_string("misplacedwords", "qtype_regexp").'</span>';
+                switch ($guesserrors) {
+                    case 1 :
+                        $labelerrors = '<div>'.$labelmisplacedwords.'</div>';
+                        break;
+                    case 10 :
+                        $labelerrors = '<div>'.$labelwrongwords.'</div>';
+                        break;
+                    case 11 :
+                        $labelerrors = '<div>'.$labelwrongwords. ' '. $labelmisplacedwords.'</div>';
+                        break;
+                }
             }
+            // Student's response with corrections to be displayed in feedback div.
+            $f = '<div><span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3].'</div>';
         }
-
-        // Student's response with corrections to be displayed in feedback div.
-        $f = '<div><span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3].'</div>';
+        
+        if ($closest[2] == 'complete') {
+            $answer->feedback = '';
+        }
         if ($answer && $answer->feedback || $closestcomplete == true) {
             return $question->format_text($f.$labelerrors.$answer->feedback.$completemessage,
                 $answer->feedbackformat, $qa, 'question', 'answerfeedback', $answer->id);

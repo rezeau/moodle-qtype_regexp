@@ -638,64 +638,67 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
             }
             $closest[4] = substr ($closestahint, strlen($closesta));
             break;
-        case 'minus':
-            $closest[0] = $closestahint;
+        case 'minus':               
+        case 'complete':        
             $closest[1] = $closesta;
             $closest[4] = substr ($closestahint, strlen($closesta));
+        case 'minus':
+            $closest[0] = $closestahint;
             break;
         case 'complete':
-            $closest[0] = $a;
-            $closest[1] = $a;
+            $closest[0] = $a;            
             break;
         default:
             $closest[0] = $closesta;
             $closest[1] = $closest[0];
     }
+
     // Search for correct *words* in student's guess, after closest answer has been found
     // and even if closest answer is null JR 26 FEB 2012.
-    if ($closest[2] != 'complete') {
-        $lenclosesta = strlen($closest[0]) - strlen($closest[4]);
-        $closest[1] = substr($closest[0], 0, $lenclosesta);
-        $restofanswer = substr($guess, $lenclosesta);
-        $restofanswer = implode(' ', explode(' ', $restofanswer));
+    // JR DEC 2020 If word was bought, response can be complete but with extra text, so we need to look for rest of answer
+    
+    $lenclosesta = strlen($closest[0]) - strlen($closest[4]);
+    $closest[1] = substr($closest[0], 0, $lenclosesta);
+    $restofanswer = substr($guess, $lenclosesta);
+    $restofanswer = implode(' ', explode(' ', $restofanswer));
 
-        // Local function get_max at end of this  l ocallib.
-        $indexoflongest = get_max($rightbits[1], 0, 0);
-        $restofanswers = $rightbits[0][$indexoflongest];
+    // Local function get_max at end of this  l ocallib.
+    $indexoflongest = get_max($rightbits[1], 0, 0);
+    $restofanswers = $rightbits[0][$indexoflongest];
 
-        if ($restofanswer) {
-            unset($array1, $array2);
-            // Count punctuation marks as words - except within within words themselves.
-            // Does not work for French number format (space separator).
-            $pattern = "/(\s|(?<!\w)[\p{P}]|[\p{P}](?!\w))/";
-            $flags = PREG_SPLIT_DELIM_CAPTURE;
-            $array1 = preg_split($pattern, $restofanswer, - 1, $flags);
-            $array2 = preg_split($pattern, $restofanswers, - 1, $flags);
-            // Filter arrays to remove empty values.
-            $array1 = array_filter(array_map('trim', $array1));
-            $array2 = array_filter(array_map('trim', $array2));
-            $misplacedwords = array_intersect($array1, $array2);
-            // Remove potential duplicate words.
-            $misplacedwords = array_unique($misplacedwords);
-            foreach ($misplacedwords as $key => $value) {
-                $misplacedwords[$key] = '<span class="misplacedword">&nbsp;'.$value.'&nbsp;</span>';
-            }
-            $wrongwords = array_diff($array1, $array2);
-            $closest[5] = (count($misplacedwords) !== 0);
-            if (count($wrongwords) !== 0) {
-                $closest[5] = $closest[5] + 10;
-            }
-            foreach ($wrongwords as $key => $value) {
-                $wrongwords[$key] = '<span class="wrongword">&nbsp;'.$value.'&nbsp;</span> ';
-            }
-            unset ($result);
-            $result = $misplacedwords + $wrongwords;
-            ksort($result);
-            $result = implode (' ', $result);
-            $closest[3] = $result;
-            unset ($result);
+    if ($restofanswer) {
+        unset($array1, $array2);
+        // Count punctuation marks as words - except within within words themselves.
+        // Does not work for French number format (space separator).
+        $pattern = "/(\s|(?<!\w)[\p{P}]|[\p{P}](?!\w))/";
+        $flags = PREG_SPLIT_DELIM_CAPTURE;
+        $array1 = preg_split($pattern, $restofanswer, - 1, $flags);
+        $array2 = preg_split($pattern, $restofanswers, - 1, $flags);
+        // Filter arrays to remove empty values.
+        $array1 = array_filter(array_map('trim', $array1));
+        $array2 = array_filter(array_map('trim', $array2));
+        $misplacedwords = array_intersect($array1, $array2);
+        // Remove potential duplicate words.
+        $misplacedwords = array_unique($misplacedwords);
+        foreach ($misplacedwords as $key => $value) {
+            $misplacedwords[$key] = '<span class="misplacedword">&nbsp;'.$value.'&nbsp;</span>';
         }
+        $wrongwords = array_diff($array1, $array2);
+        $closest[5] = (count($misplacedwords) !== 0);
+        if (count($wrongwords) !== 0) {
+            $closest[5] = $closest[5] + 10;
+        }
+        foreach ($wrongwords as $key => $value) {
+            $wrongwords[$key] = '<span class="wrongword">&nbsp;'.$value.'&nbsp;</span> ';
+        }
+        unset ($result);
+        $result = $misplacedwords + $wrongwords;
+        ksort($result);
+        $result = implode (' ', $result);
+        $closest[3] = $result;
+        unset ($result);
     }
+
     return $closest;
 }
 
@@ -964,8 +967,11 @@ function get_alternateanswers($question) {
         $i++;
     }
     // Store alternate answers in SESSION for caching effect DEC 2011.
-    $SESSION->qtype_regexp_question->alternateanswers[$qid] = $alternateanswers;
-    $SESSION->qtype_regexp_question->alternatecorrectanswers[$qid] = '';
+    // Added isset check DEC 2020 to avoid error message (strict syntax)
+    if (isset($SESSION->qtype_regexp_question->alternateanswers)) {
+        $SESSION->qtype_regexp_question->alternateanswers[$qid] = $alternateanswers;
+        $SESSION->qtype_regexp_question->alternatecorrectanswers[$qid] = '';
+    }
     return $alternateanswers;
 }
 
