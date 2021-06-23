@@ -35,14 +35,19 @@ class mobile {
     /**
      * Returns the regexp question view for the mobile app.
      *
+     * @param mixed $args
      * @return void
      */
-    public static function regexp_view() {
+    public static function regexp_view($args) {
         global $CFG;
+
+        $args = (object) $args;
+        $versionname = $args->appversioncode >= 3950 ? 'latest' : 'ionic3';
+
         return [
             'templates' => [[
                 'id' => 'main',
-                'html' => file_get_contents($CFG->dirroot . '/question/type/regexp/mobile/regexp.html')
+                'html' => file_get_contents($CFG->dirroot . "/question/type/regexp/mobile/regexp_$versionname.html")
             ]],
             'javascript' => file_get_contents($CFG->dirroot . '/question/type/regexp/mobile/regexp.js')
         ];
