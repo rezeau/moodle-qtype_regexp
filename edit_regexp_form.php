@@ -148,7 +148,7 @@ class qtype_regexp_edit_form extends question_edit_form {
     }
 
     /**
-     * Perform any preprocessing needed on the data passed to {@link set_data()}
+     * Perform any preprocessing needed on the data passed in
      * before it is used to initialise the form.
      * @param object $question the data being passed to the form.
      * @return object $question the modified data.
@@ -284,7 +284,7 @@ class qtype_regexp_edit_form extends question_edit_form {
         $answeroptions[] = $mform->createElement('text', 'answer',
                         $label, array('size' => 80));
         $answeroptions[] = $mform->createElement('select', 'fraction',
-                        get_string('grade'), $gradeoptions);
+                        get_string('gradenoun'), $gradeoptions);
         $repeated[] = $mform->createElement('group', 'answeroptions',
                         $label, $answeroptions, null, false);
         $repeated[] = $mform->createElement('editor', 'feedback',
