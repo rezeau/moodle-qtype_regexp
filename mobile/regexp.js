@@ -33,7 +33,7 @@ var result = {
         // Check if question is marked as correct for displaying relevant icon & its colour.
 
         if (input.classList.contains('incorrect')) {
-            this.question.input.correctIcon = 'fa-remove';
+            this.question.input.correctIcon = 'fa-times';
             this.question.input.correctIconColor = 'danger';
         } else if (input.classList.contains('correct')) {
             this.question.input.correctIcon = 'fa-check';
