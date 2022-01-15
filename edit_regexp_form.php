@@ -95,7 +95,6 @@ class qtype_regexp_edit_form extends question_edit_form {
 
             // Add current question category to $data for validation!
             // Modified for moodle 3.6 compatibility.
-            $data['category'] = $this->category->id.','.$this->category->contextid;
 
             foreach ($this->currentanswers as $key => $answer) {
                 $qu->answers[$i] = new stdClass();
@@ -148,7 +147,7 @@ class qtype_regexp_edit_form extends question_edit_form {
     }
 
     /**
-     * Perform any preprocessing needed on the data passed to {@link set_data()}
+     * Perform any preprocessing needed on the data passed in
      * before it is used to initialise the form.
      * @param object $question the data being passed to the form.
      * @return object $question the modified data.
@@ -192,7 +191,12 @@ class qtype_regexp_edit_form extends question_edit_form {
         global $CFG;
 
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
-        $errors = parent::validation($data, $files);
+        // Starting with Moodle 4 if we are calculating alternate answers we cannot use parent:validation.
+        if ($this->showalternate) {
+            $errors = array();
+        } else {
+            $errors = parent::validation($data, $files);
+        }
         $answers = $data['answer'];
         $data['fraction'][0] = 1;
         $grades = $data['fraction'];
@@ -284,7 +288,7 @@ class qtype_regexp_edit_form extends question_edit_form {
         $answeroptions[] = $mform->createElement('text', 'answer',
                         $label, array('size' => 80));
         $answeroptions[] = $mform->createElement('select', 'fraction',
-                        get_string('grade'), $gradeoptions);
+                        get_string('gradenoun'), $gradeoptions);
         $repeated[] = $mform->createElement('group', 'answeroptions',
                         $label, $answeroptions, null, false);
         $repeated[] = $mform->createElement('editor', 'feedback',

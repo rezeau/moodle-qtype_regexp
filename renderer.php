@@ -173,7 +173,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         $currentanswer = remove_blanks($qa->get_last_qt_var('answer') );
         $ispreview = false;
         $completemessage = '';
-        $closestcomplete = false;                                                           
+        $closestcomplete = false;
         foreach ($qa->get_reverse_step_iterator() as $step) {
             $hintadded = $step->has_behaviour_var('_helps') === true;
             break;
@@ -192,7 +192,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         } else {
             $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
         }
-        
+
         $labelerrors = '';
         $f = '';
         if (!empty($closest)) {
@@ -215,7 +215,7 @@ class qtype_regexp_renderer extends qtype_renderer {
             // Student's response with corrections to be displayed in feedback div.
             $f = '<div><span class="correctword">'.$closest[1].'<strong>'.$closest[4].'</strong></span> '.$closest[3].'</div>';
         }
-        
+
         if ($closest[2] == 'complete') {
             $answer->feedback = '';
         }

@@ -37,7 +37,7 @@
 }
 
 .que.regexp .correctword {
-    color: #0000ff;
+    color: #00f;
 }
 
 /* must be a monospace font for correct display of erroneous characters position */

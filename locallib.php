@@ -33,7 +33,7 @@ function expand_regexp($myregexp) {
 
     // JR 16 DEC 2011 add parentheses if necessary; still need to detect un-parenthesized pipe.
     // JR 04 OCT 2019 removed this feature which caused a bug.
-    
+
     $regexporiginal = $myregexp;
 
     $charlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -638,15 +638,15 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
             }
             $closest[4] = substr ($closestahint, strlen($closesta));
             break;
-        case 'minus':               
-        case 'complete':        
+        case 'minus':
+        case 'complete':
             $closest[1] = $closesta;
             $closest[4] = substr ($closestahint, strlen($closesta));
         case 'minus':
             $closest[0] = $closestahint;
             break;
         case 'complete':
-            $closest[0] = $a;            
+            $closest[0] = $a;
             break;
         default:
             $closest[0] = $closesta;
@@ -655,8 +655,8 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
 
     // Search for correct *words* in student's guess, after closest answer has been found
     // and even if closest answer is null JR 26 FEB 2012.
-    // JR DEC 2020 If word was bought, response can be complete but with extra text, so we need to look for rest of answer
-    
+    // JR DEC 2020 If word was bought, response can be complete but with extra text, so we need to look for rest of answer.
+
     $lenclosesta = strlen($closest[0]) - strlen($closest[4]);
     $closest[1] = substr($closest[0], 0, $lenclosesta);
     $restofanswer = substr($guess, $lenclosesta);
@@ -724,7 +724,7 @@ function find_closest($question, $currentanswer, $correctresponse = false, $hint
                     $alternatecorrectanswers[] = $alternate;
                 }
             }
-        } 
+        }
     }
     // Testing ignorecase.
     $ignorecase = 'i';
@@ -881,9 +881,9 @@ function check_unescaped_metachars ($myregexp, $markedline) {
 
     // Now check for unescaped backslashes.
     $unescapedregex = '/(^|[^\\\])\\\[^\.|\*|\(|\\[\]\{\}\/)\+\?\^\|\$\.]/';
-    /* First part of regexp: (^|[^\\\]) = beginning of sentence OR no backslash.
-     Second part of regexp: \\\ = followed by backslash.
-     This is the third part of regexp: [^\.|\*|\(|\\[\]\{\}\/)\+\?\^\|\$\.] = NOT followed by a metacharacter.
+    /* First part of regexp: beginning of sentence OR no backslash.
+     Second part of regexp: followed by backslash.
+     This is the third part of regexp: NOT followed by a metacharacter.
      */
 
     $unescapedmetachars = preg_match_all($unescapedregex, $myregexp, $matches, PREG_OFFSET_CAPTURE);
@@ -967,7 +967,7 @@ function get_alternateanswers($question) {
         $i++;
     }
     // Store alternate answers in SESSION for caching effect DEC 2011.
-    // Added isset check DEC 2020 to avoid error message (strict syntax)
+    // Added isset check DEC 2020 to avoid error message (strict syntax).
     if (isset($SESSION->qtype_regexp_question->alternateanswers)) {
         $SESSION->qtype_regexp_question->alternateanswers[$qid] = $alternateanswers;
         $SESSION->qtype_regexp_question->alternatecorrectanswers[$qid] = '';
