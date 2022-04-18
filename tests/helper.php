@@ -22,10 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-defined('MOODLE_INTERNAL') || die();
-
-
 /**
  * Test helper class for the regexp question type.
  *
@@ -94,7 +90,6 @@ class qtype_regexp_test_helper extends question_test_helper {
      * This question also has a '.*' match anything answer.
      * @return stdClass
      */
-
     public function get_regexp_question_form_data_frenchflag() {
         $form = new stdClass();
 

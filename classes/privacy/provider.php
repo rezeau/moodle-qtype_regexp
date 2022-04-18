@@ -24,8 +24,6 @@
 
 namespace qtype_regexp\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy Subsystem for qtype_regexp implementing null_provider.
  *

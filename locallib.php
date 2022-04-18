@@ -22,7 +22,6 @@
  * @copyright  Joseph REZEAU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- defined('MOODLE_INTERNAL') || die();
 
 /**
  * Expand regexp.
@@ -916,10 +915,10 @@ function splitstring ($longstring, $maxlen = 75) {
     $len = core_text::strlen($longstring);
     $stringchunks = array();
     if ($len < $maxlen) {
-        $stringchunks [] = $longstring;
+        $stringchunks[] = $longstring;
     } else {
         for ($i = 0; $i < $len; $i += $maxlen) {
-            $stringchunks [] = core_text::substr($longstring, $i, $maxlen);
+            $stringchunks[] = core_text::substr($longstring, $i, $maxlen);
         }
     }
     return $stringchunks;

@@ -24,8 +24,6 @@
 
 namespace qtype_regexp\output;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Mobile output class for question type regexp.
  * @copyright 2018 Joseph Rézeau
