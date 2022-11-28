@@ -257,6 +257,9 @@ class qtype_regexp extends question_type {
                 $qo->feedback[$acount] = $ans->feedback;
                 ++$acount;
             }
+            $format->import_combined_feedback($qo, $data, true);
+            $format->import_hints($qo, $data, true, false,
+                $format->get_format($qo->questiontextformat));
             return $qo;
         } else {
             return false;
