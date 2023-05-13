@@ -756,7 +756,8 @@ function find_closest($question, $currentanswer, $correctresponse = false, $hint
 function remove_blanks($text) {
     // Finds 2 successive spaces (note: \s does not work with French 'à' character!
     $pattern = "/  /";
-    while ($w = preg_match($pattern, $text, $matches, PREG_OFFSET_CAPTURE) ) {
+    // Added (string) before $text for PHP 8.1 compatibility.
+    while ($w = preg_match($pattern, (string) $text, $matches, PREG_OFFSET_CAPTURE) ) {
         $text = substr($text, 0, $matches[0][1]) .substr($text, $matches[0][1] + 1);
     }
     return $text;
