@@ -29,7 +29,7 @@ $plugin->dependencies = array(
     'qbehaviour_regexpadaptivewithhelp'   => 2022041800,
     'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2022041800
 );
-$plugin->version  = 2022112800;
+$plugin->version  = 2023051300;
 $plugin->requires = 2016052300; // Moodle version.
-$plugin->release = '4.1 for Moodle 4.1';
+$plugin->release = '4.2 for Moodle 4.2';
 $plugin->maturity  = MATURITY_STABLE;
