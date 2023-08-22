@@ -1,4 +1,4 @@
-<?php
+    <?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -22,6 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+
+defined('MOODLE_INTERNAL') || die();
+
+
 /**
  * Test helper class for the regexp question type.
  *
@@ -30,7 +34,7 @@
  */
 class qtype_regexp_test_helper extends question_test_helper {
     public function get_test_questions() {
-        return array('frenchflag');
+        return array('frenchflag','frenchflagletterhint','frenchflagwordhint','cat_bat_rat');
     }
 
     /**
@@ -44,16 +48,19 @@ class qtype_regexp_test_helper extends question_test_helper {
         $rx = new qtype_regexp_question();
         test_question_maker::initialise_a_question($rx);
         $rx->name = 'Regular expression short answer question';
-        $rx->questiontext = 'French flag colors : __________';
-        $rx->generalfeedback = 'Generalfeedback: ';
+        $rx->questiontext = 'What are the colours of the French flag?';
+        $rx->generalfeedback = 'General feedback: OK';
         $rx->usecase = false;
         $rx->answers = array(
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
-            15 => new question_answer(15, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
-            16 => new question_answer(16, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
+            15 => new question_answer(15, '--.*(blue|red|white).*', 0.0, 'You have not even found one of the colors of the French flag!', FORMAT_HTML),
+            16 => new question_answer(16, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
+            17 => new question_answer(17, '--.*(&&blue&&red&&white).*', 0.0, 'You have not found <em>all</em> the colors of the French flag!', FORMAT_HTML),
+            18 => new question_answer(18, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
         );
         $rx->qtype = question_bank::get_qtype('regexp');
+        
         return $rx;
     }
 
@@ -69,11 +76,100 @@ class qtype_regexp_test_helper extends question_test_helper {
 
         $qdata->qtype = 'regexp';
         $qdata->name = 'Regular expression short answer question';
-        $qdata->questiontext = 'French flag colors : __________';
-        $qdata->generalfeedback = 'Generalfeedback';
+        $qdata->questiontext = 'What are the colours of the French flag?';
+        $rx->generalfeedback = 'General feedback: OK';
+        $qdata->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
 
         $qdata->options = new stdClass();
         $qdata->options->usecase = 0;
+        $qdata->options->answers = array(
+            13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
+            14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
+            15 => new question_answer(15, '--.*(blue|red|white).*', 0.0, 'You have not even found one of the colors of the French flag!', FORMAT_HTML),
+            16 => new question_answer(16, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
+            17 => new question_answer(17, '--.*(&&blue&&red&&white).*', 0.0, 'You have not found <em>all</em> the colors of the French flag!', FORMAT_HTML),
+            18 => new question_answer(18, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
+        );
+
+        return $qdata;
+    }
+
+    /**
+     * Gets the question form data for a regexp question with correct answer "it's blue, white and red",
+     * partially correct answer must match "(it('s| is) |they are )?blue, white, red".
+     * This question also has a '.*' match anything answer.
+     * @return stdClass
+     */
+    public function get_regexp_question_form_data_frenchflag() {
+        $form = new stdClass();
+
+        $form->name = 'Regular expression short answer question';        
+        $form->questiontext = array('text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML);
+        $form->defaultmark = 1.0;
+        $form->generalfeedback = array('text' => 'General feedback: OK.', 'format' => FORMAT_HTML);
+        $form->usecase = false;
+        $form->answer = array("it's blue, white and red", "(it('s| is) |they are )?blue, white, red", '--.*(blue|red|white).*', '--.*blue.*', '--.*(&&blue&&red&&white).*', '.*');
+        $form->fraction = array('1.0', '0.8', '0.0', '0.0', '0.0', '0.0');
+        $form->feedback = array(
+            array('text' => 'The best answer.', 'format' => FORMAT_HTML),
+            array('text' => 'An acceptable answer.', 'format' => FORMAT_HTML),
+            array('text' => 'You have not even found one of the colors of the French flag!', 'format' => FORMAT_HTML),
+            array('text' => 'Missing blue!', 'format' => FORMAT_HTML),
+            array('text' => 'You have not found <em>all</em> the colors of the French flag!', 'format' => FORMAT_HTML),
+            array('text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML),
+        );
+        $form->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
+
+        return $form;
+    }
+
+    /**
+     * Makes a REGEXP question with (first) correct answer "it's blue, white and red",
+     * partially correct answer must match "(it('s| is) |they are )?blue, white, red".
+     * This question also has a '.*' match anything answer.
+     * @return qtype_regexp_question
+     */
+    public function make_regexp_question_frenchflagletterhint() {
+        question_bank::load_question_definition_classes('regexp');
+        $rx = new qtype_regexp_question();
+        test_question_maker::initialise_a_question($rx);
+        $rx->name = 'Regular expression short answer question';
+        $rx->questiontext = 'What are the colours of the French flag?';
+        $rx->generalfeedback = 'General feedback: OK';
+        $rx->usehint = 1; //Help button mode = Letter
+        $rx->usecase = false;
+        $rx->penalty = 0.1;
+        $rx->answers = array(
+            13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
+            14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
+            15 => new question_answer(15, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
+            16 => new question_answer(16, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
+        );
+        $rx->qtype = question_bank::get_qtype('regexp');
+        
+        return $rx;
+    }
+
+    /**
+     * Gets the question data for a regexp question with correct answer "it's blue, white and red",
+     * partially correct answer must match "(it('s| is) |they are )?blue, white, red".
+     * This question also has a '.*' match anything answer.
+     * @return stdClass
+     */
+    public function get_regexp_question_data_frenchflagletterhint() {
+        $qdata = new stdClass();
+        test_question_maker::initialise_question_data($qdata);
+
+        $qdata->qtype = 'regexp';
+        $qdata->name = 'Regular expression short answer question';
+        $qdata->questiontext = 'What are the colours of the French flag?';
+        $rx->generalfeedback = 'General feedback: OK';
+        $qdata->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
+
+        $qdata->options = new stdClass();
+        $qdata->options->usehint = 1; //Help button mode = Letter
+        $qdata->options->usecase = 0;
+        $qdata->options->penalty = 0.1;
         $qdata->options->answers = array(
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
@@ -90,14 +186,16 @@ class qtype_regexp_test_helper extends question_test_helper {
      * This question also has a '.*' match anything answer.
      * @return stdClass
      */
-    public function get_regexp_question_form_data_frenchflag() {
+    public function get_regexp_question_form_data_frenchflagletterhint() {
         $form = new stdClass();
 
-        $form->name = 'Regular expression short answer question';
-        $form->questiontext = array('French flag colors : __________', 'format' => FORMAT_HTML);
+        $form->name = 'Regular expression short answer question';        
+        $form->questiontext = array('text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML);
         $form->defaultmark = 1.0;
-        $form->generalfeedback = array('text' => 'Generalfeedback: OK.', 'format' => FORMAT_HTML);
+        $form->generalfeedback = array('text' => 'General feedback: OK.', 'format' => FORMAT_HTML);
+        $form->usehint = 1; //Help button mode = Letter
         $form->usecase = false;
+        $form->penalty = 0.1;
         $form->answer = array("it's blue, white and red", "(it('s| is) |they are )?blue, white, red", '--.*blue.*', '.*');
         $form->fraction = array('1.0', '0.8', '0.0', '0.0');
         $form->feedback = array(
@@ -106,7 +204,168 @@ class qtype_regexp_test_helper extends question_test_helper {
             array('text' => 'Missing blue!', 'format' => FORMAT_HTML),
             array('text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML),
         );
+        $form->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
 
         return $form;
     }
+
+
+    /**
+     * Makes a REGEXP question with (first) correct answer "it's blue, white and red",
+     * partially correct answer must match "(it('s| is) |they are )?blue, white, red".
+     * This question also has a '.*' match anything answer.
+     * @return qtype_regexp_question
+     */
+    public function make_regexp_question_frenchflagwordhint() {
+        question_bank::load_question_definition_classes('regexp');
+        $rx = new qtype_regexp_question();
+        test_question_maker::initialise_a_question($rx);
+        $rx->name = 'Regular expression short answer question';
+        $rx->questiontext = 'What are the colours of the French flag?';
+        $rx->generalfeedback = 'General feedback: OK';
+        $rx->usehint = 2; //Help button mode = word
+        $rx->usecase = false;
+        $rx->penalty = 0.2;
+        $rx->answers = array(
+            13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
+            14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
+            15 => new question_answer(15, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
+            16 => new question_answer(16, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
+        );
+        $rx->qtype = question_bank::get_qtype('regexp');
+        
+        return $rx;
+    }
+
+    /**
+     * Gets the question data for a regexp question with correct answer "it's blue, white and red",
+     * partially correct answer must match "(it('s| is) |they are )?blue, white, red".
+     * This question also has a '.*' match anything answer.
+     * @return stdClass
+     */
+    public function get_regexp_question_data_frenchflagwordhint() {
+        $qdata = new stdClass();
+        test_question_maker::initialise_question_data($qdata);
+
+        $qdata->qtype = 'regexp';
+        $qdata->name = 'Regular expression short answer question';
+        $qdata->questiontext = 'What are the colours of the French flag?';
+        $rx->generalfeedback = 'General feedback: OK';
+        $qdata->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
+
+        $qdata->options = new stdClass();
+        $qdata->options->usehint = 2; //Help button mode = word
+        $qdata->options->usecase = 0;
+        $qdata->options->penalty = 0.2;
+        $qdata->options->answers = array(
+            13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
+            14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
+            15 => new question_answer(15, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
+            16 => new question_answer(16, '.*', 0.0, 'No, no, no! Try again.', FORMAT_HTML),
+        );
+
+        return $qdata;
+    }
+
+    /**
+     * Gets the question form data for a regexp question with correct answer "it's blue, white and red",
+     * partially correct answer must match "(it('s| is) |they are )?blue, white, red".
+     * This question also has a '.*' match anything answer.
+     * @return stdClass
+     */
+    public function get_regexp_question_form_data_frenchflagwordhint() {
+        $form = new stdClass();
+
+        $form->name = 'Regular expression short answer question';        
+        $form->questiontext = array('text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML);
+        $form->defaultmark = 1.0;
+        $form->generalfeedback = array('text' => 'General feedback: OK.', 'format' => FORMAT_HTML);
+        $form->usehint = 2; //Help button mode = word
+        $form->usecase = false;
+        $form->penalty = 0.2;
+        $form->answer = array("it's blue, white and red", "(it('s| is) |they are )?blue, white, red", '--.*blue.*', '.*');
+        $form->fraction = array('1.0', '0.8', '0.0', '0.0');
+        $form->feedback = array(
+            array('text' => 'The best answer.', 'format' => FORMAT_HTML),
+            array('text' => 'An acceptable answer.', 'format' => FORMAT_HTML),
+            array('text' => 'Missing blue!', 'format' => FORMAT_HTML),
+            array('text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML),
+        );
+        $form->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
+
+        return $form;
+    }
+
+
+    /**
+     * Makes a REGEXP question with (first) correct answer "cat" and an input 'fill in blank',
+     * Other correct answer must match "bat|rat".
+     * @return qtype_regexp_question
+     */
+    public function make_regexp_question_cat_bat_rat() {
+        question_bank::load_question_definition_classes('regexp');
+        $rx = new qtype_regexp_question();
+        test_question_maker::initialise_a_question($rx);
+        $rx->name = 'Regular expression short answer question';
+        $rx->questiontext = 'Name an animal whose name consists of 3 letters and the middle letter is the vowel "a": _____';
+        $rx->generalfeedback = 'General feedback: OK';
+        $rx->usecase = false;
+        $rx->answers = array(
+            13 => new question_answer(13, "cat", 1.0, 'The best answer.', FORMAT_HTML),
+            14 => new question_answer(14, "[br]at", 1.0, 'An acceptable answer.', FORMAT_HTML),
+        );
+        $rx->qtype = question_bank::get_qtype('regexp');
+        
+        return $rx;
+    }
+
+    /**
+     * Gets the question data for a  a REGEXP question with (first) correct answer "cat" and an input 'fill in blank',
+     * Other correct answer must match "bat|rat".
+     * @return stdClass
+     */
+    public function get_regexp_question_data_cat_bat_rat() {
+        $qdata = new stdClass();
+        test_question_maker::initialise_question_data($qdata);
+
+        $qdata->qtype = 'regexp';
+        $qdata->name = 'Regular expression short answer question';
+        $qdata->questiontext = 'Name an animal whose name consists of 3 letters and the middle letter is the vowel "a": _____';
+        $rx->generalfeedback = 'General feedback: OK';
+        $qdata->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
+        $qdata->options = new stdClass();
+        $qdata->options->usecase = 0;
+        $qdata->options->answers = array(
+            13 => new question_answer(13, "cat", 1.0, 'The best answer.', FORMAT_HTML),
+            14 => new question_answer(14, "[br]at", 1.0, 'An acceptable answer.', FORMAT_HTML),
+        );
+
+        return $qdata;
+    }
+
+    /**
+     * Gets the question form data for a regexp question with correct answer "it's blue, white and red",
+     * partially correct answer must match "(it('s| is) |they are )?blue, white, red".
+     * This question also has a '.*' match anything answer.
+     * @return stdClass
+     */
+    public function get_regexp_question_form_data_cat_bat_rat() {
+        $form = new stdClass();
+
+        $form->name = 'Regular expression short answer question';        
+        $form->questiontext = array('text' => 'Name an animal whose name consists of 3 letters and the middle letter is the vowel "a": _____', 'format' => FORMAT_HTML);
+        $form->defaultmark = 1.0;
+        $form->generalfeedback = array('text' => 'General feedback: OK.', 'format' => FORMAT_HTML);
+        $form->usecase = false;
+        $form->answer = array("cat", "[br]at");
+        $form->fraction = array('1.0', '1.0');
+        $form->feedback = array(
+            array('text' => 'The best answer.', 'format' => FORMAT_HTML),
+            array('text' => 'An acceptable answer.', 'format' => FORMAT_HTML),
+        );
+        $form->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
+
+        return $form;
+    }
+
 }
