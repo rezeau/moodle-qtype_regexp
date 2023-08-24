@@ -118,4 +118,3 @@ Feature: Preview a Regexp question with hints
     And I should see "The other accepted answers are:"
     And I should see "Correct"
     And I should see "Marks for this submission: 1.00/1.00."
-    

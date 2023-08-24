@@ -125,7 +125,7 @@ class qtype_regexp_question_test extends advanced_testcase {
     public function test_get_question_summary() {
         $question = test_question_maker::make_question('regexp');
         $qsummary = $question->get_question_summary();
-        $this->assertEquals('French flag colors : __________', $qsummary);
+        $this->assertEquals('What are the colours of the French flag?', $qsummary);
     }
 
     /**

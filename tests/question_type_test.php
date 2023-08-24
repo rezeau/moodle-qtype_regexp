@@ -14,14 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Unit tests for the regexp question type class.
- *
- * @package    qtype_regexp
- * @copyright 2021 Joseph Rézeau <joseph@rezeau.org>
- * @copyright based on work by 2007 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace qtype_regexp;
+
+use qtype_regexp;
+use qtype_regexp_edit_form;
+use question_possible_response;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -31,77 +28,63 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
 require_once($CFG->dirroot . '/question/type/edit_question_form.php');
 require_once($CFG->dirroot . '/question/type/regexp/edit_regexp_form.php');
 
-
 /**
  * Unit tests for the regexp question type class.
  *
+ * @package    qtype_regexp
  * @copyright 2021 Joseph Rézeau <joseph@rezeau.org>
  * @copyright based on work by 2007 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_regexp_test extends advanced_testcase {
-
-    /**
-     *  explained here https://docs.moodle.org/dev/Unit_test_API
-     * @var array
-     */
-    public static $includecoverage = array(
-        'question/type/questiontypebase.php',
-        'question/type/regexp/questiontype.php',
-    );
-
-    /**
-     *  explained here https://docs.moodle.org/dev/Unit_test_API
-     * @var array
-     */
+class qtype_regexp_test extends \advanced_testcase {
+    /** @var qtype_regexp instance of the question type class to test. */
     protected $qtype;
 
-    /**
-     *  explained here https://docs.moodle.org/dev/Unit_test_API
-     * @var array
-     */
     protected function setUp(): void {
-        $this->qtype = new qtype_regexp();
+        $this->qtype = question_bank::get_qtype('regexp');
     }
 
-    /**
-     *  explained here https://docs.moodle.org/dev/Unit_test_API
-     * @var array
-     */
     protected function tearDown(): void {
         $this->qtype = null;
     }
 
-    /**
-     *  explained here https://docs.moodle.org/dev/Unit_test_API
-     * @var array
+/**
+     * template for common example of question instance
+     * @return \stdClass
      */
     protected function get_test_question_data() {
-        return test_question_maker::get_question_data('regexp');
+        return \test_question_maker::get_question_data('regexp');
     }
 
-    /**
-     *  explained here https://docs.moodle.org/dev/Unit_test_API
-     * @var array
-     */
+     /**
+      * Test the valuue returned by name  method.
+      *
+      * @covers ::name()
+      */
     public function test_name() {
         $this->assertEquals($this->qtype->name(), 'regexp');
     }
 
     /**
-     *  explained here https://docs.moodle.org/dev/Unit_test_API
-     * @var array
+     * Test response of can_analyse_responses
+     * Which determines if this question type can perform a frequency analysis of student responses.
+     *
+     *  If it returns true, it must implement the get_possible_responses method, and  question_definition class must
+     *  implement the classify_response method.
+     *
+     * @covers ::can_analyse_responses()
      */
     public function test_can_analyse_responses() {
         $this->assertTrue($this->qtype->can_analyse_responses());
     }
 
     /**
-     *  explained here https://docs.moodle.org/dev/Unit_test_API
-     * @var array
+     * Test the behaviour of get_possible_responses method.
+     *
+     * @covers ::get_possible_responses
      */
     public function test_get_possible_responses() {
-        $q = test_question_maker::get_question_data('regexp');
+        $q = \test_question_maker::get_question_data('regexp');
 
         $this->assertEquals(array(
             $q->id => array(
@@ -113,6 +96,11 @@ class qtype_regexp_test extends advanced_testcase {
         ), $this->qtype->get_possible_responses($q));
     }
 
+    /**
+     * Test the behaviour of save_question method.
+     *
+     * @covers ::save_question
+     */
     public function test_question_saving_frenchflag() {
         $this->resetAfterTest(true);
         $this->setAdminUser();

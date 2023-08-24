@@ -1,4 +1,4 @@
-@qtype @qtype_shortanswer
+@qtype @qtype_regexp
 Feature: Test creating a Regexp question
   As a teacher
   In order to test my students
@@ -35,4 +35,3 @@ Feature: Test creating a Regexp question
       | id_fraction_2        | 100%                                      |
       | id_feedback_2        | Well done too.                            |
     Then I should see "regularshortanswer-001"
-    

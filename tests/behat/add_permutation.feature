@@ -49,7 +49,7 @@ Feature: Test creating Regexp questions with the 'permutation' feature
     And I should see "it's red, white and blue"
     And I press "id_submitbutton"
     Then I should see "regexp-001"
-    
+
   @javascript
   Scenario: Create a Regexp question with the 'permutation' feature
     When I am on the "Course 1" "core_question > course question bank" page logged in as teacher

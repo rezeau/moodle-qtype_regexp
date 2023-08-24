@@ -50,4 +50,3 @@ Feature: Test creating a Regexp question with validation warnings
     And I should see "798 dollars"
     And I press "id_submitbutton"
     Then I should see "regularshortanswer-001"
-    
