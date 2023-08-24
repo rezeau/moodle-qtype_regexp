@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace qtype_regexp;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -34,7 +36,7 @@ require_once($CFG->dirroot . '/question/type/regexp/question.php');
  * @copyright  2021 Joseph REZEAU
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_regexp_question_test extends advanced_testcase {
+class question_test extends \advanced_testcase {
     /**
      * Unit tests for the REGEXP question definition class.
      */

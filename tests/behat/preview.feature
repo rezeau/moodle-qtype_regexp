@@ -18,10 +18,9 @@ Feature: Preview a Regexp question
       | contextlevel | reference | name           |
       | Course       | C1        | Test questions |
     And the following "questions" exist:
-      | questioncategory | qtype  | name       | template |      
+      | questioncategory | qtype  | name       | template |
       | Test questions   | regexp | regexp-001 | cat_bat_rat |
       | Test questions   | regexp | regexp-002 | frenchflag |
-
 
   @javascript @_switch_window
   Scenario: Preview a Regexp question with an inline input blank

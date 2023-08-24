@@ -48,10 +48,10 @@ class qtype_regexp_test extends \advanced_testcase {
         $this->qtype = null;
     }
 
-/**
+    /**
      * template for common example of question instance
      * @return \stdClass
-     */
+    */
     protected function get_test_question_data() {
         return \test_question_maker::get_question_data('regexp');
     }
