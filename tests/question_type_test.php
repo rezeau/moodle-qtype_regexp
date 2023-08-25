@@ -51,7 +51,7 @@ class question_type_test extends \advanced_testcase {
     /**
      * template for common example of question instance
      * @return \stdClass
-    */
+     */
     protected function get_test_question_data() {
         return \test_question_maker::get_question_data('regexp');
     }
