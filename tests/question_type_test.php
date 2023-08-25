@@ -36,7 +36,7 @@ require_once($CFG->dirroot . '/question/type/regexp/edit_regexp_form.php');
  * @copyright based on work by 2007 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_regexp_test extends \advanced_testcase {
+class question_type_test extends \advanced_testcase {
     /** @var qtype_regexp instance of the question type class to test. */
     protected $qtype;
 

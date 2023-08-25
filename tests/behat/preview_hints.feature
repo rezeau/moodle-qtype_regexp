@@ -65,7 +65,7 @@ Feature: Preview a Regexp question with hints
     And I press "Check"
     Then I should see "Incorrect"
     And I should see "Misplaced words"
-    And I should see "Missing blue!" 
+    And I should see "Missing blue!"
     And I should see "Marks for this submission: 0.00/1.00. This submission attracted a penalty of 0.20"
     And I click on "Buy next word" "button"
     And I should see "Added word: blue, This Help cost you a penalty of: 0.20. Total penalties so far: 0.40."
