@@ -26,6 +26,9 @@ namespace qtype_regexp;
 
 defined('MOODLE_INTERNAL') || die();
 
+use \qtype_regexp_test_helper as helper;
+use qtype_regexp_question;
+
 global $CFG;
 require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
 require_once($CFG->dirroot . '/question/type/regexp/question.php');

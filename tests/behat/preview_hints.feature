@@ -52,4 +52,3 @@ Feature: Preview a Regexp question with hints
     And I should see "it is blue, white, red"
     And I should see "they are blue, white, red"
     And I should see "blue, white, red"
-
