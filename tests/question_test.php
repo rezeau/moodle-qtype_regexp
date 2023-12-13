@@ -26,8 +26,11 @@ namespace qtype_regexp;
 
 defined('MOODLE_INTERNAL') || die();
 
-use \qtype_regexp_test_helper as helper;
 use qtype_regexp_question;
+use question_attempt_step;
+use question_classified_response;
+use question_state;
+use test_question_maker;
 
 global $CFG;
 require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
