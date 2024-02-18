@@ -33,6 +33,16 @@ class qtype_regexp_edit_form extends question_edit_form {
      *
      * @param MoodleQuickForm $mform the form being built.
      */
+
+    /* Added public declarations to fix PHP 8.2 warning: Deprecated: Creation of dynamic property */
+    public $showalternate;
+    public $questionid;
+    public $usecase;
+    public $studentshowalternate;
+    public $fraction;
+    public $currentanswers;
+    public $feedback;
+
     protected function definition_inner($mform) {
         global $CFG, $OUTPUT, $SESSION;
 

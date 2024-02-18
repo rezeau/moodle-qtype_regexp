@@ -39,6 +39,9 @@ class qtype_regexp_question extends question_graded_by_strategy
 
     /** @var boolean whether all correct alternate answers should be displayed to student on review page. */
     public $studentshowalternate;
+    
+    /** @var closest */
+    public $closest;
 
     /** @var array of question_answer. */
     public $answers = array();

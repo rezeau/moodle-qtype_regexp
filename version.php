@@ -18,7 +18,7 @@
  * Version information for the Regexp question type.
  *
  * @package    qtype_regexp
- * @copyright  2011-2022 Joseph Rézeau moodle@rezeau.org
+ * @copyright  2011-2024 Joseph Rézeau moodle@rezeau.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,7 +29,8 @@ $plugin->dependencies = array(
     'qbehaviour_regexpadaptivewithhelp'   => 2022041800,
     'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2022041800
 );
-$plugin->version  = 2023051300;
-$plugin->requires = 2016052300; // Moodle version.
-$plugin->release = '4.2 for Moodle 4.2';
+$plugin->version  = 2024021800;
+// Require Moodle 4.0.0.
+$plugin->requires = 2022041900.00;
+$plugin->release = '4.3 for Moodle 4.3';
 $plugin->maturity  = MATURITY_STABLE;
