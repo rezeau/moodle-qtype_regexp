@@ -41,7 +41,7 @@ class qtype_regexp extends question_type {
      * @return array
      */
     public function extra_question_fields() {
-        return array('qtype_regexp', 'usehint', 'usecase', 'studentshowalternate');
+        return ['qtype_regexp', 'usehint', 'usecase', 'studentshowalternate'];
     }
 
     /**
@@ -71,7 +71,7 @@ class qtype_regexp extends question_type {
      * @param stdClass $question
      * @return object
      */
-    public function save_question_options ($question) {
+    public function save_question_options($question) {
         global $DB, $SESSION, $CFG;
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         $result = new stdClass;
@@ -79,9 +79,9 @@ class qtype_regexp extends question_type {
         $context = $question->context;
 
         $oldanswers = $DB->get_records('question_answers',
-                array('question' => $question->id), 'id ASC');
+                ['question' => $question->id], 'id ASC');
 
-        $answers = array();
+        $answers = [];
 
         // Insert all the new answers.
         foreach ($question->answer as $key => $answerdata) {
@@ -126,7 +126,7 @@ class qtype_regexp extends question_type {
         $fs = get_file_storage();
         foreach ($oldanswers as $oldanswer) {
             $fs->delete_area_files($context->id, 'question', 'answerfeedback', $oldanswer->id);
-            $DB->delete_records('question_answers', array('id' => $oldanswer->id));
+            $DB->delete_records('question_answers', ['id' => $oldanswer->id]);
         }
         $this->save_hints($question);
 
@@ -174,14 +174,14 @@ class qtype_regexp extends question_type {
      *
      * @param stdClass $questiondata
      */
-    public function get_possible_responses ($questiondata) {
-        $responses = array();
+    public function get_possible_responses($questiondata) {
+        $responses = [];
 
         foreach ($questiondata->options->answers as $aid => $answer) {
             $responses[$aid] = new question_possible_response($answer->answer, $answer->fraction);
         }
         $responses[null] = question_possible_response::no_response();
-        return array($questiondata->id => $responses);
+        return [$questiondata->id => $responses];
     }
 
     /**
@@ -192,7 +192,7 @@ class qtype_regexp extends question_type {
      * @param object $extra
      * @return string
      */
-    public function export_to_xml ($question, qformat_xml $format, $extra=null) {
+    public function export_to_xml($question, qformat_xml $format, $extra=null) {
         $extraquestionfields = $this->extra_question_fields();
         if (!is_array($extraquestionfields)) {
             return false;
@@ -228,7 +228,7 @@ class qtype_regexp extends question_type {
      * @param stdClass $extra
      * @return boolean
      */
-    public function import_from_xml ($data, $question, qformat_xml $format, $extra=null) {
+    public function import_from_xml($data, $question, qformat_xml $format, $extra=null) {
         // Check question is for us.
         $qtype = $data['@']['type'];
         if ($qtype == 'regexp') {
@@ -239,12 +239,12 @@ class qtype_regexp extends question_type {
             $qo->usehint = 0;
 
             // Get usehint.
-            $qo->usehint = $format->getpath($data, array('#', 'usehint', 0, '#'), $qo->usehint );
+            $qo->usehint = $format->getpath($data, ['#', 'usehint', 0, '#'], $qo->usehint );
             // Get usecase.
-            $qo->usecase = $format->getpath($data, array('#', 'usecase', 0, '#'), $qo->usecase );
+            $qo->usecase = $format->getpath($data, ['#', 'usecase', 0, '#'], $qo->usecase );
             // Get studentshowalternate.
             $qo->studentshowalternate = new stdClass;
-            $qo->studentshowalternate = $format->getpath($data, array('#', 'studentshowalternate', 0, '#'),
+            $qo->studentshowalternate = $format->getpath($data, ['#', 'studentshowalternate', 0, '#'],
                             $qo->studentshowalternate );
 
             // Run through the answers.

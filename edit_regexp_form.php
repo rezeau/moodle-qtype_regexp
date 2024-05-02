@@ -18,14 +18,14 @@
  * Defines the editing form for the regexp question type.
  * @package qtype_regexp
  * @copyright  2011 Joseph REZEAU
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 
  */
 
 /**
  * Editing form for the regexp question type
  * @copyright  2011 Joseph REZEAU
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_regexp_edit_form extends question_edit_form {
     /**
@@ -34,15 +34,47 @@ class qtype_regexp_edit_form extends question_edit_form {
      * @param MoodleQuickForm $mform the form being built.
      */
 
-    /* Added public declarations to fix PHP 8.2 warning: Deprecated: Creation of dynamic property */
+    /** Added public declarations to fix PHP 8.2 warning: Deprecated: Creation of dynamic property */
+    /**
+     * Description of the property.
+     * @var int
+     */
     public $showalternate;
+    /**
+     * Description of the property.
+     * @var int
+     */
     public $questionid;
+    /**
+     * Description of the property.
+     * @var int
+     */
     public $usecase;
+    /**
+     * Description of the property.
+     * @var int
+     */
     public $studentshowalternate;
+    /**
+     * Description of the property.
+     * @var int
+     */
     public $fraction;
+    /**
+     * Description of the property.
+     * @var int
+     */
     public $currentanswers;
+    /**
+     * Description of the property.
+     * @var int
+     */
     public $feedback;
 
+    /**
+     * Description of the property.
+     * @param object $mform the form being built.
+     */
     protected function definition_inner($mform) {
         global $CFG, $OUTPUT, $SESSION;
 
@@ -64,17 +96,18 @@ class qtype_regexp_edit_form extends question_edit_form {
         }
 
         // Hint mode :: None / Letter / Word (including punctuation) / Word OR Punctuation.
-        $menu = array(get_string('none'), get_string('letter', 'qtype_regexp'),
-            get_string('word', 'qtype_regexp'), get_string('wordorpunctuation', 'qtype_regexp'));
+        $menu = [get_string('none'), get_string('letter', 'qtype_regexp'),
+            get_string('word', 'qtype_regexp'), get_string('wordorpunctuation', 'qtype_regexp')];
         $mform->addElement('select', 'usehint', get_string('usehint', 'qtype_regexp'), $menu);
         $mform->addHelpButton('usehint', 'usehint', 'qtype_regexp');
 
         // Use case :: yes / no.
-        $menu = array(get_string('caseno', 'qtype_regexp'), get_string('caseyes', 'qtype_regexp'));
+        $menu = [get_string('caseno', 'qtype_regexp'), get_string('caseyes', 'qtype_regexp')];
         $mform->addElement('select', 'usecase', get_string('casesensitive', 'qtype_regexp'), $menu);
 
         // Display all correct alternate answers to student on review page :: yes / no.
-        $menu = array(get_string('no'), get_string('yes'));
+        $menu = [get_string('no'), get_string('yes')];
+        $menu = [get_string('no'), get_string('yes')];
         $mform->addElement('select', 'studentshowalternate', get_string('studentshowalternate', 'qtype_regexp'), $menu);
         $mform->addHelpButton('studentshowalternate', 'studentshowalternate', 'qtype_regexp');
 
@@ -90,17 +123,17 @@ class qtype_regexp_edit_form extends question_edit_form {
         $mform->addElement('header', 'showhidealternate', get_string('showhidealternate', 'qtype_regexp'));
         $mform->addHelpButton('showhidealternate', 'showhidealternate', 'qtype_regexp');
 
-        $buttonarray = array();
+        $buttonarray = [];
         $buttonarray[] = $mform->createElement('submit', 'showalternate', get_string('calculatealternate', 'qtype_regexp'));
         $mform->registerNoSubmitButton('showalternate');
 
         if ($this->showalternate) {
             $qu = new stdClass();
             $qu->id = $this->questionid;
-            $qu->answers = array();
+            $qu->answers = [];
             $i = 0;
             $this->fraction[0] = 1;
-            $data = array();
+            $data = [];
 
             // Add current question category to $data for validation!
             // Modified for moodle 3.6 compatibility.
@@ -144,7 +177,7 @@ class qtype_regexp_edit_form extends question_edit_form {
             }
         }
 
-        $mform->addGroup($buttonarray, '', '', array(' '), false);
+        $mform->addGroup($buttonarray, '', '', [' '], false);
     }
 
     /**
@@ -202,7 +235,7 @@ class qtype_regexp_edit_form extends question_edit_form {
         require_once($CFG->dirroot.'/question/type/regexp/locallib.php');
         // Starting with Moodle 4 if we are calculating alternate answers we cannot use parent:validation.
         if ($this->showalternate) {
-            $errors = array();
+            $errors = [];
         } else {
             $errors = parent::validation($data, $files);
         }
@@ -292,16 +325,16 @@ class qtype_regexp_edit_form extends question_edit_form {
      */
     protected function get_per_answer_fields($mform, $label, $gradeoptions,
                     &$repeatedoptions, &$answersoption) {
-        $repeated = array();
-        $answeroptions = array();
+        $repeated = [];
+        $answeroptions = [];
         $answeroptions[] = $mform->createElement('text', 'answer',
-                        $label, array('size' => 80));
+                        $label, ['size' => 80]);
         $answeroptions[] = $mform->createElement('select', 'fraction',
                         get_string('gradenoun'), $gradeoptions);
         $repeated[] = $mform->createElement('group', 'answeroptions',
                         $label, $answeroptions, null, false);
         $repeated[] = $mform->createElement('editor', 'feedback',
-                        get_string('feedback', 'question'), array('rows' => 5), $this->editoroptions);
+                        get_string('feedback', 'question'), ['rows' => 5], $this->editoroptions);
         $repeatedoptions['answer']['type'] = PARAM_RAW;
         $repeatedoptions['fraction']['default'] = 0;
         $answersoption = 'answers';
@@ -321,21 +354,21 @@ class qtype_regexp_edit_form extends question_edit_form {
         $mform->addElement('header', 'multitriesheader',
                         get_string('settingsformultipletries', 'qtype_regexp'));
 
-        $penalties = array(
+        $penalties = [
             1.0000000,
             0.5000000,
             0.3333333,
             0.2500000,
             0.2000000,
             0.1000000,
-            0.0000000
-        );
+            0.0000000,
+        ];
 
         if (!empty($this->question->penalty) && !in_array($this->question->penalty, $penalties)) {
             $penalties[] = $this->question->penalty;
             sort($penalties);
         }
-        $penaltyoptions = array();
+        $penaltyoptions = [];
         foreach ($penalties as $penalty) {
             $penaltyoptions["$penalty"] = (100 * $penalty) . '%';
         }

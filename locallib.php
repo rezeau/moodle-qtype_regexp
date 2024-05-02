@@ -190,8 +190,8 @@ function expand_regexp($myregexp) {
     }
     $i = 0;
     foreach ($results as $result) {
-        $toreplace = array('（', '）');
-        $replacewith = array('(', ')');
+        $toreplace = ['（', '）'];
+        $replacewith = ['(', ')'];
         $results[$i] = strtr($result, array_combine($toreplace, $replacewith));
         $i++;
     }
@@ -400,7 +400,7 @@ function find_ors ($mystring) {
  * @param string $plainors
  */
 function expand_ors ($plainparts, $plainors) {
-    $expandedors = array();
+    $expandedors = [];
     $expandedors[] = '';
     $slen = count($expandedors);
     $expandedors[$slen - 1] = '';
@@ -444,7 +444,7 @@ function expand_ors ($plainparts, $plainors) {
  * @param array $plainparts
  */
 function index_plain_parts($mystring, $plainparts) {
-    $indexedplainparts = array();
+    $indexedplainparts = [];
     if (is_array($plainparts) ) {
         foreach ($plainparts as $parts) {
             if ($parts) {
@@ -463,7 +463,7 @@ function index_plain_parts($mystring, $plainparts) {
  * @param array $plainors
  */
 function index_ors($mystring, $plainors) {
-    $indexedplainors = array();
+    $indexedplainors = [];
     foreach ($plainors as $ors) {
         foreach ($ors as $or) {
             $indexedplainors[] = $or[1];
@@ -533,7 +533,7 @@ function get_closest( $guess, $answers, $ignorecase, $ishint) {
     if ($ishint) {
         $closest[2] = 'nil';
     }
-    $rightbits = array();
+    $rightbits = [];
     foreach ($answers as $answer) {
         $rightbits[0][] = $answer;
         $rightbits[1][] = check_beginning($guess, $answer, $ignorecase, $ishint);
@@ -713,7 +713,7 @@ function find_closest($question, $currentanswer, $correctresponse = false, $hint
     global $CFG;
     // JR dec 2011 moved get alternate answers to new function.
     $alternateanswers = get_alternateanswers($question);
-    $alternatecorrectanswers = array();
+    $alternatecorrectanswers = [];
     // JR jan 2012 changed contents of alternateanswers.
     if (isset($question->id)) {
         $qid = $question->id;
@@ -770,8 +770,8 @@ function remove_blanks($text) {
  * @return string
  */
 function check_my_parens($myregexp, $markedline) {
-    $parens = array();
-    $sqbrackets = array();
+    $parens = [];
+    $sqbrackets = [];
 
     // Walk the $myregexp string to find parentheses and square brackets.
     for ($i = 0; $i < strlen($myregexp); $i++) {
@@ -818,7 +818,7 @@ function check_my_parens($myregexp, $markedline) {
  * @return string
  */
 function check_balanced ($bracketstype, $tags, $markedline) {
-    $open = array();
+    $open = [];
     foreach ($bracketstype as $key => $value) {
         switch ($value) {
             case 'open':
@@ -914,7 +914,7 @@ function check_unescaped_metachars ($myregexp, $markedline) {
  */
 function splitstring ($longstring, $maxlen = 75) {
     $len = core_text::strlen($longstring);
-    $stringchunks = array();
+    $stringchunks = [];
     if ($len < $maxlen) {
         $stringchunks[] = $longstring;
     } else {
@@ -939,7 +939,7 @@ function get_alternateanswers($question) {
             return $SESSION->qtype_regexp_question->alternateanswers[$qid];
         }
     }
-    $alternateanswers = array();
+    $alternateanswers = [];
     $i = 1;
     foreach ($question->answers as $answer) {
         if ($answer->fraction != 0) {
@@ -1009,7 +1009,7 @@ function check_permutations($ans) {
 function has_permutations($ans) {
     require_once('combinatorics.php');
     $combinatorics = new Math_Combinatorics;
-    $staticparts = array();
+    $staticparts = [];
     $p = preg_match_all("/\[\[(.*)\]\]/U", $ans, $matches);
     if ($p === 0) {
         return $ans;
@@ -1027,7 +1027,7 @@ function has_permutations($ans) {
         $staticparts[1] = $nonpermuted[3][0];
     }
     $nbstaticparts = count($staticparts);
-    $res = array();
+    $res = [];
 
     for ($i = 0; $i < $nbpermuted; $i++) {
         $res[$i] = '(';

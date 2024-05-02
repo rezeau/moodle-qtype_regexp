@@ -29,30 +29,30 @@ if (defined('CLI_SCRIPT') === false) {
     header('Access-Control-Allow-Origin: *');
 }
 
-$addons = array(
-    "qtype_regexp" => array(
-        "handlers" => array( // Different places where the add-on will display content.
-            'regexp' => array( // Handler unique name (can be anything).
-                'displaydata' => array(
+$addons = [
+    "qtype_regexp" => [
+        "handlers" => [
+            'regexp' => [
+                'displaydata' => [
                     'title' => 'Regular Expression Short Answer',
                     'icon' => '/question/type/regexp/pix/icon.gif',
-                    'class' => '', // What does this do?
-                ),
-                'delegate' => 'CoreQuestionDelegate', // Delegate (where to display the link to the add-on).
+                    'class' => '',
+                ],
+                'delegate' => 'CoreQuestionDelegate',
                 'method' => 'regexp_view',
-                'offlinefunctions' => array(
-                    'mobile_get_regexp' => array(),
-                ), // Function needs caching for offline.
-
-               'styles' => array(
+                'offlinefunctions' => [
+                    'mobile_get_regexp' => [],
+                ],
+                'styles' => [
                     'url' => '/question/type/regexp/mobile/styles_app.css',
-                    'version' => '1.00'
-                ),
-                'lang' => array(
-                    array('pluginname', 'qtype_regexp'),
-                    array('buyword', 'qbehaviour_regexpadaptivewithhelp')
-                )
-            )
-        ),
-    )
-);
+                    'version' => '1.00',
+                ],
+                'lang' => [
+                    ['pluginname', 'qtype_regexp'],
+                    ['buyword', 'qbehaviour_regexpadaptivewithhelp'],
+                ],
+            ],
+        ],
+    ],
+];
+

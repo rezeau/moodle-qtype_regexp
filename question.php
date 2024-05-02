@@ -31,20 +31,20 @@
 class qtype_regexp_question extends question_graded_by_strategy
         implements question_response_answer_comparer {
 
-    /** @var boolean whether answers should be graded case-sensitively. */
+    /** @var bool whether answers should be graded case-sensitively. */
     public $usecase;
 
     /** @var usehint : hint mode :: None / Letter / Word */
     public $usehint;
 
-    /** @var boolean whether all correct alternate answers should be displayed to student on review page. */
+    /** @var bool whether all correct alternate answers should be displayed to student on review page. */
     public $studentshowalternate;
-    
+
     /** @var closest */
     public $closest;
 
     /** @var array of question_answer. */
-    public $answers = array();
+    public $answers = [];
 
     /**
      * Contruct new question.
@@ -57,14 +57,14 @@ class qtype_regexp_question extends question_graded_by_strategy
      * Get expected data.
      */
     public function get_expected_data() {
-        return array('answer' => PARAM_RAW_TRIMMED);
+        return ['answer' => PARAM_RAW_TRIMMED];
     }
 
     /**
      * Get data.
      */
     public function get_data() {
-        return array('answer' => PARAM_RAW_TRIMMED);
+        return ['answer' => PARAM_RAW_TRIMMED];
     }
 
     /**
@@ -246,7 +246,7 @@ class qtype_regexp_question extends question_graded_by_strategy
             $args, $forcedownload) {
         if ($component == 'question' && $filearea == 'answerfeedback') {
             $currentanswer = $qa->get_last_qt_var('answer');
-            $answer = $this->get_matching_answer(array('answer' => $currentanswer));
+            $answer = $this->get_matching_answer(['answer' => $currentanswer]);
             $answerid = reset($args); // Itemid is answer id.
             return $options->feedback && $answer && $answerid == $answer->id;
 

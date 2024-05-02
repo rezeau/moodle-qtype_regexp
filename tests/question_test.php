@@ -86,11 +86,11 @@ class question_test extends \advanced_testcase {
     public function test_is_complete_response() {
         $question = test_question_maker::make_question('regexp');
 
-        $this->assertFalse($question->is_complete_response(array()));
-        $this->assertFalse($question->is_complete_response(array('answer' => '')));
-        $this->assertTrue($question->is_complete_response(array('answer' => '0')));
-        $this->assertTrue($question->is_complete_response(array('answer' => '0.0')));
-        $this->assertTrue($question->is_complete_response(array('answer' => 'x')));
+        $this->assertFalse($question->is_complete_response([]));
+        $this->assertFalse($question->is_complete_response(['answer' => '']));
+        $this->assertTrue($question->is_complete_response(['answer' => '0']));
+        $this->assertTrue($question->is_complete_response(['answer' => '0.0']));
+        $this->assertTrue($question->is_complete_response(['answer' => 'x']));
     }
 
     /**
@@ -100,11 +100,11 @@ class question_test extends \advanced_testcase {
     public function test_is_gradable_response() {
         $question = test_question_maker::make_question('regexp');
 
-        $this->assertFalse($question->is_gradable_response(array()));
-        $this->assertFalse($question->is_gradable_response(array('answer' => '')));
-        $this->assertTrue($question->is_gradable_response(array('answer' => '0')));
-        $this->assertTrue($question->is_gradable_response(array('answer' => '0.0')));
-        $this->assertTrue($question->is_gradable_response(array('answer' => 'x')));
+        $this->assertFalse($question->is_gradable_response([]));
+        $this->assertFalse($question->is_gradable_response(['answer' => '']));
+        $this->assertTrue($question->is_gradable_response(['answer' => '0']));
+        $this->assertTrue($question->is_gradable_response(['answer' => '0.0']));
+        $this->assertTrue($question->is_gradable_response(['answer' => 'x']));
     }
 
     /**
@@ -114,12 +114,9 @@ class question_test extends \advanced_testcase {
     public function test_grading() {
         $question = test_question_maker::make_question('regexp');
 
-        $this->assertEquals(array(0, question_state::$gradedwrong),
-                $question->grade_response(array('answer' => 'x')));
-        $this->assertEquals(array(1, question_state::$gradedright),
-                $question->grade_response(array('answer' => "it's blue, white and red")));
-        $this->assertEquals(array(0.8, question_state::$gradedpartial),
-                $question->grade_response(array('answer' => 'blue, white, red')));
+        $this->assertEquals([0, question_state::$gradedwrong], $question->grade_response(['answer' => 'x']));
+        $this->assertEquals([1, question_state::$gradedright], $question->grade_response(['answer' => "it's blue, white and red"]));
+        $this->assertEquals([0.8, question_state::$gradedpartial], $question->grade_response(['answer' => 'blue, white, red']));
     }
 
     /**
@@ -129,7 +126,7 @@ class question_test extends \advanced_testcase {
     public function test_get_correct_response() {
         $question = test_question_maker::make_question('regexp');
 
-        $this->assertEquals(array('answer' => "it's blue, white and red"),
+        $this->assertEquals(['answer' => "it's blue, white and red"],
                 $question->get_correct_response());
     }
 
@@ -149,7 +146,7 @@ class question_test extends \advanced_testcase {
      */
     public function test_summarise_response() {
         $question = test_question_maker::make_question('regexp');
-        $summary = $question->summarise_response(array('answer' => "it's blue, white and red"));
+        $summary = $question->summarise_response(['answer' => "it's blue, white and red"]);
         $this->assertEquals("it's blue, white and red", $summary);
     }
 
@@ -161,26 +158,40 @@ class question_test extends \advanced_testcase {
         $question = test_question_maker::make_question('regexp');
         $question->start_attempt(new question_attempt_step(), 1);
 
-        $this->assertEquals(array(
-                new question_classified_response(13, "it's blue, white and red", 1.0)),
-                $question->classify_response(array('answer' => "it's blue, white and red")));
-        $this->assertEquals(array(
-                new question_classified_response(14, 'they are blue, white, red', 0.8)),
-                $question->classify_response(array('answer' => 'they are blue, white, red')));
-        $this->assertEquals(array(
-                new question_classified_response(14, 'it is blue, white, red', 0.8)),
-                $question->classify_response(array('answer' => 'it is blue, white, red')));
-        $this->assertEquals(array(
-                new question_classified_response(14, 'blue, white, red', 0.8)),
-                $question->classify_response(array('answer' => 'blue, white, red')));
-        $this->assertEquals(array(
-                new question_classified_response(15, 'red and white', 0.0)),
-                $question->classify_response(array('answer' => 'red and white')));
-        $this->assertEquals(array(
-                new question_classified_response(15, 'black', 0.0)),
-                $question->classify_response(array('answer' => 'black')));
-        $this->assertEquals(array(
-                question_classified_response::no_response()),
-                $question->classify_response(array('answer' => '')));
+        $this->assertEquals(
+            [new question_classified_response(13, "it's blue, white and red", 1.0)],
+            $question->classify_response(['answer' => "it's blue, white and red"])
+        );
+
+        $this->assertEquals(
+            [new question_classified_response(14, 'they are blue, white, red', 0.8)],
+            $question->classify_response(['answer' => 'they are blue, white, red'])
+        );
+
+        $this->assertEquals(
+            [new question_classified_response(14, 'it is blue, white, red', 0.8)],
+            $question->classify_response(['answer' => 'it is blue, white, red'])
+        );
+
+        $this->assertEquals(
+            [new question_classified_response(14, 'blue, white, red', 0.8)],
+            $question->classify_response(['answer' => 'blue, white, red'])
+        );
+
+        $this->assertEquals(
+            [new question_classified_response(15, 'red and white', 0.0)],
+            $question->classify_response(['answer' => 'red and white'])
+        );
+
+        $this->assertEquals(
+            [new question_classified_response(15, 'black', 0.0)],
+            $question->classify_response(['answer' => 'black'])
+        );
+
+        $this->assertEquals(
+            [question_classified_response::no_response()],
+            $question->classify_response(['answer' => ''])
+        );
+
     }
 }

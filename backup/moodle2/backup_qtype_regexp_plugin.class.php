@@ -48,8 +48,8 @@ class backup_qtype_regexp_plugin extends backup_qtype_plugin {
         $this->add_question_question_answers($pluginwrapper);
 
         // Now create the qtype own structures.
-        $regexp = new backup_nested_element('regexp', array('id'), array(
-            'answers', 'usecase', 'usehint'));
+        $regexp = new backup_nested_element('regexp', ['id'], [
+            'answers', 'usecase', 'usehint']);
 
         // Now the own qtype tree.
         $pluginwrapper->add_child($regexp);
@@ -57,7 +57,7 @@ class backup_qtype_regexp_plugin extends backup_qtype_plugin {
         // Set source to populate the data.
         // JR changed table name to match new table name system in moodle 2.1 DEC 2011.
         // JR changed field name question to questionid JAN 2012.
-        $regexp->set_source_table('qtype_regexp', array('questionid' => backup::VAR_PARENTID));
+        $regexp->set_source_table('qtype_regexp', ['questionid' => backup::VAR_PARENTID];
 
         // Don't need to annotate ids nor files.
 

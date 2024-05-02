@@ -61,14 +61,14 @@ class qtype_regexp_renderer extends qtype_renderer {
         // Changed from javascript to print_collapsible_region OCT 2012.
         // Removed for compatibility with the Embed questions plugin see https://moodle.org/plugins/filter_embedquestion.
 
-        $inputattributes = array(
+        $inputattributes = [
             'type' => 'text',
             'name' => $inputname,
             'value' => $currentanswer,
             'id' => $inputname,
             'size' => 80,
             'class' => 'form-control d-inline',
-        );
+        ];
 
         if ($options->readonly) {
             $inputattributes['readonly'] = 'readonly';
@@ -76,7 +76,7 @@ class qtype_regexp_renderer extends qtype_renderer {
 
         $feedbackimg = '';
         if ($options->correctness) {
-            $answer = $question->get_matching_answer(array('answer' => $currentanswer));
+            $answer = $question->get_matching_answer(['answer' => $currentanswer]);
             if ($answer) {
                 $fraction = $answer->fraction;
             } else {
@@ -102,19 +102,19 @@ class qtype_regexp_renderer extends qtype_renderer {
                     strpos($questiontext, $placeholder), strlen($placeholder));
         }
 
-        $result = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
+        $result = html_writer::tag('div', $questiontext, ['class' => 'qtext']);
 
         if (!$placeholder) {
-            $result .= html_writer::start_tag('div', array('class' => 'ablock'));
+            $result .= html_writer::start_tag('div', ['class' => 'ablock']);
             $result .= get_string('answer', 'qtype_shortanswer',
-                    html_writer::tag('div', $input, array('class' => 'answer')));
+                    html_writer::tag('div', $input, ['class' => 'answer']));
             $result .= html_writer::end_tag('div');
         }
 
         if ($qa->get_state() == question_state::$invalid) {
             $result .= html_writer::nonempty_tag('div',
-                    $question->get_validation_error(array('answer' => $currentanswer)),
-                    array('class' => 'validationerror'));
+                    $question->get_validation_error(['answer' => $currentanswer]),
+                    ['class' => 'validationerror']);
         }
 
         return $result;
@@ -132,13 +132,13 @@ class qtype_regexp_renderer extends qtype_renderer {
         $hint = null;
         if ($options->feedback) {
             $result .= html_writer::nonempty_tag('div', $this->specific_feedback($qa),
-                    array('class' => 'specificfeedback qtype-regexp'));
+                    ['class' => 'specificfeedback qtype-regexp']);
             $hint = $qa->get_applicable_hint();
         }
 
         if ($options->numpartscorrect) {
             $result .= html_writer::nonempty_tag('div', $this->num_parts_correct($qa),
-                    array('class' => 'numpartscorrect'));
+                    ['class' => 'numpartscorrect']);
         }
 
         if ($hint) {
@@ -147,13 +147,13 @@ class qtype_regexp_renderer extends qtype_renderer {
 
         if ($options->generalfeedback) {
             $result .= html_writer::nonempty_tag('div', $this->general_feedback($qa),
-                    array('class' => 'generalfeedback'));
+                    ['class' => 'generalfeedback']);
         }
 
         if ($options->rightanswer) {
             $displaycorrectanswers = $this->correct_response($qa);
             $result .= html_writer::nonempty_tag('div', $displaycorrectanswers,
-                    array('class' => 'rightanswer'));
+                    ['class' => 'rightanswer']);
         }
 
         return $result;
@@ -177,7 +177,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         }
         $closest = $question->closest;
         if ($hintadded) { // Hint added one letter or hint added letter and answer is complete.
-            $answer = $question->get_matching_answer(array('answer' => $closest[0]));
+            $answer = $question->get_matching_answer(['answer' => $closest[0]]);
             // Help has added letter OR word and answer is complete.
             $isstateimprovable = $qa->get_behaviour()->is_state_improvable($qa->get_state());
             if ($closest[2] == 'complete' && $isstateimprovable) {
@@ -187,7 +187,7 @@ class qtype_regexp_renderer extends qtype_renderer {
 
             }
         } else {
-            $answer = $question->get_matching_answer(array('answer' => $qa->get_last_qt_var('answer')));
+            $answer = $question->get_matching_answer(['answer' => $qa->get_last_qt_var('answer')]);
         }
 
         $labelerrors = '';

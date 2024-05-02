@@ -45,9 +45,9 @@ class mobile {
         return [
             'templates' => [[
                 'id' => 'main',
-                'html' => file_get_contents($CFG->dirroot . "/question/type/regexp/mobile/regexp_$versionname.html")
+                'html' => file_get_contents($CFG->dirroot . "/question/type/regexp/mobile/regexp_$versionname.html"),
             ]],
-            'javascript' => file_get_contents($CFG->dirroot . '/question/type/regexp/mobile/regexp.js')
+            'javascript' => file_get_contents($CFG->dirroot . '/question/type/regexp/mobile/regexp.js'),
         ];
     }
 }

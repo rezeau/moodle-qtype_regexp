@@ -35,7 +35,7 @@ class qtype_regexp_test_helper extends question_test_helper {
      * @return array
      */
     public function get_test_questions() {
-        return array('frenchflag', 'frenchflagletterhint', 'frenchflagwordhint', 'cat_bat_rat');
+        return ['frenchflag', 'frenchflagletterhint', 'frenchflagwordhint', 'cat_bat_rat'];
     }
 
     /**
@@ -52,7 +52,7 @@ class qtype_regexp_test_helper extends question_test_helper {
         $rx->questiontext = 'What are the colours of the French flag?';
         $rx->generalfeedback = 'General feedback: OK';
         $rx->usecase = false;
-        $rx->answers = array(
+        $rx->answers = [
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
             15 => new question_answer(15, '--.*(blue|red|white).*', 0.0,
@@ -61,7 +61,7 @@ class qtype_regexp_test_helper extends question_test_helper {
             17 => new question_answer(17, '--.*(&&blue&&red&&white).*', 0.0,
                 'You have not found <em>all</em> the colors of the French flag!', FORMAT_HTML),
             18 => new question_answer(18, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
-        );
+        ];
         $rx->qtype = question_bank::get_qtype('regexp');
 
         return $rx;
@@ -85,7 +85,7 @@ class qtype_regexp_test_helper extends question_test_helper {
 
         $qdata->options = new stdClass();
         $qdata->options->usecase = 0;
-        $qdata->options->answers = array(
+        $qdata->options->answers = [
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
             15 => new question_answer(15, '--.*(blue|red|white).*', 0.0,
@@ -94,7 +94,7 @@ class qtype_regexp_test_helper extends question_test_helper {
             17 => new question_answer(17, '--.*(&&blue&&red&&white).*', 0.0,
                 'You have not found <em>all</em> the colors of the French flag!', FORMAT_HTML),
             18 => new question_answer(18, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
-        );
+        ];
 
         return $qdata;
     }
@@ -109,21 +109,21 @@ class qtype_regexp_test_helper extends question_test_helper {
         $form = new stdClass();
 
         $form->name = 'Regular expression short answer question';
-        $form->questiontext = array('text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML);
+        $form->questiontext = ['text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML];
         $form->defaultmark = 1.0;
-        $form->generalfeedback = array('text' => 'General feedback: OK.', 'format' => FORMAT_HTML);
+        $form->generalfeedback = ['text' => 'General feedback: OK.', 'format' => FORMAT_HTML];
         $form->usecase = false;
-        $form->answer = array("it's blue, white and red", "(it('s| is) |they are )?blue, white, red",
-            '--.*(blue|red|white).*', '--.*blue.*', '--.*(&&blue&&red&&white).*', '.*');
-        $form->fraction = array('1.0', '0.8', '0.0', '0.0', '0.0', '0.0');
-        $form->feedback = array(
-            array('text' => 'The best answer.', 'format' => FORMAT_HTML),
-            array('text' => 'An acceptable answer.', 'format' => FORMAT_HTML),
-            array('text' => 'You have not even found one of the colors of the French flag!', 'format' => FORMAT_HTML),
-            array('text' => 'Missing blue!', 'format' => FORMAT_HTML),
-            array('text' => 'You have not found <em>all</em> the colors of the French flag!', 'format' => FORMAT_HTML),
-            array('text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML),
-        );
+        $form->answer = ["it's blue, white and red", "(it('s| is) |they are )?blue, white, red",
+            '--.*(blue|red|white).*', '--.*blue.*', '--.*(&&blue&&red&&white).*', '.*'];
+        $form->fraction = ['1.0', '0.8', '0.0', '0.0', '0.0', '0.0'];
+        $form->feedback = [
+            ['text' => 'The best answer.', 'format' => FORMAT_HTML],
+            ['text' => 'An acceptable answer.', 'format' => FORMAT_HTML],
+            ['text' => 'You have not even found one of the colors of the French flag!', 'format' => FORMAT_HTML],
+            ['text' => 'Missing blue!', 'format' => FORMAT_HTML],
+            ['text' => 'You have not found <em>all</em> the colors of the French flag!', 'format' => FORMAT_HTML],
+            ['text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML],
+        ];
         $form->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
 
         return $form;
@@ -145,13 +145,13 @@ class qtype_regexp_test_helper extends question_test_helper {
         $rx->usehint = 1; // Help button mode = Letter.
         $rx->usecase = false;
         $rx->penalty = 0.1;
-        $rx->answers = array(
+        $rx->answers = [
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8,
                 'An acceptable answer.', FORMAT_HTML),
             15 => new question_answer(15, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
             16 => new question_answer(16, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
-        );
+        ];
         $rx->qtype = question_bank::get_qtype('regexp');
 
         return $rx;
@@ -177,12 +177,12 @@ class qtype_regexp_test_helper extends question_test_helper {
         $qdata->options->usehint = 1; // Help button mode = Letter.
         $qdata->options->usecase = 0;
         $qdata->options->penalty = 0.1;
-        $qdata->options->answers = array(
+        $qdata->options->answers = [
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8, 'An acceptable answer.', FORMAT_HTML),
             15 => new question_answer(15, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
             16 => new question_answer(16, '.*', 0.0, 'No, no, no! Try again.', FORMAT_HTML),
-        );
+        ];
 
         return $qdata;
     }
@@ -197,20 +197,21 @@ class qtype_regexp_test_helper extends question_test_helper {
         $form = new stdClass();
 
         $form->name = 'Regular expression short answer question';
-        $form->questiontext = array('text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML);
+        $form->questiontext = ['text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML];
         $form->defaultmark = 1.0;
-        $form->generalfeedback = array('text' => 'General feedback: OK.', 'format' => FORMAT_HTML);
+        $form->generalfeedback = ['text' => 'General feedback: OK.', 'format' => FORMAT_HTML];
         $form->usehint = 1; // Help button mode = Letter.
         $form->usecase = false;
         $form->penalty = 0.1;
-        $form->answer = array("it's blue, white and red", "(it('s| is) |they are )?blue, white, red", '--.*blue.*', '.*');
-        $form->fraction = array('1.0', '0.8', '0.0', '0.0');
-        $form->feedback = array(
-            array('text' => 'The best answer.', 'format' => FORMAT_HTML),
-            array('text' => 'An acceptable answer.', 'format' => FORMAT_HTML),
-            array('text' => 'Missing blue!', 'format' => FORMAT_HTML),
-            array('text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML),
-        );
+        $form->answer = ["it's blue, white and red", "(it('s| is) |they are )?blue, white, red", '--.*blue.*', '.*'];
+        $form->fraction = ['1.0', '0.8', '0.0', '0.0'];
+        $form->feedback = [
+            ['text' => 'The best answer.', 'format' => FORMAT_HTML],
+            ['text' => 'An acceptable answer.', 'format' => FORMAT_HTML],
+            ['text' => 'Missing blue!', 'format' => FORMAT_HTML],
+            ['text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML],
+        ];
+
         $form->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
 
         return $form;
@@ -233,13 +234,13 @@ class qtype_regexp_test_helper extends question_test_helper {
         $rx->usehint = 2; // Help button mode = word.
         $rx->usecase = false;
         $rx->penalty = 0.2;
-        $rx->answers = array(
+        $rx->answers = [
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8,
                 'An acceptable answer.', FORMAT_HTML),
             15 => new question_answer(15, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
             16 => new question_answer(16, '.*', 0.0, 'No, no, no! Try again', FORMAT_HTML),
-        );
+        ];
         $rx->qtype = question_bank::get_qtype('regexp');
 
         return $rx;
@@ -265,13 +266,13 @@ class qtype_regexp_test_helper extends question_test_helper {
         $qdata->options->usehint = 2; // Help button mode = word.
         $qdata->options->usecase = 0;
         $qdata->options->penalty = 0.2;
-        $qdata->options->answers = array(
+        $qdata->options->answers = [
             13 => new question_answer(13, "it's blue, white and red", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "(it('s| is) |they are )?blue, white, red", 0.8,
                 'An acceptable answer.', FORMAT_HTML),
             15 => new question_answer(15, '--.*blue.*', 0.0, 'Missing blue!', FORMAT_HTML),
             16 => new question_answer(16, '.*', 0.0, 'No, no, no! Try again.', FORMAT_HTML),
-        );
+        ];
 
         return $qdata;
     }
@@ -286,20 +287,21 @@ class qtype_regexp_test_helper extends question_test_helper {
         $form = new stdClass();
 
         $form->name = 'Regular expression short answer question';
-        $form->questiontext = array('text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML);
+        $form->questiontext = ['text' => 'What are the colours of the French flag?', 'format' => FORMAT_HTML];
         $form->defaultmark = 1.0;
-        $form->generalfeedback = array('text' => 'General feedback: OK.', 'format' => FORMAT_HTML);
+        $form->generalfeedback = ['text' => 'General feedback: OK.', 'format' => FORMAT_HTML];
         $form->usehint = 2; // Help button mode = word.
         $form->usecase = false;
         $form->penalty = 0.2;
-        $form->answer = array("it's blue, white and red", "(it('s| is) |they are )?blue, white, red", '--.*blue.*', '.*');
-        $form->fraction = array('1.0', '0.8', '0.0', '0.0');
-        $form->feedback = array(
-            array('text' => 'The best answer.', 'format' => FORMAT_HTML),
-            array('text' => 'An acceptable answer.', 'format' => FORMAT_HTML),
-            array('text' => 'Missing blue!', 'format' => FORMAT_HTML),
-            array('text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML),
-        );
+        $form->answer = ["it's blue, white and red", "(it('s| is) |they are )?blue, white, red", '--.*blue.*', '.*'];
+        $form->fraction = ['1.0', '0.8', '0.0', '0.0'];
+        $form->feedback = [
+            ['text' => 'The best answer.', 'format' => FORMAT_HTML],
+            ['text' => 'An acceptable answer.', 'format' => FORMAT_HTML],
+            ['text' => 'Missing blue!', 'format' => FORMAT_HTML],
+            ['text' => 'No, no, no! Try again.', 'format' => FORMAT_HTML],
+        ];
+
         $form->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
 
         return $form;
@@ -319,10 +321,10 @@ class qtype_regexp_test_helper extends question_test_helper {
         $rx->questiontext = 'Name an animal whose name consists of 3 letters and the middle letter is the vowel "a": _____';
         $rx->generalfeedback = 'General feedback: OK';
         $rx->usecase = false;
-        $rx->answers = array(
+        $rx->answers = [
             13 => new question_answer(13, "cat", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "[br]at", 1.0, 'An acceptable answer.', FORMAT_HTML),
-        );
+        ];
         $rx->qtype = question_bank::get_qtype('regexp');
 
         return $rx;
@@ -344,10 +346,10 @@ class qtype_regexp_test_helper extends question_test_helper {
         $qdata->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
         $qdata->options = new stdClass();
         $qdata->options->usecase = 0;
-        $qdata->options->answers = array(
+        $qdata->options->answers = [
             13 => new question_answer(13, "cat", 1.0, 'The best answer.', FORMAT_HTML),
             14 => new question_answer(14, "[br]at", 1.0, 'An acceptable answer.', FORMAT_HTML),
-        );
+        ];
 
         return $qdata;
     }
@@ -362,17 +364,18 @@ class qtype_regexp_test_helper extends question_test_helper {
         $form = new stdClass();
 
         $form->name = 'Regular expression short answer question';
-        $form->questiontext = array('text' => 'Name an animal whose name consists of 3 letters'.
-            ' and the middle letter is the vowel "a": _____', 'format' => FORMAT_HTML);
+        $form->questiontext = ['text' => 'Name an animal whose name consists of 3 letters'.
+            ' and the middle letter is the vowel "a": _____', 'format' => FORMAT_HTML];
         $form->defaultmark = 1.0;
-        $form->generalfeedback = array('text' => 'General feedback: OK.', 'format' => FORMAT_HTML);
+        $form->generalfeedback = ['text' => 'General feedback: OK.', 'format' => FORMAT_HTML];
         $form->usecase = false;
-        $form->answer = array("cat", "[br]at");
-        $form->fraction = array('1.0', '1.0');
-        $form->feedback = array(
-            array('text' => 'The best answer.', 'format' => FORMAT_HTML),
-            array('text' => 'An acceptable answer.', 'format' => FORMAT_HTML),
-        );
+        $form->answer = ["cat", "[br]at"];
+        $form->fraction = ['1.0', '1.0'];
+        $form->feedback = [
+            ['text' => 'The best answer.', 'format' => FORMAT_HTML],
+            ['text' => 'An acceptable answer.', 'format' => FORMAT_HTML],
+        ];
+
         $form->status = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
 
         return $form;

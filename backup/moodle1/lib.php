@@ -37,10 +37,10 @@ class moodle1_qtype_regexp_handler extends moodle1_qtype_handler {
      * @return array
      */
     public function get_question_subpaths() {
-        return array(
+        return [
             'ANSWERS/ANSWER',
             'REGEXP',
-        );
+        ];
     }
 
     /**
@@ -58,7 +58,7 @@ class moodle1_qtype_regexp_handler extends moodle1_qtype_handler {
         // Convert and write the regexp extra fields.
         foreach ($data['regexp'] as $regexp) {
             $regexp['id'] = $this->converter->get_nextid();
-            $this->write_xml('regexp', $regexp, array('/regexp/id'));
+            $this->write_xml('regexp', $regexp, ['/regexp/id']);
         }
     }
 }

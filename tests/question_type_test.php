@@ -87,14 +87,14 @@ class question_type_test extends \advanced_testcase {
     public function test_get_possible_responses() {
         $q = \test_question_maker::get_question_data('regexp');
 
-        $this->assertEquals(array(
-            $q->id => array(
+        $this->assertEquals([
+            $q->id => [
                 13 => new question_possible_response("it's blue, white and red", 1),
                 14 => new question_possible_response("(it('s| is) |they are )?blue, white, red", 0.8),
                 15 => new question_possible_response('--.*blue.*', 0.0),
                 16 => new question_possible_response('.*', 0.0),
-                null => question_possible_response::no_response()),
-        ), $this->qtype->get_possible_responses($q));
+                null => question_possible_response::no_response()],
+        ], $this->qtype->get_possible_responses($q));
     }
 
     /**
@@ -110,10 +110,10 @@ class question_type_test extends \advanced_testcase {
         $formdata = test_question_maker::get_question_form_data('regexp');
 
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
-        $cat = $generator->create_question_category(array());
+        $cat = $generator->create_question_category([]);
 
         $formdata->category = "{$cat->id},{$cat->contextid}";
-        qtype_regexp_edit_form::mock_submit((array)$formdata);
+        qtype_regexp_edit_form::mock_submit(([])$formdata);
 
         $form = qtype_regexp_test_helper::get_question_editing_form($cat, $questiondata);
 
@@ -122,11 +122,11 @@ class question_type_test extends \advanced_testcase {
         $fromform = $form->get_data();
 
         $returnedfromsave = $this->qtype->save_question($questiondata, $fromform);
-        $actualquestionsdata = question_load_questions(array($returnedfromsave->id));
+        $actualquestionsdata = question_load_questions([$returnedfromsave->id]);
         $actualquestiondata = end($actualquestionsdata);
 
         foreach ($questiondata as $property => $value) {
-            if (!in_array($property, array('id', 'version', 'timemodified', 'timecreated', 'options'))) {
+            if (!in_array($property, ['id', 'version', 'timemodified', 'timecreated', 'options'])) {
                 $this->assertEquals($value, $actualquestiondata->$property);
             }
         }

@@ -25,12 +25,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_regexp';
-$plugin->dependencies = array(
-    'qbehaviour_regexpadaptivewithhelp'   => 2022041800,
-    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2022041800
-);
-$plugin->version  = 2024021800;
+$plugin->dependencies = [
+    'qbehaviour_regexpadaptivewithhelp'   => 2024050200,
+    'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2024050200,
+];
+$plugin->version  = 2024050200;
 // Require Moodle 4.0.0.
 $plugin->requires = 2022041900.00;
-$plugin->release = '4.3 for Moodle 4.3';
-$plugin->maturity  = MATURITY_STABLE;
+$plugin->release = '4.4';
+$plugin->maturity = MATURITY_STABLE;

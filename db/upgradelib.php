@@ -22,10 +22,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/** This is a single line DocComment.
+/**
+ * Class for converting attempt data for shortanswer questions when upgrading
+ * attempts to the new question engine.
+ *
+ * This class is used by the code in question/engine/upgrade/upgradelib.php.
+ *
  * @copyright  2011 Joseph Rézeau
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- **/
+ */
 class qtype_regexp_qe2_attempt_updater extends question_qtype_attempt_updater {
     /**
      * Returns right answer
