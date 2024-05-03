@@ -4,7 +4,6 @@ var result = {
     componentInit: function() {
 
         if (!this.question) {
-            console.warn('Aborting because of no question received.');
             return that.CoreQuestionHelperProvider.showComponentError(that.onAbort);
         }
         var div = document.createElement('div');
@@ -44,7 +43,7 @@ var result = {
         }
 
         // Check if the answer is inside the question text.
-        if (input.classList.contains ('inlineinput')) {
+        if (input.classList.contains('inlineinput')) {
             this.question.input.isInline = true;
         } else {
             this.question.input.isInline = false;
