@@ -107,7 +107,6 @@ class qtype_regexp_edit_form extends question_edit_form {
 
         // Display all correct alternate answers to student on review page :: yes / no.
         $menu = [get_string('no'), get_string('yes')];
-        $menu = [get_string('no'), get_string('yes')];
         $mform->addElement('select', 'studentshowalternate', get_string('studentshowalternate', 'qtype_regexp'), $menu);
         $mform->addHelpButton('studentshowalternate', 'studentshowalternate', 'qtype_regexp');
 
