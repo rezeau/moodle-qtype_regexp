@@ -33,7 +33,7 @@ require_once($CFG->dirroot . '/question/type/regexp/edit_regexp_form.php');
  * Unit tests for the regexp question type class.
  *
  * @package    qtype_regexp
- * @copyright 2021 Joseph R�zeau <joseph@rezeau.org>
+ * @copyright 2021 Joseph Rézeau <joseph@rezeau.org>
  * @copyright based on work by 2007 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
