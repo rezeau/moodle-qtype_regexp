@@ -31,7 +31,7 @@ Feature: Preview a Regexp question with hints
       | behaviour | adaptive |
     And I press "Save preview options and start again"
     And I wait until "Buy next letter" "button" exists
-    #Then "Buy next letter" "button" should be visible
+    Then "Buy next letter" "button" should be visible
     And I set the field with xpath "//div[@class='answer']//input[contains(@id, '1_answer')]" to "it's"
     And I press "Check"
     Then I should see "Incorrect"

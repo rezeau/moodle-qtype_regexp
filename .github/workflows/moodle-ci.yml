@@ -40,15 +40,6 @@ jobs:
           - php: '8.1'
             moodle-branch: 'MOODLE_404_STABLE'
             database: 'mariadb'
-          - php: '8.1'
-            moodle-branch: 'MOODLE_403_STABLE'
-            database: 'mariadb'
-          - php: '8.0'
-            moodle-branch: 'MOODLE_402_STABLE'
-            database: 'mariadb'
-          - php: '8.0'
-            moodle-branch: 'MOODLE_401_STABLE'
-            database: 'mariadb'
 
     steps:
       - name: Check out repository code
@@ -125,15 +116,6 @@ jobs:
         id: behat
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci behat --profile chrome
-
-      - name: Upload Behat Faildump
-        if: ${{ failure() && steps.behat.outcome == 'failure' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: Behat Faildump (${{ join(matrix.*, ', ') }})
-          path: ${{ github.workspace }}/moodledata/behat_dump
-          retention-days: 7
-          if-no-files-found: ignore
 
       - name: Mark cancelled jobs as failed.
         if: ${{ cancelled() }}
