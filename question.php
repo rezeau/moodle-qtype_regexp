@@ -147,9 +147,9 @@ class qtype_regexp_question extends question_graded_by_strategy
         }
         if (!$this->usecase) {
             $correctresponse = $this->get_correct_response();
-            $responseAnswer = $response['answer'] ?? '';
-            $correctAnswer = $correctresponse['answer'] ?? '';
-            if (strtoupper($responseAnswer) == strtoupper($correctAnswer)) {
+            $responseanswer = $response['answer'] ?? '';
+            $correctanswer = $correctresponse['answer'] ?? '';
+            if (strtoupper($responseanswer) == strtoupper($correctanswer)) {
                 return true;
             }
         }
