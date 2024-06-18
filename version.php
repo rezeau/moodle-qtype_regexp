@@ -29,7 +29,7 @@ $plugin->dependencies = [
     'qbehaviour_regexpadaptivewithhelp'   => 2024050200,
     'qbehaviour_regexpadaptivewithhelpnopenalty'  => 2024050200,
 ];
-$plugin->version  = 2024050500;
+$plugin->version  = 2024061800;
 // Require Moodle 4.0.0.
 $plugin->requires = 2022041900.00;
 $plugin->release = '4.4';

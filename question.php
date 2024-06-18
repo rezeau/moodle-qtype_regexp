@@ -147,7 +147,9 @@ class qtype_regexp_question extends question_graded_by_strategy
         }
         if (!$this->usecase) {
             $correctresponse = $this->get_correct_response();
-            if (strtoupper($response['answer']) == strtoupper($correctresponse['answer'])) {
+            $responseAnswer = $response['answer'] ?? '';
+            $correctAnswer = $correctresponse['answer'] ?? '';
+            if (strtoupper($responseAnswer) == strtoupper($correctAnswer)) {
                 return true;
             }
         }
@@ -223,7 +225,9 @@ class qtype_regexp_question extends question_graded_by_strategy
                     }
                 }
             } else {  // This is *not* a NOT (a OR b OR c etc.) request.
-                if (preg_match('/^'.$response1.'$/'.$ignorecase, $response0) == 0) {
+                $response0 = $response0 ?? '';
+                $response1 = $response1 ?? '';
+                if (preg_match('/^' . $response1 . '$/' . $ignorecase, $response0) == 0) {
                     return true;
                 }
             }
