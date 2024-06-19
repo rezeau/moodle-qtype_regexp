@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: 'ubuntu-latest'
 
     services:
       postgres:
@@ -31,15 +31,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php: '8.2'
-            moodle-branch: 'main'
-            database: 'mariadb'
-          - php: '8.2'
+          # - php: '8.2'
+          #   moodle-branch: 'main'
+          #   database: 'mariadb'
+          - php: '8.3'
             moodle-branch: 'main'
             database: 'pgsql'
-          - php: '8.1'
+          - php: '8.2'
             moodle-branch: 'MOODLE_404_STABLE'
-            database: 'mariadb'
+            database: 'pgsql'
 
     steps:
       - name: Check out repository code
