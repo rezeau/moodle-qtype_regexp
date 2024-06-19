@@ -42,13 +42,14 @@ final class question_type_test extends \advanced_testcase {
     protected $qtype;
 
     protected function setUp(): void {
-        $this->qtype = question_bank::get_qtype('regexp');
+        //$this->qtype = question_bank::get_qtype('regexp');
+        $this->qtype = new \qtype_regexp();
     }
-
+/*
     protected function tearDown(): void {
         $this->qtype = null;
     }
-
+*/
     /**
      * template for common example of question instance
      * @return \stdClass
