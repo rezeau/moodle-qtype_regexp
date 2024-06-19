@@ -42,10 +42,12 @@ final class question_type_test extends \advanced_testcase {
     protected $qtype;
 
     protected function setUp(): void {
+        parent::setUp();
         $this->qtype = question_bank::get_qtype('regexp');
     }
 
     protected function tearDown(): void {
+        parent::tearDown();
         $this->qtype = null;
     }
 
