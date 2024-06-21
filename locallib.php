@@ -1007,8 +1007,7 @@ function check_permutations($ans) {
  * @param string $ans
  */
 function has_permutations($ans) {
-    require_once('combinatorics.php');
-    $combinatorics = new Math_Combinatorics;
+    require_once('combinations/YourCombinations.php');
     $staticparts = [];
     $p = preg_match_all("/\[\[(.*)\]\]/U", $ans, $matches);
     if ($p === 0) {
@@ -1028,19 +1027,18 @@ function has_permutations($ans) {
     }
     $nbstaticparts = count($staticparts);
     $res = [];
-
     for ($i = 0; $i < $nbpermuted; $i++) {
         $res[$i] = '(';
         $ans = $matches[1][$i];
         $p = preg_match_all("/(.*)_(.*)_.*/U", $ans, $matchesp);
-        $permutations = $combinatorics->permutations($matchesp[2]);
+        $combinations = new YourCombinations($matchesp[2]);
         $nb = count($matchesp[2]);
         $p = preg_match_all("/_.*_(.*)/", $ans, $matchesr);
         $rightelement = '';
         if ($p) {
             $rightelement = $matchesr[1][0];
         }
-        foreach ($permutations as $permutation) {
+        foreach ($combinations->Permutations($nb, false) as $permutation) {
             for ($j = 0; $j < $nb; $j++) {
                 $res[$i] .= $matchesp[1][$j] .$permutation[$j];
             }
