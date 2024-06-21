@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <libraries>
   <library>
-    <location>combinations/YourCombinations.php"</location>
+    <location>combinations/YourCombinations.php</location>
     <name>YourCombinations</name>
     <description>An efficient combinatorics library for PHP 8 to generate and get the list of all Permutations and Combinations with the ability to enable or disable repetition. (utilizing generators)</description>
     <version></version>
