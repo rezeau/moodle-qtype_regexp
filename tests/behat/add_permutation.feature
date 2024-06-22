@@ -33,7 +33,7 @@ Feature: Test creating Regexp questions with the 'permutation' feature
     And I press "id_updatebutton"
     And I click on "Show/Hide alternate answers" "link"
     And I click on "id_showalternate" "button"
-    Then I should see "Answer 2 (100%)"    
+    Then I should see "Answer 2 (100%)"
     And I should see "it's blue, white, red"
     And I should see "it's blue, white and red"
     And I should see "it's blue, red, white"
