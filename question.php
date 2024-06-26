@@ -181,6 +181,10 @@ class qtype_regexp_question extends question_graded_by_strategy
      * @return boolean
      */
     public static function compare_string_with_wildcard($string, $pattern, $grade, $ignorecase) {
+        // To avoid PHP warnings when using REGEXP inside a multianswer question.
+        if ($string == '') {
+            return;
+        }
         if (substr($pattern, 0, 2) != '--') {
             // Answers with a positive grade must be anchored for strict match.
             // Incorrect answers are not strictly matched.
