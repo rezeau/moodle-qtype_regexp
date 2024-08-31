@@ -760,6 +760,8 @@ function remove_blanks($text) {
     while ($w = preg_match($pattern, (string) $text, $matches, PREG_OFFSET_CAPTURE) ) {
         $text = substr($text, 0, $matches[0][1]) .substr($text, $matches[0][1] + 1);
     }
+    // Remove potential final extra blank. 31 AUG 2024.
+    $text = trim($text);
     return $text;
 }
 
