@@ -761,7 +761,7 @@ function remove_blanks($text) {
         $text = substr($text, 0, $matches[0][1]) .substr($text, $matches[0][1] + 1);
     }
     // Remove potential final extra blank. 31 AUG 2024.
-    $text = trim($text);
+    $text = $text !== null ? trim($text) : '';
     return $text;
 }
 
