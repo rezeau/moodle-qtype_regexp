@@ -235,6 +235,7 @@ class qtype_regexp_renderer extends qtype_renderer {
         $displayresponses = '';
         $alternateanswers = get_alternateanswers($question);
         $bestcorrectanswer = $alternateanswers[1]['answers'][0];
+        $bestcorrectanswer = format_text($bestcorrectanswer, FORMAT_HTML, ['context' => $qa->get_question()->contextid]);
 
         if (count($alternateanswers) == 1 ) { // No alternative answers besides the only "correct" answer.
             $displayresponses .= get_string('correctansweris', 'qtype_regexp', $bestcorrectanswer);
